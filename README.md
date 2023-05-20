@@ -3,11 +3,7 @@ UWaterloo Course Search Tool, CS 348 Project
 
 ## local setup
 
-install rust
-
-```
-https://www.rust-lang.org/tools/install
-```
+install rust https://www.rust-lang.org/tools/install
 
 install perseus-cli
 
