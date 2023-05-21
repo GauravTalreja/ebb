@@ -5,6 +5,8 @@ UWaterloo Course Search Tool, CS 348 Project
 
 install rust https://www.rust-lang.org/tools/install
 
+install npm
+
 install perseus-cli
 
 ```
@@ -16,6 +18,11 @@ clone the repo and then
 ```
 cd ebb
 ```
+install npm packages (this only needs to be done one time after cloning the repo)
+```
+npm install
+```
+
 compile and run locally with
 
 ```
