@@ -4,15 +4,22 @@ use sycamore::prelude::*;
 fn index_page<G: Html>(cx: Scope) -> View<G> {
     view! { cx,
         link ( rel="stylesheet", href="/tailwind.css")
-        // Don't worry, there are much better ways of styling in Perseus!
-        div(style = "display: flex; flex-direction: column; justify-content: center; align-items: center; height: 95vh;") {
-            h1 { "Welcome to Perseus!" }
-            p (class = "bg-purple-100") {
-                "This is just an example app. Try changing some code inside "
-                code { "src/templates/index.rs" }
-                " and you'll be able to see the results here!"
+        div (class="hero min-h-screen bg-base-200") {
+            div (class="hero-content text-center") {
+                div (class="max-w-md") {
+                    h1 (class="text-5xl font-bold") { "UW Ebb" }
+                    p (class="py-6") {"Explore thousands of courses offered by the University of Waterloo. Plan your courses. Get Recommendations."}
+                    input (type="text", placeholder="Search for courses", class="input input-bordered input-lg input-primary w-full max-w-xl")
+                }
             }
-            a(href = "about", id = "about-link") { "About!" }
+        }
+        footer (class="footer items-center p-4 bg-neutral text-neutral-content") {
+            div (class="items-center grid-flow-col") {
+                p {"Made for CS 348 with ♥"}
+            }
+            div (class="grid-flow-col gap-4 md:place-self-center md:justify-self-end") {
+                a (class ="link link-hover", href = "about", id = "about-link") {"About"}
+            }
         }
     }
 }
@@ -20,7 +27,7 @@ fn index_page<G: Html>(cx: Scope) -> View<G> {
 #[engine_only_fn]
 fn head(cx: Scope) -> View<SsrNode> {
     view! { cx,
-        title { "Welcome to Perseus!" }
+        title { "UW Ebb" }
     }
 }
 
