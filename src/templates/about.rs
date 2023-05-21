@@ -3,7 +3,8 @@ use sycamore::prelude::*;
 
 fn about_page<G: Html>(cx: Scope) -> View<G> {
     view! { cx,
-        p { "About." }
+        link ( rel="stylesheet", href="/tailwind.css")
+        p (class = "bg-red-100") { "About." }
     }
 }
 

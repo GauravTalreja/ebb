@@ -3,10 +3,11 @@ use sycamore::prelude::*;
 
 fn index_page<G: Html>(cx: Scope) -> View<G> {
     view! { cx,
+        link ( rel="stylesheet", href="/tailwind.css")
         // Don't worry, there are much better ways of styling in Perseus!
         div(style = "display: flex; flex-direction: column; justify-content: center; align-items: center; height: 95vh;") {
             h1 { "Welcome to Perseus!" }
-            p {
+            p (class = "bg-purple-100") {
                 "This is just an example app. Try changing some code inside "
                 code { "src/templates/index.rs" }
                 " and you'll be able to see the results here!"
