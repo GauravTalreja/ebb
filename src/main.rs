@@ -11,8 +11,6 @@ pub fn main<G: Html>() -> PerseusApp<G> {
             perseus_tailwind::get_tailwind_plugin,
             perseus_tailwind::TailwindOptions {
                 in_file: "src/tailwind.css".into(),
-                // Don't put this in /static, it will trigger build loops.
-                // Put this in /dist and use a static alias instead.
                 out_file: "dist/tailwind.css".into(),
             },
         ))
