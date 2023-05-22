@@ -7,15 +7,19 @@ edition = "2021"
 
 # Dependencies for the engine and the browser go here
 [dependencies]
-perseus = { version = "=0.4.2", features = [ "hydrate" ] }
+clap = { version = "4.1.7", features = ["derive"] }
+perseus = { version = "=0.4.2", features = ["hydrate"] }
+perseus-tailwind = "0.4.6"
 sycamore = "^0.8.1"
 serde = { version = "1", features = [ "derive" ] }
 serde_json = "1"
-perseus-tailwind = "0.4.6"
+sqlx = { version = "0.6", features = [ "runtime-tokio-native-tls" , "mysql" ] }
+thiserror = "1.0.24"
+toml = "0.7.2"
 
 # Engine-only dependencies go here
 [target.'cfg(engine)'.dependencies]
-tokio = { version = "1", features = [ "macros", "rt", "rt-multi-thread" ] }
+tokio = { version = "1.28.1", features = [ "macros", "rt", "rt-multi-thread" ] }
 perseus-axum = { version = "=0.4.2", features = [ "dflt-server" ] }
 
 # Browser-only dependencies go here

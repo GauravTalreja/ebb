@@ -8,8 +8,8 @@ fn index_page<G: Html>(cx: Scope) -> View<G> {
             div (class="hero-content text-center") {
                 div (class="max-w-md") {
                     h1 (class="text-5xl font-bold") { "UW Ebb" }
-                    p (class="py-6") {"Explore thousands of courses offered by the University of Waterloo. Plan your courses. Get Recommendations."}
-                    input (type="text", placeholder="Search for courses", class="input input-bordered input-lg input-primary w-full max-w-xl")
+                    p (class="py-6") {"Explore thousands of models offered by the University of Waterloo. Plan your models. Get Recommendations."}
+                    input (type="text", placeholder="Search for models", class="input input-bordered input-lg input-primary w-full max-w-xl")
                 }
             }
         }

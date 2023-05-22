@@ -1,0 +1,6 @@
+[database]
+username = "root"
+password = "<password>"
+hostname = "localhost"
+database = "ebbjustin"
+pool_size = 16
