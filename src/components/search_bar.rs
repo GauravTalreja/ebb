@@ -19,13 +19,12 @@ pub fn SearchBar<'a, G: Html>(cx: Scope<'a>, props: SearchBarProps<'a>) -> View<
                         ""
                     }
                 )) {
-                li { a {"Item 1"}}
-                li { a {"Item 2"}}
-                li { a {"Item 3"}}
-                li { a {"Item 4"}}
-                li { a {"Item 5"}}
-                li { a {"Item 6"}}
-                li { a {"Item 7"}}
+                li {a (class="hover:bg-primary hover:text-white") {"Item 1"}}
+                li {a (class="hover:bg-primary hover:text-white") {"Item 2"}}
+                li {a (class="hover:bg-primary hover:text-white") {"Item 3"}}
+                li {a (class="hover:bg-primary hover:text-white") {"Item 4"}}
+                li {a (class="hover:bg-primary hover:text-white") {"Item 5"}}
+                
             }
         }
     }
