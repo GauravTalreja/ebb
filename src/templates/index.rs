@@ -3,10 +3,12 @@ use perseus::prelude::*;
 use serde::{Deserialize, Serialize};
 use sycamore::prelude::*;
 
+// TODO: This should be global (maybe?)
 #[derive(Serialize, Deserialize, ReactiveState, Clone)]
 #[rx(alias = "IndexPageStateRx")]
 pub struct IndexPageState {
     search_input: String,
+    search_results: Vec<String>,
 }
 
 #[auto_scope]
@@ -15,10 +17,10 @@ fn index_page<G: Html>(cx: Scope, state: &IndexPageStateRx) -> View<G> {
         link ( rel="stylesheet", href="/tailwind.css")
         div (class="hero min-h-screen bg-base-200") {
             div (class="hero-content text-center") {
-                div (class="max-w-md") {
+                div (class="max-w-7xl") {
                     h1 (class="text-5xl font-bold") { "UW Ebb" }
                     p (class="py-6") {"Explore thousands of courses offered by the University of Waterloo. Plan your courses. Get Recommendations."}
-                    SearchBar (input=&state.search_input)
+                    SearchBar (input=&state.search_input, results=&state.search_results)
                 }
             }
         }
@@ -37,6 +39,14 @@ fn index_page<G: Html>(cx: Scope, state: &IndexPageStateRx) -> View<G> {
 async fn get_build_state(_info: StateGeneratorInfo<()>) -> IndexPageState {
     IndexPageState {
         search_input: "".to_string(),
+        search_results: vec![
+            "Item1".to_string(),
+            "Item2".to_string(),
+            "Item3".to_string(),
+            "Item4".to_string(),
+            "Item5".to_string(),
+            "Item6".to_string(),
+        ],
     }
 }
 
