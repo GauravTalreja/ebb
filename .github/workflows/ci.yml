@@ -1,4 +1,4 @@
-name: Rust
+name: Check
 
 on:
   push:
@@ -28,5 +28,5 @@ jobs:
           if: steps.cache.outputs.cache-hit != 'true'
           run: cargo install perseus-cli
           
-        - name: Run Checks
+        - name: perseus check
           run: perseus check
