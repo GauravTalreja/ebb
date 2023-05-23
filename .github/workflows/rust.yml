@@ -1,0 +1,32 @@
+name: Rust
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+        - uses: actions/checkout@v3
+        # Cache Cargo binaries
+        - uses: actions/cache@v3
+          id: cache
+          with:
+            path: |
+              ~/.cargo/bin/
+            # The cache should be OS-specific
+            key: ${{ runner.os }}-cargo-bins
+            
+        # Only install the binaries if the cache doesn't have them
+        - name: Install Dependencies
+          if: steps.cache.outputs.cache-hit != 'true'
+          run: cargo install perseus-cli
+          
+        - name: Run Checks
+          run: perseus check
