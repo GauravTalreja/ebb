@@ -1,7 +1,16 @@
+use crate::components::search_bar::SearchBar;
 use perseus::prelude::*;
+use serde::{Deserialize, Serialize};
 use sycamore::prelude::*;
 
-fn index_page<G: Html>(cx: Scope) -> View<G> {
+#[derive(Serialize, Deserialize, ReactiveState, Clone)]
+#[rx(alias = "IndexPageStateRx")]
+pub struct IndexPageState {
+    search_input: String,
+}
+
+#[auto_scope]
+fn index_page<G: Html>(cx: Scope, state: &IndexPageStateRx) -> View<G> {
     view! { cx,
         link ( rel="stylesheet", href="/tailwind.css")
         div (class="hero min-h-screen bg-base-200") {
@@ -9,7 +18,7 @@ fn index_page<G: Html>(cx: Scope) -> View<G> {
                 div (class="max-w-md") {
                     h1 (class="text-5xl font-bold") { "UW Ebb" }
                     p (class="py-6") {"Explore thousands of courses offered by the University of Waterloo. Plan your courses. Get Recommendations."}
-                    input (type="text", placeholder="Search for courses", class="input input-bordered input-lg input-primary w-full max-w-xl")
+                    SearchBar (input=&state.search_input)
                 }
             }
         }
@@ -25,12 +34,23 @@ fn index_page<G: Html>(cx: Scope) -> View<G> {
 }
 
 #[engine_only_fn]
-fn head(cx: Scope) -> View<SsrNode> {
+async fn get_build_state(_info: StateGeneratorInfo<()>) -> IndexPageState {
+    IndexPageState {
+        search_input: "".to_string(),
+    }
+}
+
+#[engine_only_fn]
+fn head(cx: Scope, _props: IndexPageState) -> View<SsrNode> {
     view! { cx,
         title { "UW Ebb" }
     }
 }
 
 pub fn get_template<G: Html>() -> Template<G> {
-    Template::build("index").view(index_page).head(head).build()
+    Template::build("index")
+        .build_state_fn(get_build_state)
+        .view_with_state(index_page)
+        .head_with_state(head)
+        .build()
 }
