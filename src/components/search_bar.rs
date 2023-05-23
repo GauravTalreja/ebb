@@ -7,15 +7,24 @@ pub struct SearchBarProps<'a> {
     results: &'a RcSignal<Vec<String>>,
 }
 
+// TODO: Improve this with support for mobile and arrow keys, see https://github.com/metonym/svelte-typeahead/blob/master/src/Typeahead.svelte for inspiration
 #[component]
 pub fn SearchBar<'a, G: Html>(
     cx: Scope<'a>,
     SearchBarProps { input, results }: SearchBarProps<'a>,
 ) -> View<G> {
     view! { cx,
-        div ( class="dropdown dropdown-bottom w-full") {
-            input (type="text", bind:value=input, placeholder="Search for courses", class="input input-bordered input-lg input-primary w-full", tabindex="0")
-            ul (tabindex="0", class=format!(
+        div ( class="dropdown dropdown-bottom w-full {}") {
+            input (
+                type="search",
+                bind:value=input,
+                placeholder="Search for courses",
+                class="input input-bordered input-lg input-primary w-full",
+                tabindex="0"
+            )
+            ul (
+                tabindex="0",
+                class=format!(
                     "dropdown-content menu p-2 shadow bg-base-100 rounded-box w-full mt-2 {}",
                     if input.get().is_empty() {
                         "hidden"
