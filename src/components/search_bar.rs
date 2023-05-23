@@ -14,9 +14,8 @@ pub fn SearchBar<'a, G: Html>(
 ) -> View<G> {
     view! { cx,
         div ( class="dropdown dropdown-bottom w-full") {
-            input (type="text", bind:value=input, placeholder="Search for courses", class="input input-bordered input-lg input-primary w-full")
-            ul (
-                class=format!(
+            input (type="text", bind:value=input, placeholder="Search for courses", class="input input-bordered input-lg input-primary w-full", tabindex="0")
+            ul (tabindex="0", class=format!(
                     "dropdown-content menu p-2 shadow bg-base-100 rounded-box w-full mt-2 {}",
                     if input.get().is_empty() {
                         "hidden"
