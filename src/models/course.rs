@@ -7,8 +7,3 @@ pub struct Course {
     pub name: String,
     pub department: String,
 }
-
-#[derive(Clone, Debug, Serialize, Deserialize)]
-pub struct ListCourseResponse {
-    pub courses: Vec<Course>
-}

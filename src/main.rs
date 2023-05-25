@@ -1,12 +1,11 @@
 use perseus::plugins::Plugins;
 use perseus::prelude::*;
 
+mod backend;
 mod components;
-mod config;
 mod error_views;
 mod models;
 mod templates;
-mod backend;
 
 #[perseus::main(backend::server::main)]
 pub fn main<G: Html>() -> PerseusApp<G> {

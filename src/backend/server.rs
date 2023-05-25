@@ -1,18 +1,15 @@
 use std::net::SocketAddr;
-use std::num::{NonZeroU16, NonZeroUsize};
-
-use axum::http::header::CONTENT_TYPE;
-use axum::http::Method;
-use axum::{routing, Extension, Router, Server};
-use perseus::i18n::TranslationsManager;
-use perseus::server::ServerOptions;
-use perseus::stores::MutableStore;
-use perseus::turbine::Turbine;
-use tower_http::cors::{Any, CorsLayer};
 
 use crate::backend::http;
-use crate::backend::storage::{CourseStore, MySqlClient};
-use crate::config::DatabaseConfig;
+use crate::backend::storage::CourseStore;
+use axum::{
+    http::{header::CONTENT_TYPE, Method},
+    routing, Extension, Router, Server,
+};
+use perseus::{
+    i18n::TranslationsManager, server::ServerOptions, stores::MutableStore, turbine::Turbine,
+};
+use tower_http::cors::{Any, CorsLayer};
 
 pub async fn main<M, T>(
     turbine: &'static Turbine<M, T>,
@@ -38,17 +35,17 @@ where
     M: MutableStore + 'static,
     T: TranslationsManager + 'static,
 {
-    let mysql_client = MySqlClient::new(&DatabaseConfig {
-        username: "root".to_string(),
-        password: "password".to_string(),
-        hostname: "127.0.0.1".to_string(),
-        database: "ebbjustin".to_string(),
-        port: NonZeroU16::new(3306).unwrap(),
-        pool_size: NonZeroUsize::new(16).unwrap(),
-    })
-    .await
-    .expect("cannot connect to mysql database");
-    let course_store = CourseStore::new(mysql_client);
+    dotenv::dotenv();
+    let pool =
+        sqlx::AnyPool::connect(&std::env::var("DATABASE_URL").expect("DATABASE_ENV url not found"))
+            .await
+            .expect("Could not connect to database.");
+
+    sqlx::migrate!("src/backend/storage/migrations")
+        .run(&pool)
+        .await;
+
+    let course_store = CourseStore::new(pool);
 
     let cors_options = CorsLayer::new()
         .allow_methods([Method::GET, Method::POST])

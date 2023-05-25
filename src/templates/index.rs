@@ -1,12 +1,10 @@
-use std::collections::HashMap;
-use std::string::String;
-
+use crate::components::search_bar::SearchBar;
 use perseus::prelude::*;
 use serde::{Deserialize, Serialize};
 use sycamore::prelude::*;
 
-use crate::components::search_bar::SearchBar;
-use crate::models::{Course, ListCourseResponse};
+#[cfg(client)]
+use crate::models::Course;
 
 // TODO: This should be global (maybe?)
 #[derive(Serialize, Deserialize, ReactiveState, Clone)]
@@ -16,8 +14,30 @@ pub struct IndexPageState {
     search_results: Vec<String>,
 }
 
-#[auto_scope]
-fn index_page<G: Html>(cx: Scope, state: &IndexPageStateRx) -> View<G> {
+fn index_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a IndexPageStateRx) -> View<G> {
+    #[cfg(client)]
+    if !state.search_input.get().is_empty() {
+        spawn_local_scoped(cx, async {
+            let body = reqwasm::http::Request::get(
+                format!(
+                    "http://localhost:8080/api/v1/courses/{}",
+                    state.search_input.get()
+                )
+                .as_str(),
+            )
+            .send()
+            .await
+            .unwrap()
+            .json::<Vec<Course>>()
+            .await
+            .unwrap()
+            .iter()
+            .map(|course| course.name.clone())
+            .collect();
+            state.search_input.set(body);
+        })
+    }
+
     view! { cx,
         link ( rel="stylesheet", href="/tailwind.css")
         div (class="hero min-h-screen bg-base-200") {
@@ -43,22 +63,10 @@ fn index_page<G: Html>(cx: Scope, state: &IndexPageStateRx) -> View<G> {
 #[engine_only_fn]
 async fn get_build_state(_info: StateGeneratorInfo<()>) -> IndexPageState {
     // TODO: fix api requests to backend endpoint for list of courses.
-    // let found_courses = reqwest::get("http://localhost:8080/api/v1/courses/<user search input here>")
-    //     .await
-    //     .expect("cannot make api request for courses")
-    //     .json::<ListCourseResponse>()
-    //     .await
-    //     .expect("cannot make api request for courses");
 
     IndexPageState {
         search_input: "".to_string(),
         search_results: vec![],
-        // TODO: surface all courses in search text bar.
-        // found_courses
-        //     .courses
-        //     .iter()
-        //     .map(|course| course.name.clone())
-        //     .collect::<Vec<String>>(),
     }
 }
 
