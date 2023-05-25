@@ -1,7 +1,12 @@
-use crate::components::search_bar::SearchBar;
+use std::collections::HashMap;
+use std::string::String;
+
 use perseus::prelude::*;
 use serde::{Deserialize, Serialize};
 use sycamore::prelude::*;
+
+use crate::components::search_bar::SearchBar;
+use crate::models::{Course, ListCourseResponse};
 
 // TODO: This should be global (maybe?)
 #[derive(Serialize, Deserialize, ReactiveState, Clone)]
@@ -37,16 +42,23 @@ fn index_page<G: Html>(cx: Scope, state: &IndexPageStateRx) -> View<G> {
 
 #[engine_only_fn]
 async fn get_build_state(_info: StateGeneratorInfo<()>) -> IndexPageState {
+    // TODO: fix api requests to backend endpoint for list of courses.
+    // let found_courses = reqwest::get("http://localhost:8080/api/v1/courses/<user search input here>")
+    //     .await
+    //     .expect("cannot make api request for courses")
+    //     .json::<ListCourseResponse>()
+    //     .await
+    //     .expect("cannot make api request for courses");
+
     IndexPageState {
         search_input: "".to_string(),
-        search_results: vec![
-            "Item1".to_string(),
-            "Item2".to_string(),
-            "Item3".to_string(),
-            "Item4".to_string(),
-            "Item5".to_string(),
-            "Item6".to_string(),
-        ],
+        search_results: vec![],
+        // TODO: surface all courses in search text bar.
+        // found_courses
+        //     .courses
+        //     .iter()
+        //     .map(|course| course.name.clone())
+        //     .collect::<Vec<String>>(),
     }
 }
 
