@@ -1,11 +1,12 @@
 mod components;
 mod error_views;
+mod server;
 mod templates;
 
 use perseus::plugins::Plugins;
 use perseus::prelude::*;
 
-#[perseus::main(perseus_axum::dflt_server)]
+#[perseus::main(server::main)]
 pub fn main<G: Html>() -> PerseusApp<G> {
     PerseusApp::new()
         .plugins(Plugins::new().plugin(
