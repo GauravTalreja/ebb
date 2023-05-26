@@ -35,15 +35,16 @@ where
     M: MutableStore + 'static,
     T: TranslationsManager + 'static,
 {
-    dotenv::dotenv();
+    dotenv::dotenv().expect("Couldn't find a .env file in the proct root");
     let pool =
-        sqlx::AnyPool::connect(&std::env::var("DATABASE_URL").expect("DATABASE_ENV url not found"))
+        sqlx::PgPool::connect(&std::env::var("DATABASE_URL").expect("DATABASE_ENV url not found"))
             .await
             .expect("Could not connect to database.");
 
     sqlx::migrate!("src/backend/storage/migrations")
         .run(&pool)
-        .await;
+        .await
+        .expect("Could not run migrations.");
 
     let course_store = CourseStore::new(pool);
 

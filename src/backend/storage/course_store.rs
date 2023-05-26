@@ -1,24 +1,23 @@
-use crate::backend::storage::StorageError;
 use crate::models::Course;
-use sqlx::any;
+use sqlx::{Error, PgPool};
 
 #[derive(Clone)]
 pub struct CourseStore {
-    pool: any::AnyPool,
+    pool: PgPool,
 }
 
 impl CourseStore {
-    pub fn new(pool: any::AnyPool) -> Self {
+    pub fn new(pool: PgPool) -> Self {
         CourseStore { pool }
     }
 
-    pub async fn select_courses(&self, course_name: &str) -> Result<Vec<Course>, StorageError> {
+    pub async fn select_courses(&self, course_name: &str) -> Result<Vec<Course>, Error> {
         sqlx::query_as!(
             Course,
-            "SELECT id, name, department FROM courses WHERE name LIKE ?",
+            "SELECT id, name, department FROM courses WHERE name ILIKE $1",
+            ["%", course_name, "%"].concat()
         )
-        .bind(["%", course_name, "%"].concat())
-        .fetch_all()
+        .fetch_all(&self.pool)
         .await
     }
 }

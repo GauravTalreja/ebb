@@ -15,28 +15,31 @@ pub struct IndexPageState {
 }
 
 fn index_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a IndexPageStateRx) -> View<G> {
-    #[cfg(client)]
-    if !state.search_input.get().is_empty() {
-        spawn_local_scoped(cx, async {
-            let body = reqwasm::http::Request::get(
-                format!(
-                    "http://localhost:8080/api/v1/courses/{}",
-                    state.search_input.get()
+    create_effect(cx, move || {
+        if !state.search_input.get().is_empty() {
+            state.search_results.track();
+            #[cfg(client)]
+            spawn_local_scoped(cx, async {
+                let body = reqwasm::http::Request::get(
+                    format!(
+                        "http://ebb.csclub.cloud/api/v1/courses/{}",
+                        state.search_input.get()
+                    )
+                    .as_str(),
                 )
-                .as_str(),
-            )
-            .send()
-            .await
-            .unwrap()
-            .json::<Vec<Course>>()
-            .await
-            .unwrap()
-            .iter()
-            .map(|course| course.name.clone())
-            .collect();
-            state.search_input.set(body);
-        })
-    }
+                .send()
+                .await
+                .unwrap()
+                .json::<Vec<Course>>()
+                .await
+                .unwrap()
+                .iter()
+                .map(|course| course.name.clone())
+                .collect();
+                state.search_input.set(body);
+            })
+        }
+    });
 
     view! { cx,
         link ( rel="stylesheet", href="/tailwind.css")

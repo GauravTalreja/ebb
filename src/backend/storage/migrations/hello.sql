@@ -1,5 +1,17 @@
 CREATE TABLE IF NOT EXISTS courses (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(10) NOT NULL UNIQUE,
-    department VARCHAR(30) NOT NULL
+    id serial primary key,
+    name varchar(40) not null unique,
+    department varchar(30) not null
 );
+
+insert INTO courses (name, department) values
+    ('Math', 'Mathematics'),
+    ('Physics', 'Physics'),
+    ('Chemistry', 'Chemistry'),
+    ('English', 'Language Arts'),
+    ('History', 'Social Sciences'),
+    ('Biology', 'Life Sciences'),
+    ('Computer Science', 'Computer Science'),
+    ('Art', 'Fine Arts'),
+    ('Economics', 'Social Sciences'),
+    ('Psychology', 'Social Sciences');
