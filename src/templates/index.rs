@@ -15,29 +15,26 @@ pub struct IndexPageState {
 }
 
 fn index_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a IndexPageStateRx) -> View<G> {
-    create_effect(cx, move || {
+    #[cfg(client)]
+    create_effect_scoped(cx, move || {
         if !state.search_input.get().is_empty() {
-            state.search_results.track();
-            #[cfg(client)]
-            spawn_local_scoped(cx, async {
-                let body = reqwasm::http::Request::get(
-                    format!(
-                        "http://ebb.csclub.cloud/api/v1/courses/{}",
-                        state.search_input.get()
-                    )
-                    .as_str(),
+            let body = reqwasm::http::Request::get(
+                format!(
+                    "http://ebb.csclub.cloud/api/v1/courses/{}",
+                    state.search_input.get()
                 )
-                .send()
-                .await
-                .unwrap()
-                .json::<Vec<Course>>()
-                .await
-                .unwrap()
-                .iter()
-                .map(|course| course.name.clone())
-                .collect();
-                state.search_input.set(body);
-            })
+                .as_str(),
+            )
+            .send()
+            .await
+            .unwrap()
+            .json::<Vec<Course>>()
+            .await
+            .unwrap()
+            .iter()
+            .map(|course| course.name.clone())
+            .collect();
+            state.search_input.set(body);
         }
     });
 
