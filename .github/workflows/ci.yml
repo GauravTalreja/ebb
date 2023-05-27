@@ -27,7 +27,7 @@ jobs:
         # Only install the binaries if the cache doesn't have them
         - name: Install Dependencies
           if: steps.cache.outputs.cache-hit != 'true'
-          run: 
+          run: |
             cargo install perseus-cli
             cargo install sqlx-cli --no-default-features --features native-tls,postgres
         - name: sqlx
