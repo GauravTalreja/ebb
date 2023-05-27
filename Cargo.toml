@@ -21,7 +21,7 @@ perseus-axum = { version = "=0.4.2" }
 dotenv = "0.15.0"
 sqlx = { version = "0.6", features = [
     "runtime-tokio-native-tls",
-    "any",
+    "offline",
     "postgres",
     "macros",
 ] }

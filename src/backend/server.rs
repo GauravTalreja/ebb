@@ -41,11 +41,6 @@ where
             .await
             .expect("Could not connect to database.");
 
-    sqlx::migrate!("src/backend/storage/migrations")
-        .run(&pool)
-        .await
-        .expect("Could not run migrations.");
-
     let course_store = CourseStore::new(pool);
 
     let cors_options = CorsLayer::new()
