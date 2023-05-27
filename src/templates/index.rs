@@ -21,7 +21,7 @@ fn index_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a IndexPageStateRx
             spawn_local_scoped(cx, async {
                 let body = reqwasm::http::Request::get(
                     format!(
-                        "http://ebb.csclub.cloud/api/v1/courses/{}",
+                        "https://ebb.csclub.cloud/api/v1/courses/{}/",
                         state.search_input.get()
                     )
                     .as_str(),
