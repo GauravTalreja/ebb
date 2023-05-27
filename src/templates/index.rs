@@ -35,6 +35,7 @@ fn index_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a IndexPageStateRx
                 .iter()
                 .map(|course| course.name.clone())
                 .collect();
+                println!("{}", body);
                 state.search_input.set(body);
             })
         }
