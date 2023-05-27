@@ -11,12 +11,6 @@ env:
   RUSTFLAGS: "-Dwarnings"
 
 jobs:
-  clippy_check:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Run Clippy
-        run: cargo clippy --all-targets --all-features
   perseus_check:
     runs-on: ubuntu-latest
     steps:
@@ -38,3 +32,6 @@ jobs:
             
         - name: perseus
           run: perseus check -g --no-system-tools-cache --verbose
+
+        - name: Run Clippy
+          run: cargo clippy --all-targets --all-features
