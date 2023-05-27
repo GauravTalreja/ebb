@@ -47,7 +47,6 @@ fn index_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a IndexPageStateRx
             div (class="hero-content text-center") {
                 div (class="max-w-7xl") {
                     h1 (class="text-5xl font-bold") { "UW Ebb" }
-                    h1 (class="text-5xl font-bold") { (state.search_results.get()[0] ) }
                     p (class="py-6") {"Explore thousands of courses offered by the University of Waterloo. Plan your courses. Get Recommendations."}
                     SearchBar (input=&state.search_input, results=&state.search_results)
                 }
