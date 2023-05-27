@@ -3,3 +3,4 @@ target/
 pkg/
 tailwindcss-*
 node_modules/
+.env

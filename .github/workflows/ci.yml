@@ -1,4 +1,4 @@
-name: Build
+name: Check
 
 on:
   push:
@@ -11,7 +11,26 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  Build:
+  clippy_check_client:
+    runs-on: ubuntu-latest
+    env:
+      RUSTFLAGS: "-Dwarnings --cfg=client"
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run Clippy
+        run: cargo clippy --all-targets --all-features --no-deps
+
+  clippy_check_engine:
+    runs-on: ubuntu-latest
+    env:
+      RUSTFLAGS: "-Dwarnings --cfg=engine"
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run Clippy
+        run: cargo clippy --all-targets --all-features --no-deps
+    
+    
+  perseus_check:
     runs-on: ubuntu-latest
     steps:
         - uses: actions/checkout@v3
@@ -27,7 +46,9 @@ jobs:
         # Only install the binaries if the cache doesn't have them
         - name: Install Dependencies
           if: steps.cache.outputs.cache-hit != 'true'
-          run: cargo install perseus-cli
-          
-        - name: perseus build
-          run: perseus build
+          run: |
+            cargo install perseus-cli
+            
+        - name: perseus
+          run: |
+            perseus check -g --no-system-tools-cache --verbose

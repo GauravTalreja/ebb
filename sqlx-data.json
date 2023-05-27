@@ -1,0 +1,35 @@
+{
+  "db": "PostgreSQL",
+  "c1844ee1d9b62fc4f0ad9e34889f66d8df95dfb525c684477779656263d4691e": {
+    "describe": {
+      "columns": [
+        {
+          "name": "id",
+          "ordinal": 0,
+          "type_info": "Int4"
+        },
+        {
+          "name": "name",
+          "ordinal": 1,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "department",
+          "ordinal": 2,
+          "type_info": "Varchar"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Text"
+        ]
+      }
+    },
+    "query": "SELECT id, name, department FROM courses WHERE name ILIKE $1"
+  }
+}

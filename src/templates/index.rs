@@ -3,6 +3,9 @@ use perseus::prelude::*;
 use serde::{Deserialize, Serialize};
 use sycamore::prelude::*;
 
+#[cfg(client)]
+use crate::models::Course;
+
 // TODO: This should be global (maybe?)
 #[derive(Serialize, Deserialize, ReactiveState, Clone)]
 #[rx(alias = "IndexPageStateRx")]
@@ -11,8 +14,32 @@ pub struct IndexPageState {
     search_results: Vec<String>,
 }
 
-#[auto_scope]
-fn index_page<G: Html>(cx: Scope, state: &IndexPageStateRx) -> View<G> {
+fn index_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a IndexPageStateRx) -> View<G> {
+    #[cfg(client)]
+    create_effect_scoped(cx, |cx| {
+        if !state.search_input.get().is_empty() {
+            spawn_local_scoped(cx, async {
+                let body = reqwasm::http::Request::get(
+                    format!(
+                        "https://ebb.csclub.cloud/api/v1/courses/{}",
+                        state.search_input.get()
+                    )
+                    .as_str(),
+                )
+                .send()
+                .await
+                .unwrap()
+                .json::<Vec<Course>>()
+                .await
+                .unwrap()
+                .iter()
+                .map(|course| course.name.clone())
+                .collect();
+                state.search_results.set(body);
+            })
+        }
+    });
+
     view! { cx,
         link ( rel="stylesheet", href="/tailwind.css")
         div (class="hero min-h-screen bg-base-200") {
@@ -39,14 +66,7 @@ fn index_page<G: Html>(cx: Scope, state: &IndexPageStateRx) -> View<G> {
 async fn get_build_state(_info: StateGeneratorInfo<()>) -> IndexPageState {
     IndexPageState {
         search_input: "".to_string(),
-        search_results: vec![
-            "Item1".to_string(),
-            "Item2".to_string(),
-            "Item3".to_string(),
-            "Item4".to_string(),
-            "Item5".to_string(),
-            "Item6".to_string(),
-        ],
+        search_results: vec![],
     }
 }
 
