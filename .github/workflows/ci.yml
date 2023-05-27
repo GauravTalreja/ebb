@@ -8,9 +8,18 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
-  RUSTFLAGS: "-Dwarnings"
 
 jobs:
+  clippy_check:
+    runs-on: ubuntu-latest
+    env:
+      RUSTFLAGS: "-Dwarnings --cfg=engine"
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run Clippy
+        run: cargo clippy --all-targets --all-features --no-deps
+    
+    
   perseus_check:
     runs-on: ubuntu-latest
     steps:
@@ -33,4 +42,3 @@ jobs:
         - name: perseus
           run: |
             perseus check -g --no-system-tools-cache --verbose
-            cargo clippy --all-targets --all-features --no-deps
