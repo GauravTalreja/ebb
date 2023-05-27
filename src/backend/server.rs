@@ -52,11 +52,10 @@ where
         .route("/courses/:course_name", routing::get(http::list_courses))
         .layer(Extension(course_store))
         .layer(cors_options);
-    let combined_router = perseus_axum::get_router(turbine, opts)
-        .await
-        .nest("/api/v1", api_routes);
 
-    combined_router
+    perseus_axum::get_router(turbine, opts)
+        .await
+        .nest("/api/v1", api_routes)
 }
 
 async fn hello_world() -> &'static str {
