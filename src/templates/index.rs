@@ -64,8 +64,6 @@ fn index_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a IndexPageStateRx
 
 #[engine_only_fn]
 async fn get_build_state(_info: StateGeneratorInfo<()>) -> IndexPageState {
-    // TODO: fix api requests to backend endpoint for list of courses.
-
     IndexPageState {
         search_input: "".to_string(),
         search_results: vec![],
