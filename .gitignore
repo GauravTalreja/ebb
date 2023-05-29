@@ -1,6 +1,8 @@
 dist/
 target/
 pkg/
+data/postgres/
 tailwindcss-*
 node_modules/
 .env
+.DS_Store
