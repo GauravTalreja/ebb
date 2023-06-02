@@ -15,7 +15,7 @@ UWaterloo Course Search Tool, CS 348 Project
     cargo install sqlx-cli --no-default-features --features native-tls,postgres
     ```
 
-## Setup
+## Development Setup
 
 1. Clone the repository.
     ```sh
@@ -27,10 +27,7 @@ UWaterloo Course Search Tool, CS 348 Project
     ```sh
     npm install
     ```
-3. Make a new file named ``.env`` with the following contents.
-    ```
-    DATABASE_URL=postgres://ebb:ebb@localhost:5432/ebb
-    ```
+3. Copy ``env/dev.env`` to the project root and rename it to ``.env``.
 4. Run a local Postgres container.
     ```
     docker compose up
