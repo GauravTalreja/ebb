@@ -14,7 +14,7 @@ pub struct IndexPageState {
 fn index_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a IndexPageStateRx) -> View<G> {
     view! { cx,
         link ( rel="stylesheet", href="/tailwind.css")
-        div (class="hero min-h-screen bg-base-200") {
+        div (class="hero min-h-screen bg-base-300") {
             div (class="hero-content text-center") {
                 div (class="max-w-7xl") {
                     h1 (class="text-5xl font-bold") { "UW Ebb" }

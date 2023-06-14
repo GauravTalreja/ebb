@@ -57,10 +57,10 @@ pub fn SearchBar<'a, G: Html>(
                     Indexed(
                         iterable=results,
                         view=|cx, result| view! { cx,
-                            SearchResult(name=result)
+                            SearchResult(name=result.clone(), link=format!("c/{}",result))
                         },
                     )
-                    SearchResult(name="BOTTOM TEXT".to_string())
+                    SearchResult(name="BOTTOM TEXT".to_string(), link="courses".to_string())
                 }
             }
         }
@@ -70,13 +70,17 @@ pub fn SearchBar<'a, G: Html>(
 #[derive(Prop)]
 pub struct SearchResultProps {
     name: String,
+    link: String,
 }
 // TODO: Make results fancier than plain text
 // TODO: Use custom styles based on what the search result is, would require pattern matching a more strongly typed result
 // (ex. Math Course -> Primary Color, Eng Course -> Secondary Color etc.)
 #[component]
-fn SearchResult<G: Html>(cx: Scope, SearchResultProps { name }: SearchResultProps) -> View<G> {
+fn SearchResult<G: Html>(
+    cx: Scope,
+    SearchResultProps { name, link }: SearchResultProps,
+) -> View<G> {
     view! { cx,
-        li {a (class="hover:bg-primary hover:text-primary-content") { (name) }}
+        li {a (class="hover:bg-primary hover:text-primary-content", href=link) { (name) }}
     }
 }
