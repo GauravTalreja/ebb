@@ -20,5 +20,6 @@ pub fn main<G: Html>() -> PerseusApp<G> {
         .static_alias("/tailwind.css", "dist/tailwind.css")
         .template(templates::index::get_template())
         .template(templates::about::get_template())
+        .template(templates::courses::get_template())
         .error_views(error_views::get_error_views())
 }
