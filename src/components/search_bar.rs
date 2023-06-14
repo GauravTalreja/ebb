@@ -46,7 +46,7 @@ pub fn SearchBar<'a, G: Html>(
                     type="search",
                     bind:value=input,
                     placeholder="Search for courses",
-                    class="input input-bordered input-md md:input-lg input-primary w-full",
+                    class="input input-bordered input-md text-base lg:input-lg input-primary w-full",
                     tabindex="0"
                 )
                 ul (
