@@ -15,7 +15,7 @@ pub fn Layout<'a, G: Html>(
     view! { cx,
         // These elements are styled with bright colors for demonstration purposes
         header() {
-            div (class="navbar bg-base-200 text-base-content") {
+            div (class="navbar bg-base-300 text-base-content") {
                 a (class="btn btn-md md:btn-lg btn-ghost normal-case font-bold text-xl md:text-2xl", href = "") { "UW Ebb" }
                 SearchBar (input=&input, results=&results)
             }

@@ -51,7 +51,7 @@ pub fn SearchBar<'a, G: Html>(
                 )
                 ul (
                     tabindex="0",
-                    class="dropdown-content menu p-2 shadow bg-base-100 rounded-box mt-2 w-full display:none focus-within:display:block",
+                    class="dropdown-content menu p-2 shadow-lg bg-base-200 rounded-box mt-2 w-full display:none focus-within:display:block",
                 ) {
                     // TODO: Used Keyed with a UID Key instead
                     Indexed(
