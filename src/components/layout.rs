@@ -17,7 +17,7 @@ pub fn Layout<'a, G: Html>(
         header() {
             div (class="navbar bg-base-300 text-base-content") {
                 a (class="btn btn-md md:btn-lg btn-ghost normal-case font-bold text-xl md:text-2xl", href = "") { "UW Ebb" }
-                SearchBar (input=&input, results=&results)
+                SearchBar (input=input, results=results)
             }
         }
         main(class = "p-4 min-h-screen") {
