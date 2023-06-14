@@ -1,6 +1,6 @@
 # \ExamSchedulesApi
 
-All URIs are relative to *https://openapi.data.uwaterloo.ca/v3*
+All URIs are relative to *https://openapi.data.uwaterloo.ca*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------

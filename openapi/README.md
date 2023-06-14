@@ -21,7 +21,7 @@ openapi = { path = "./openapi" }
 
 ## Documentation for API Endpoints
 
-All URIs are relative to *https://openapi.data.uwaterloo.ca/v3*
+All URIs are relative to *https://openapi.data.uwaterloo.ca*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
