@@ -1,30 +1,34 @@
+pub use crate::components::search_bar::SearchBarProps;
+use crate::components::{footer::Footer, search_bar::SearchBar};
 use sycamore::prelude::*;
 
 #[component]
-pub fn Layout<'a, G: Html>(cx: Scope<'a>, LayoutProps { children }: LayoutProps<'a, G>) -> View<G> {
+pub fn Layout<'a, G: Html>(
+    cx: Scope<'a>,
+    LayoutProps {
+        children,
+        search_bar: SearchBarProps { input, results },
+    }: LayoutProps<'a, G>,
+) -> View<G> {
     let children = children.call(cx);
 
     view! { cx,
         // These elements are styled with bright colors for demonstration purposes
         header() {
-            div (class="navbar bg-base-100")
-            a (class="btn btn-ghost normal-case text-xl") { "Ebb" }
+            div (class="navbar bg-base-200 text-base-content") {
+                a (class="btn btn-md md:btn-lg btn-ghost normal-case font-bold text-xl md:text-2xl", href = "") { "UW Ebb" }
+                SearchBar (input=&input, results=&results)
+            }
         }
-        main(class = "p-4") {
+        main(class = "p-4 min-h-screen") {
             (children)
         }
-        footer (class="footer items-center p-4 bg-neutral text-neutral-content") {
-            div (class="items-center grid-flow-col") {
-                p {"Made for CS 348 with ♥"}
-            }
-            div (class="grid-flow-col gap-4 md:place-self-center md:justify-self-end") {
-                a (class ="link link-hover", href = "about", id = "about-link") {"About"}
-            }
-        }
+        Footer
     }
 }
 
 #[derive(Prop)]
 pub struct LayoutProps<'a, G: Html> {
     pub children: Children<'a, G>,
+    pub search_bar: SearchBarProps<'a>,
 }
