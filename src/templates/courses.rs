@@ -23,17 +23,20 @@ fn courses_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a CoursesStateRx
             div (class="w-full px-8 h-24 text-base-100 font-bold text-2xl bg-primary relative") {
                 p(class="absolute bottom-3") {"Result for testing"}
             }
-            div(class="flex justify-center w-full") {
-                div (class="py-6 flex flex-row gap-10 w-11/12") {
-                    div (class = "flex-initial w-2/3") {
+            div (class="flex justify-center w-full") {
+                div (class="py-6 flex flex-row gap-10 w-11/12 ") {
+                    div (class = "flex-initial w-2/3 py-4 px-8") {
                         CourseTable()
+        
                     }
                     div (class="flex-1 w-1/6 py-4 px-8") {
-                        Filter()
+                        div (class="shadow-lg") {
+                            Filter()
+                        }
                     }
                 }
             }
-
+           
                
             
         }

@@ -32,9 +32,9 @@ pub fn FilterSection<'a, G: Html>(
     FilterScetionProps { title }: FilterScetionProps,
 ) -> View<G> {
     view! {cx,
-        div(class="relative p-4") {
+        div(class="relative p-4 bg-base-100 shadow-md") {
             h3 (class="text-lg font-semibold") { (title) }
-            div (class="flex flex-row justify-items-end w-1/3") {
+            div (class="flex flex-row justify-items-end w-1/2 left-1/2") {
                 div (class="flex flex-col w-full") {
                     CheckBox(name="testing".to_string())
                     CheckBox(name="testing".to_string())  
