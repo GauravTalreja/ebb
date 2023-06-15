@@ -16,7 +16,10 @@ pub fn Layout<'a, G: Html>(
         // These elements are styled with bright colors for demonstration purposes
         header() {
             div (class="navbar bg-base-300 text-base-content") {
-                a (class="hidden sm:flex btn btn-md lg:btn-lg btn-ghost normal-case font-bold text-2xl lg:text-4xl", href = "") { "UW Ebb" }
+                a (class="hidden sm:inline-flex btn btn-md xl:btn-lg btn-ghost normal-case font-bold text-3xl xl:text-5xl", href = "") {
+                    span (class="text-base-content") { "UW" }
+                    span (class="text-primary") { "Ebb" }
+                }
                 SearchBar (input=input, results=results)
             }
         }
