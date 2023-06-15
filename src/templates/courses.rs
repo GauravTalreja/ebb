@@ -20,17 +20,17 @@ fn courses_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a CoursesStateRx
     view! { cx,
         link ( rel="stylesheet", href="/tailwind.css")
         Layout (search_bar=search_bar_props) {
-            div (class="w-full px-8 h-24 text-base-100 font-bold text-2xl bg-primary relative") {
-                p(class="absolute bottom-3") {"Result for testing"}
+            div (class="w-full px-8 h-24 bg-primary relative") {
+                p(class="absolute bottom-3 font-bold text-2xl text-primary-content") {"Result for testing"}
             }
             div (class="flex justify-center w-full") {
-                div (class="py-6 flex flex-row gap-10 w-11/12 ") {
+                div (class="py-6 flex flex-row gap-2 w-5/6 ") {
                     div (class = "flex-initial w-2/3 py-4 px-8") {
                         CourseTable()
         
                     }
-                    div (class="flex-1 w-1/6 py-4 px-8") {
-                        div (class="shadow-lg") {
+                    div (class="flex-1 w-1/6 py-4 px-8 ") {
+                        div (class="shadow-lg rounded-md") {
                             Filter()
                         }
                     }

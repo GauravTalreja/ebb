@@ -6,17 +6,17 @@ pub fn CourseTable<'a, G: Html>(
     cx: Scope<'a>,
 ) -> View<G> {
     view! { cx,
-        div (class="overflow-x-auto w-full shadow-md") {
+        div (class="overflow-x-auto w-full shadow-md rounded-md") {
             // TODO: change header color, change hover color
             table (class="table table-auto table-md w-full") {
                 // table header
                 thead(class="") {
                     tr() {
-                        th(){} // row index
-                        th() { p(class="text-base normal-case") {"Code"} }
-                        th() { p(class="text-base normal-case") {"Course Name"} }
-                        th() { p(class="text-base normal-case") {"Location"} }
-                        th() { p(class="text-base normal-case") {"Status"} }
+                        th(class="bg-primary"){} // row index
+                        th(class="bg-primary") { p(class="text-base normal-case text-primary-content") {"Code"} }
+                        th(class="bg-primary") { p(class="text-base normal-case text-primary-content") {"Course Name"} }
+                        th(class="bg-primary") { p(class="text-base normal-case text-primary-content") {"Location"} }
+                        th(class="bg-primary") { p(class="text-base normal-case text-primary-content") {"Status"} }
                     }
                 }
                 // table content
