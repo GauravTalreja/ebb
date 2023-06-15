@@ -20,7 +20,7 @@ pub fn Layout<'a, G: Html>(
                 SearchBar (input=input, results=results)
             }
         }
-        main(class = "p-4 min-h-screen") {
+        main(class = "p-0 min-h-screen") {
             (children)
         }
         Footer
