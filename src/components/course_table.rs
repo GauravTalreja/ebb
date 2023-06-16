@@ -2,8 +2,8 @@ use sycamore::prelude::*;
 
 // table structure
 #[component]
-pub fn CourseTable<'a, G: Html>(
-    cx: Scope<'a>,
+pub fn CourseTable<G: Html>(
+    cx: Scope,
 ) -> View<G> {
     view! { cx,
         div (class="overflow-x-auto w-full shadow-md rounded-md") {

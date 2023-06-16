@@ -2,8 +2,8 @@ use sycamore::prelude::*;
 
 // table structure
 #[component]
-pub fn Filter<'a, G: Html>(
-    cx: Scope<'a>,
+pub fn Filter<G: Html>(
+    cx: Scope,
 ) -> View<G> {
     view! { cx,
         div (class="flex flex-col shadow-md rounded-md ") {
@@ -34,8 +34,8 @@ pub struct FilterScetionProps {
 }
 
 #[component]
-pub fn FilterSection<'a, G: Html>(
-    cx: Scope<'a>,
+pub fn FilterSection<G: Html>(
+    cx: Scope,
     FilterScetionProps { title }: FilterScetionProps,
 ) -> View<G> {
     view! {cx,
@@ -60,8 +60,8 @@ pub struct CheckBoxProps {
 }
 
 #[component]
-pub fn CheckBox<'a, G: Html>(
-    cx: Scope<'a>,
+pub fn CheckBox<G: Html>(
+    cx: Scope,
     CheckBoxProps { name }: CheckBoxProps,
 ) -> View<G> {
     view! {cx,
