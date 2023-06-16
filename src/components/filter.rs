@@ -6,15 +6,20 @@ pub fn Filter<'a, G: Html>(
     cx: Scope<'a>,
 ) -> View<G> {
     view! { cx,
-        div (class="relative flex flex-col shadow-md rounded-md ") {
+        div (class="flex flex-col shadow-md rounded-md ") {
             // filter title
             div (class="bg-primary p-4 font-bold rounded-t-md") { 
                 p(class="text-primary-content text-lg") { "Filter" }
             }
         
             // Term
-            div(class="left-6 rounded-b-md") {
+            div(class="flex rounded-b-md") {
                 FilterSection(title="Term".to_string())
+                
+            }
+            div(class="flex rounded-b-md") {
+                FilterSection(title="Time".to_string())
+                
             }
         }       
     }        
@@ -34,10 +39,10 @@ pub fn FilterSection<'a, G: Html>(
     FilterScetionProps { title }: FilterScetionProps,
 ) -> View<G> {
     view! {cx,
-        div(class="relative p-4 bg-base-100 rounded-b-md") {
+        div(class="relative p-4 bg-base-100 rounded-b-md w-full") {
             h3 (class="text-lg font-semibold") { (title) }
-            div (class="flex flex-row justify-items-end w-1/2 left-1/2") {
-                div (class="flex flex-col w-full") {
+            div (class="flex justify-center") {
+                div (class="flex flex-col w-1/2") {
                     CheckBox(name="testing".to_string())
                     CheckBox(name="testing".to_string())  
                 }
