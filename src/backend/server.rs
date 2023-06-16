@@ -1,14 +1,15 @@
-use std::net::SocketAddr;
-
 use crate::backend::http;
+use crate::backend::open_api;
 use crate::backend::storage::CourseStore;
 use axum::{
     http::{header::CONTENT_TYPE, Method},
     routing, Extension, Router, Server,
 };
+use perseus::web_log;
 use perseus::{
     i18n::TranslationsManager, server::ServerOptions, stores::MutableStore, turbine::Turbine,
 };
+use std::net::SocketAddr;
 use tower_http::cors::{Any, CorsLayer};
 
 pub async fn main<M, T>(
@@ -36,10 +37,17 @@ where
     T: TranslationsManager + 'static,
 {
     dotenv::dotenv().expect("Couldn't find a .env file in the proct root");
+
     let pool =
         sqlx::PgPool::connect(&std::env::var("DATABASE_URL").expect("DATABASE_ENV url not found"))
             .await
             .expect("Could not connect to database.");
+
+    let configuration = open_api::configuration();
+    web_log!(
+        "The current term is {:#?}",
+        openapi::apis::terms_api::v3_terms_current_get(&configuration).await
+    );
 
     let course_store = CourseStore::new(pool);
 
@@ -47,6 +55,7 @@ where
         .allow_methods([Method::GET, Method::POST])
         .allow_origin(Any)
         .allow_headers([CONTENT_TYPE]);
+
     let api_routes = Router::new()
         .route("/status", routing::get(hello_world))
         .route("/courses/:course_name", routing::get(http::list_courses))
