@@ -1,4 +1,5 @@
 use crate::components::{footer::Footer, search_bar::SearchBar};
+use crate::global_state::AppStateRx;
 use perseus::prelude::*;
 use serde::{Deserialize, Serialize};
 use sycamore::prelude::*;
@@ -12,7 +13,8 @@ pub struct IndexPageState {
 }
 
 fn index_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a IndexPageStateRx) -> View<G> {
-    view! { cx,
+    let global_state = Reactor::<G>::from_cx(cx).get_global_state::<AppStateRx>(cx);
+    view! { cx, div (data-theme=global_state.theme) {
         link ( rel="stylesheet", href="/tailwind.css")
         div (class="hero min-h-screen bg-base-300") {
             div (class="hero-content text-center") {
@@ -24,7 +26,7 @@ fn index_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a IndexPageStateRx
             }
         }
         Footer
-    }
+    }}
 }
 
 #[engine_only_fn]
