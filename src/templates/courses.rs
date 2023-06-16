@@ -24,15 +24,14 @@ fn courses_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a CoursesStateRx
                 p(class="absolute bottom-3 font-bold text-2xl text-primary-content") {"Result for testing"}
             }
             div (class="flex justify-center w-full") {
-                div (class="py-6 flex flex-row gap-2 w-5/6 ") {
-                    div (class = "flex-initial w-2/3 py-4 px-8") {
-                        CourseTable()
-        
+                // the responsive part doesn't work..... 
+                 div (class="flex md:flex-col lg:flex-row w-full lg:w-5/6 py-6 gap-4 justify-center ") {
+                    div (class = "flex-initial w-2/3") {
+                        CourseTable()        
                     }
-                    div (class="flex-1 w-1/6 py-4 px-8 ") {
-                        div (class="shadow-lg rounded-md") {
-                            Filter()
-                        }
+                    div (class="divider lg:divider-horizontal"){}
+                    div (class="flex-1 w-1/3 pl-8") {
+                        Filter()
                     }
                 }
             }

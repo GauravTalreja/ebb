@@ -39,7 +39,7 @@ pub fn FilterSection<'a, G: Html>(
     FilterScetionProps { title }: FilterScetionProps,
 ) -> View<G> {
     view! {cx,
-        div(class="relative p-4 bg-base-100 rounded-b-md w-full") {
+        div(class="p-4 bg-base-100 rounded-md w-full shadow-md") {
             h3 (class="text-lg font-semibold") { (title) }
             div (class="flex justify-center") {
                 div (class="flex flex-col w-1/2") {
@@ -65,9 +65,11 @@ pub fn CheckBox<'a, G: Html>(
     CheckBoxProps { name }: CheckBoxProps,
 ) -> View<G> {
     view! {cx,
-        label (class="cursor-pointer label") {
-            span (class="label-text") { (name) }
-            input (type="checkbox", class="checkbox checkbox-primary")
+        div (class="form-control") {
+            label (class="cursor-pointer label") {
+                span (class="label-text") { (name) }
+                input (type="checkbox", class="checkbox checkbox-primary")
+            }
         }
     }
 }
