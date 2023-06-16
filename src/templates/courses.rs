@@ -25,13 +25,13 @@ fn courses_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a CoursesStateRx
             }
             div (class="flex justify-center w-full") {
                 // the responsive part doesn't work..... 
-                 div (class="flex md:flex-col lg:flex-row w-full lg:w-5/6 py-6 gap-4 justify-center ") {
-                    div (class = "flex-initial w-2/3") {
-                        CourseTable()        
-                    }
-                    div (class="divider lg:divider-horizontal"){}
-                    div (class="flex-1 w-1/3 pl-8") {
+                 div (class="md:flex md:flex-row-reverse w-full lg:w-5/6 py-6 gap-4 justify-center px-4") {
+                    div (class="w-full md:flex-1 md:w-1/3") {
                         Filter()
+                    }
+                    div (class="divider md:divider-horizontal"){}                    
+                    div (class = "w-full md:flex-initial md:w-2/3") {
+                        CourseTable()        
                     }
                 }
             }
