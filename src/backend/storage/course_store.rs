@@ -12,12 +12,6 @@ impl CourseStore {
     }
 
     pub async fn select_courses(&self, course_name: &str) -> Result<Vec<Course>, Error> {
-        sqlx::query_as!(
-            Course,
-            "SELECT id, name, department FROM courses WHERE name ILIKE $1",
-            ["%", course_name, "%"].concat()
-        )
-        .fetch_all(&self.pool)
-        .await
+        Ok(Vec::new())
     }
 }
