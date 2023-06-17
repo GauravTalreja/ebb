@@ -12,11 +12,11 @@ pub fn CourseTable<G: Html>(
                 // table header
                 thead(class="") {
                     tr() {
-                        th(class="bg-primary"){} // row index
-                        th(class="bg-primary") { p(class="text-base normal-case text-primary-content") {"Code"} }
-                        th(class="bg-primary") { p(class="text-base normal-case text-primary-content") {"Course Name"} }
-                        th(class="bg-primary") { p(class="text-base normal-case text-primary-content") {"Location"} }
-                        th(class="bg-primary") { p(class="text-base normal-case text-primary-content") {"Status"} }
+                        TableColumnHead(name="".to_string())
+                        TableColumnHead(name="Code".to_string())
+                        TableColumnHead(name="Course Name".to_string())
+                        TableColumnHead(name="Location".to_string())
+                        TableColumnHead(name="Status".to_string())
                     }
                 }
                 // table content
@@ -49,6 +49,21 @@ pub fn CourseTable<G: Html>(
 
     }
         
+}
+
+// table heading
+#[derive(Prop)]
+pub struct TableColumnHeadProps {
+    name: String,
+}
+
+#[component]
+fn TableColumnHead<G: Html>(cx: Scope, 
+    TableColumnHeadProps { name  }: TableColumnHeadProps) -> View<G> {
+    view! { cx,
+        // TODO: change hover color hover:bg-primary-content
+        th(class="bg-primary") { p(class="text-base normal-case text-primary-content") { (name) } }
+    }
 }
 
 // table content
@@ -86,3 +101,4 @@ fn TableContent<G: Html>(cx: Scope,
         }
     }
 }
+

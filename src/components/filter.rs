@@ -43,7 +43,7 @@ pub fn Filter<G: Html>(
             div(class="p-4 bg-base-100 rounded-md w-full ") {
                 h3 (class="text-lg font-semibold") { "Course status" }
                 div (class="flex justify-center") {
-                    div (class="flex flex-row w-full gap-x-8") {
+                    div (class="flex flex-row flex-wrap w-full gap-x-8") {
                         CheckBox(name="Open".to_string())
                         CheckBox(name="Closed".to_string()) 
                         CheckBox(name="All".to_string())
