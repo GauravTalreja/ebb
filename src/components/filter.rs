@@ -13,14 +13,81 @@ pub fn Filter<G: Html>(
             }
         
             // Term
-            div(class="flex rounded-b-md") {
-                FilterSection(title="Term".to_string())
-                
+            div(class="flex") {
+                div(class="p-4 bg-base-100 rounded-md w-full shadow-md") {
+                    h3 (class="text-lg font-semibold") { "Term" }
+                    div (class="flex justify-center") {
+                        div (class="flex flex-row w-full gap-4") {
+                            CheckBox(name="Spring 2023".to_string())
+                            CheckBox(name="Fall 2023".to_string())  
+                        }
+                    }    
+                }             
             }
-            div(class="flex rounded-b-md") {
-                FilterSection(title="Time".to_string())
-                
+
+            // time
+            div(class="flex") {
+                div(class="p-4 bg-base-100 rounded-md w-full shadow-md") {
+                    h3 (class="text-lg font-semibold") { "Course Level" }
+                    div (class="flex justify-center") {
+                        div (class="flex flex-row w-full gap-4") {
+                            CheckBox(name="1--".to_string())
+                            CheckBox(name="2--".to_string()) 
+                            CheckBox(name="3--".to_string())
+                            CheckBox(name="4--".to_string()) 
+                            CheckBox(name="5--".to_string()) 
+                        }
+                    }  
+                }               
             }
+
+            // course status
+            div(class="flex") {
+                div(class="p-4 bg-base-100 rounded-md w-full shadow-md") {
+                    h3 (class="text-lg font-semibold") { "Course status" }
+                    div (class="flex justify-center") {
+                        div (class="flex flex-row w-full gap-4") {
+                            CheckBox(name="Open".to_string())
+                            CheckBox(name="Closed".to_string()) 
+                            CheckBox(name="All".to_string())
+                        }
+                    }    
+                }             
+            }
+
+            // period
+            div(class="flex") {
+                div(class="p-4 bg-base-100 rounded-md w-full shadow-md") {
+                    h3 (class="text-lg font-semibold") { "Period" }
+                    div (class="flex justify-center") {
+                        div (class="flex flex-row w-full gap-4") {
+                            CheckBox(name="Morning".to_string())
+                            CheckBox(name="Afternoon".to_string()) 
+                            CheckBox(name="Evening".to_string())
+                            CheckBox(name="All".to_string())
+                        }
+                    }   
+                }              
+            }
+
+            // date
+            div(class="flex") {
+                div(class="p-4 bg-base-100 rounded-md w-full shadow-md") {
+                    h3 (class="text-lg font-semibold") { "Date" }
+                    div (class="flex justify-center") {
+                        div (class="flex flex-row w-full gap-4") {
+                            CheckBox(name="Mon".to_string())
+                            CheckBox(name="Tues".to_string()) 
+                            CheckBox(name="Wed".to_string())
+                            CheckBox(name="Thur".to_string())
+                            CheckBox(name="Fri".to_string())
+                            CheckBox(name="All".to_string())
+                        }
+                    }                 
+                }
+            }
+
+            
         }       
     }        
 }
