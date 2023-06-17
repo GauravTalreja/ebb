@@ -5,7 +5,7 @@ pub async fn list_courses(
     Path(course_name): Path<String>,
     Extension(course_store): Extension<CourseStore>,
 ) -> Result<Json<Vec<Course>>, StatusCode> {
-    match course_store.select_courses(&course_name).await {
+    match course_store.select_courses_by_code(&course_name).await {
         Ok(courses) => Ok(Json(courses)),
         Err(_) => Err(StatusCode::INTERNAL_SERVER_ERROR),
     }

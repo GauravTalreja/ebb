@@ -1,8 +1,4 @@
-use std::ops::Add;
-use std::time::SystemTime;
-
-use serde::de::DeserializeOwned;
-use serde::{Deserialize, Deserializer, Serialize};
+use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Course {
@@ -14,8 +10,6 @@ pub struct Course {
     pub offerings: Vec<CourseOffering>,
     pub prerequisites: Prerequisites,
 }
-
-
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Prerequisites {

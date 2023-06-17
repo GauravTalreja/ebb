@@ -30,7 +30,7 @@ pub fn SearchBar<'a, G: Html>(
                 .await
                 .unwrap()
                 .iter()
-                .map(|course| course.name.clone())
+                .map(|course| course.title.clone())
                 .collect();
                 results.set(body);
             })

@@ -1,12 +1,7 @@
-use std::fs::File;
-use std::io::Write;
 use crate::backend::storage::StorageError;
-use crate::models::{AcademicLevel, Course, CourseOffering};
-use serde_json::Value;
-use sqlx::error::BoxDynError;
-use sqlx::postgres::PgRow;
-use sqlx::{Error, FromRow, PgPool, Postgres, Row};
-use std::time::SystemTime;
+use crate::models::Course;
+
+use sqlx::{PgPool, Postgres};
 
 #[derive(Clone)]
 pub struct CourseStore {

@@ -1,13 +1,6 @@
-use std::fs::File;
-use std::io::Write;
-use std::time::SystemTime;
-
-use serde::de::DeserializeOwned;
-use serde_json::Value;
-use sqlx::error::BoxDynError;
 use sqlx::postgres::PgRow;
 use sqlx::types::JsonValue;
-use sqlx::{Error, FromRow, PgPool, Postgres, Row};
+use sqlx::{Error, FromRow, Row};
 
 use crate::models::{AcademicLevel, Course, CourseOffering, Prerequisites};
 
