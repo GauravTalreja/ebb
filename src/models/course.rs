@@ -22,6 +22,7 @@ pub struct Prerequisites {
 }
 
 impl Course {
+    #[allow(clippy::all)]
     pub fn code(&self) -> String {
         let mut course_code = String::new();
         course_code.push_str(&self.subject_code);
@@ -40,7 +41,7 @@ impl From<String> for AcademicLevel {
     fn from(level: String) -> Self {
         match level.to_lowercase().as_str() {
             "graduate" => AcademicLevel::Graduate,
-            "undergraduate" | _ => AcademicLevel::Undergraduate,
+            _ => AcademicLevel::Undergraduate,
         }
     }
 }
