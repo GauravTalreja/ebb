@@ -1,6 +1,7 @@
 use crate::backend::http;
 use crate::backend::open_api;
 use crate::backend::storage::CourseStore;
+use crate::backend::storage::StorageConfig;
 use axum::{
     http::{header::CONTENT_TYPE, Method},
     routing, Extension, Router, Server,
@@ -44,12 +45,13 @@ where
             .expect("Could not connect to database.");
 
     let configuration = open_api::configuration();
+    let storage_configuration = StorageConfig::new(std::env::var("STORAGE_MODE").expect("STORAGE_MODE not found"));
     web_log!(
         "The current term is {:#?}",
         openapi::apis::terms_api::v3_terms_current_get(&configuration).await
     );
 
-    let course_store = CourseStore::new(pool);
+    let course_store = CourseStore::new(pool, storage_configuration);
 
     let cors_options = CorsLayer::new()
         .allow_methods([Method::GET, Method::POST])
