@@ -3,6 +3,15 @@ use sqlx::{Error, PgPool};
 
 use super::StorageConfig;
 
+macro_rules! a {
+    ($file_name:literal) => {
+        match std::env::var("STORAGE_MODE").expect("Err").as_str(){
+            "PROD" => sqlx::query_file!("src/backend/storage/prod_queries/" + $file_name),
+            _ => sqlx::query_file!("src/backend/storage/sample_queries/" + $file_name),
+        }
+    };
+}
+
 #[derive(Clone)]
 pub struct CourseStore {
     pool: PgPool,
@@ -26,9 +35,6 @@ impl CourseStore {
 
     pub async fn select_course_2(&self, course_name: &str) -> Result<Int, Error>{
         let path = self.storage_configuration.query_path.as_str();
-        sqlx::query_file!(
-            format!("{path}")
-            // "src/backend/storage/prod_queries/test_query.sql"
-        )
+        a!("PROD");
     }
 }
