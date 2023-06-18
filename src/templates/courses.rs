@@ -27,19 +27,16 @@ fn courses_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a CoursesStateRx
     view! { cx,
         link ( rel="stylesheet", href="/tailwind.css")
         Layout (search_bar=search_bar_props, theme=theme_props) {
-            div (class="w-full px-8 h-24 bg-primary relative") {
+            div (class="w-full px-8 h-20 bg-primary relative") {
                 p(class="absolute bottom-3 font-bold text-2xl text-primary-content") {"Result for testing"}
             }
-            div (class="flex justify-center w-full") {
-                // the responsive part doesn't work.....
-                 div (class="md:flex md:flex-row-reverse w-full lg:w-5/6 py-6 gap-4 justify-center px-4") {
-                    div (class="w-full md:flex-1 md:w-1/3") {
-                        Filter()
-                    }
-                    div (class="divider md:divider-horizontal"){}
-                    div (class = "w-full md:flex-initial md:w-2/3") {
-                        CourseTable()
-                    }
+            div (class="flex flex-col w-full lg:flex-row-reverse p-8") {
+                div (class="w-full lg:flex-1 lg:max-w-sm") {
+                    Filter()
+                }
+                div (class="divider lg:divider-horizontal")
+                div (class = "w-full") {
+                    CourseTable()
                 }
             }
         }
