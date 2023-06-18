@@ -16,14 +16,14 @@ impl CourseStore {
 
     pub async fn select_courses(&self, course_name: &str) -> Result<Vec<Course>, Error>{
         match self.storage_configuration.mode{
-            super::StorageConfigMode::PROD => {
+            super::StorageConfigMode::Prod => {
                 sqlx::query_file_as!(
                     Course,
                     "src/backend/storage/prod_queries/select_courses.sql",
                     ["%", course_name, "%"].concat()
                 )
             },
-            super::StorageConfigMode::SAMPLE => todo!(),
+            super::StorageConfigMode::Sample => todo!(),
         }
         .fetch_all(&self.pool)
         .await

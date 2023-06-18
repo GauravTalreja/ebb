@@ -4,8 +4,8 @@ mod course_store;
 
 #[derive(Clone, PartialEq, Debug)]
 pub enum StorageConfigMode {
-    PROD,
-    SAMPLE
+    Prod,
+    Sample
 }
 #[derive(Clone)]
 pub struct StorageConfig {
@@ -16,8 +16,8 @@ impl StorageConfig {
     pub fn new(storage_mode: String) -> Self {
         StorageConfig { mode: {
             match storage_mode.as_str() {
-                "PROD" => StorageConfigMode::PROD,
-                _ => StorageConfigMode::SAMPLE,
+                "PROD" => StorageConfigMode::Prod,
+                _ => StorageConfigMode::Sample,
             }
         }}
     }
@@ -29,11 +29,11 @@ mod tests {
 
     #[test]
     fn test_prod_value() {
-        assert_eq!(StorageConfig::new(String::from("PROD")).mode, StorageConfigMode::PROD);
+        assert_eq!(StorageConfig::new(String::from("PROD")).mode, StorageConfigMode::Prod);
     }
 
     #[test]
     fn test_non_prod_value() {
-        assert_eq!(StorageConfig::new(String::from("SAMPLE")).mode, StorageConfigMode::SAMPLE);
+        assert_eq!(StorageConfig::new(String::from("SAMPLE")).mode, StorageConfigMode::Sample);
     }
 }
