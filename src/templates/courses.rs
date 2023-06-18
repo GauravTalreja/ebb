@@ -118,7 +118,6 @@ fn courses_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a CoursesStateRx
                 p(class="absolute bottom-3 font-bold text-2xl text-primary-content") {"Result for testing"}
             }
             div (class="flex justify-center w-full") {
-                // the responsive part doesn't work..... 
                  div (class="md:flex md:flex-row-reverse w-full lg:w-5/6 py-6 gap-4 justify-center px-4") {
                     div (class="w-full md:flex-1 md:w-1/3") {
                         Filter( filterprops )
