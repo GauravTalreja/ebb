@@ -1,7 +1,5 @@
 use std::net::SocketAddr;
 
-use crate::backend::http;
-use crate::backend::storage::CourseStore;
 use axum::{
     http::{header::CONTENT_TYPE, Method},
     routing, Extension, Router, Server,
@@ -10,6 +8,9 @@ use perseus::{
     i18n::TranslationsManager, server::ServerOptions, stores::MutableStore, turbine::Turbine,
 };
 use tower_http::cors::{Any, CorsLayer};
+
+use crate::backend::http;
+use crate::backend::storage::CourseStore;
 
 pub async fn main<M, T>(
     turbine: &'static Turbine<M, T>,
@@ -35,11 +36,9 @@ where
     M: MutableStore + 'static,
     T: TranslationsManager + 'static,
 {
-    dotenv::dotenv().expect("Couldn't find a .env file in the proct root");
-    let pool =
-        sqlx::PgPool::connect(&std::env::var("DATABASE_URL").expect("DATABASE_ENV url not found"))
-            .await
-            .expect("Could not connect to database.");
+    let pool = sqlx::PgPool::connect(&std::env::var("DATABASE_URL").expect("DATABASE_URL"))
+        .await
+        .expect("Could not connect to database.");
 
     let course_store = CourseStore::new(pool);
 
@@ -49,7 +48,8 @@ where
         .allow_headers([CONTENT_TYPE]);
     let api_routes = Router::new()
         .route("/status", routing::get(hello_world))
-        .route("/courses/:course_name", routing::get(http::list_courses))
+        .route("/course/:course_code", routing::get(http::get_course))
+        .route("/courses/:course_code", routing::get(http::list_courses))
         .layer(Extension(course_store))
         .layer(cors_options);
 
