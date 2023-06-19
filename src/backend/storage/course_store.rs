@@ -1,7 +1,7 @@
+use sqlx::{PgPool, Postgres};
+
 use crate::backend::storage::StorageError;
 use crate::models::Course;
-
-use sqlx::{PgPool, Postgres};
 
 #[derive(Clone)]
 pub struct CourseStore {
@@ -13,10 +13,41 @@ impl CourseStore {
         CourseStore { pool }
     }
 
-    pub async fn select_courses_by_code(
-        &self,
-        course_code: &str,
-    ) -> Result<Vec<Course>, StorageError> {
+    /// Selects courses for the current year from a pre-built materialized view.
+    pub async fn select_courses(&self, course_code: &str) -> Result<Vec<Course>, StorageError> {
+        let sql = "
+        SELECT
+            id,
+            catalog_number,
+            subject_code,
+            title,
+            external_id,
+            offerings
+        FROM
+            mv_courses
+        WHERE
+            subject_code || catalog_number::VARCHAR ILIKE $1
+        GROUP BY
+            id,
+            title,
+            external_id,
+            subject_code,
+            catalog_number,
+            offerings
+        ORDER BY
+            catalog_number
+        LIMIT
+            100;
+        ";
+
+        sqlx::query_as::<Postgres, Course>(sql)
+            .bind(["%", &course_code.to_uppercase(), "%"].concat())
+            .fetch_all(&self.pool)
+            .await
+            .map_err(StorageError::QueryFailure)
+    }
+
+    pub async fn select_course_by_code(&self, course_code: &str) -> Result<Course, StorageError> {
         let sql = "
         SELECT
             c.id AS id,
@@ -47,15 +78,16 @@ impl CourseStore {
             LEFT JOIN optional_prerequisites op ON p.id = op.prerequisite_id
             LEFT JOIN courses oc ON op.course_id = oc.id
         WHERE
-            c.subject_code || c.catalog_number::VARCHAR ILIKE $1
+            c.subject_code || c.catalog_number::VARCHAR = $1
         GROUP BY
-            c.id;
+            c.id
+        LIMIT 1;
         ";
 
         sqlx::query_as::<Postgres, Course>(sql)
-            .bind(["%", course_code, "%"].concat())
-            .fetch_all(&self.pool)
+            .bind(course_code.to_uppercase())
+            .fetch_one(&self.pool)
             .await
-            .map_err(StorageError::QueryFailure)
+            .map_err(StorageError::MissingRecords)
     }
 }
