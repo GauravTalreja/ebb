@@ -65,23 +65,18 @@ pub fn Filter<'a, G: Html>(
      }: FilterProps<'a>,
 ) -> View<G> {
     view! { cx,
-        div (class="flex flex-col shadow-md rounded-md ") {
-            // filter title
-            div (class="bg-primary p-4 font-bold rounded-t-md") { 
-                p(class="text-primary-content text-lg") { "Filter" }
-            }
-        
-            // Term
-            div(class="p-4 bg-base-100 rounded-md w-full ") {
+        div (class="flex flex-col shadow-md rounded-box bg-base-100") {
+            p(class="rounded-box bg-primary p-4 font-bold text-primary-content text-lg") { "Filters" }
+
+            div(class="p-4") {
                 h3 (class="text-lg font-semibold") { "Term" }
                 div (class="flex justify-center") {
                     div (class="flex flex-row w-full gap-x-8") {
                         CheckBox(name="Spring 2023".to_string(), checked=currentterm)
                         CheckBox(name="Fall 2023".to_string(), checked=nextterm)                        
                     }
-                }    
-            }             
-            
+                }
+            }
 
             // level    
             div(class="p-4 bg-base-100 rounded-md w-full ") {
@@ -94,12 +89,10 @@ pub fn Filter<'a, G: Html>(
                         CheckBox(name="4--".to_string(), checked=level4) 
                         CheckBox(name="All".to_string(), checked=all_levels) 
                     }
-                }  
-            }               
-            
+                }
+            }
 
-            // course status
-            div(class="p-4 bg-base-100 rounded-md w-full ") {
+            div(class="p-4") {
                 h3 (class="text-lg font-semibold") { "Course status" }
                 div (class="flex justify-center") {
                     div (class="flex flex-row flex-wrap w-full gap-x-8") {
@@ -107,11 +100,10 @@ pub fn Filter<'a, G: Html>(
                         CheckBox(name="Closed".to_string(), checked=closed) 
                         CheckBox(name="All".to_string(), checked=all_status)
                     }
-                }    
-            }   
+                }
+            }
 
-            // period
-            div(class="p-4 bg-base-100 rounded-md w-full") {
+            div(class="p-4") {
                 h3 (class="text-lg font-semibold") { "Period" }
                 div (class="flex justify-center") {
                     div (class="flex flex-wrap w-full gap-x-8") {
@@ -120,12 +112,10 @@ pub fn Filter<'a, G: Html>(
                         CheckBox(name="Evening".to_string(), checked=evening)
                         CheckBox(name="All".to_string(), checked=all_periods)
                     }
-                }   
-            }              
-            
+                }
+            }
 
-            // date
-            div(class="p-4 bg-base-100 rounded-md w-full ") {
+            div(class="p-4") {
                 h3 (class="text-lg font-semibold") { "Date" }
                 div (class="flex justify-center") {
                     div (class="flex flex-wrap w-full gap-x-8") {
@@ -136,7 +126,7 @@ pub fn Filter<'a, G: Html>(
                         CheckBox(name="Fri".to_string(), checked=friday)
                         CheckBox(name="All".to_string(), checked=all_dates)
                     }
-                }                 
+                }
             }
             
             
@@ -172,7 +162,6 @@ pub fn Filter<'a, G: Html>(
 //     }
 // }
 
-
 // check box
 #[derive(Prop)]
 pub struct CheckBoxProps<'a> {
@@ -197,5 +186,3 @@ pub fn CheckBox<'a, G: Html>(
         }
     }
 }
-
-

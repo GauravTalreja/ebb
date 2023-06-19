@@ -1,9 +1,12 @@
-use crate::components::layout::{Layout, SearchBarProps};
-use crate::components::course_table::CourseTable;
-use crate::components::filter::Filter;
 use perseus::prelude::*;
 use serde::{Deserialize, Serialize};
 use sycamore::prelude::*;
+
+use crate::global_state::AppStateRx;
+
+use crate::components::course_table::CourseTable;
+use crate::components::filter::Filter;
+use crate::components::layout::{Layout, SearchBarProps, ThemeProps};
 
 #[derive(Serialize, Deserialize, ReactiveState, Clone)]
 #[rx(alias = "CoursesStateRx")]
@@ -46,6 +49,10 @@ pub struct CoursesState {
 }
 
 fn courses_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a CoursesStateRx) -> View<G> {
+    let global_state = Reactor::<G>::from_cx(cx).get_global_state::<AppStateRx>(cx);
+    let theme_props = ThemeProps {
+        state: &global_state.theme,
+    };
     let search_bar_props = SearchBarProps {
         input: &state.search_input,
         results: &state.search_results,
@@ -78,8 +85,8 @@ fn courses_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a CoursesStateRx
 
     view! { cx,
         link ( rel="stylesheet", href="/tailwind.css")
-        Layout (search_bar=search_bar_props) {
-            div (class="w-full px-8 h-24 bg-primary relative") {
+        Layout (search_bar=search_bar_props, theme=theme_props) {
+            div (class="w-full px-8 h-20 bg-primary relative") {
                 p(class="absolute bottom-3 font-bold text-2xl text-primary-content") {"Result for testing"}
             }
             div (class="flex justify-center w-full") {
