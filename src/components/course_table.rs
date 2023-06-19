@@ -70,17 +70,11 @@ fn TableColumnHead<G: Html>(cx: Scope,
 #[derive(Prop)]
 pub struct TableContentProps {
     
-    // TODO: include more content
     idx: String,
     code: String,
     coursename: String,
     location: String,
     status: String,
-    // subject + code e.g. CS136
-    // coursecode: String,
-    // courseName: String, 
-    // location: String,
-    // status: String,
     
 }
 // TODO: Make results fancier than plain text
