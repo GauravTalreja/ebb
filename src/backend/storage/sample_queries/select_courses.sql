@@ -5,4 +5,4 @@ SELECT
 FROM
     courses
 WHERE
-    name ILIKE $ 1
+    name ILIKE $1
