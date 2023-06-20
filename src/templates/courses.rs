@@ -59,7 +59,7 @@ fn courses_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a CoursesStateRx
         results: &state.search_results,
     };
     // course table
-    // true: (use the true version in application)
+    // true version: (use the true version in application)
     //let table_content: &state.table_content
     // test version: (remove/comment test version )
     let table_content = create_signal(cx, vec![vec![

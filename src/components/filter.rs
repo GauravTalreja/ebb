@@ -33,6 +33,9 @@ pub struct FilterProps<'a> {
     
 }
 
+// TODO: for status, use a toggle with "include closed course"
+// TODO: change level, period, dates to button-toggle, remove all_xxx
+// TODO: change term to dropdown
 #[component]
 pub fn Filter<'a, G: Html>(
     cx: Scope<'a>,
