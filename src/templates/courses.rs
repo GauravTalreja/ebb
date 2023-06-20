@@ -48,6 +48,7 @@ pub struct CoursesState {
 
 }
 
+
 fn courses_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a CoursesStateRx) -> View<G> {
     let global_state = Reactor::<G>::from_cx(cx).get_global_state::<AppStateRx>(cx);
     let theme_props = ThemeProps {
@@ -57,6 +58,21 @@ fn courses_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a CoursesStateRx
         input: &state.search_input,
         results: &state.search_results,
     };
+    // course table
+    // true: (use the true version in application)
+    //let table_content: &state.table_content
+    // test version: (remove/comment test version )
+    let table_content = create_signal(cx, vec![vec![
+                                            "abc".to_string(),
+                                            "cde".to_string(),
+                                            "eft".to_string(),
+                                            "dfs".to_string()],
+                                            vec![
+                                            "abc".to_string(),
+                                            "cde".to_string(),
+                                            "eft".to_string(),
+                                            "dfs".to_string()]]);
+    
     // term
     let currentterm = &state.currentterm;
     let nextterm = &state.nextterm;
@@ -122,7 +138,7 @@ fn courses_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a CoursesStateRx
                     }
                     div (class="divider md:divider-horizontal"){}                    
                     div (class = "w-full md:flex-initial md:w-2/3") {
-                        CourseTable()        
+                        CourseTable(table_content=table_content)        
                     }
                 }
             }         
