@@ -1,11 +1,16 @@
 use std::net::SocketAddr;
 
+// use crate::backend::{
+//     http, open_api,
+//     storage::{CourseStore, StorageConfig},
+// };
 use axum::{
     http::{header::CONTENT_TYPE, Method},
     routing, Extension, Router, Server,
 };
 use perseus::{
     i18n::TranslationsManager, server::ServerOptions, stores::MutableStore, turbine::Turbine,
+    web_log,
 };
 use tower_http::cors::{Any, CorsLayer};
 
@@ -39,13 +44,26 @@ where
     let pool = sqlx::PgPool::connect(&std::env::var("DATABASE_URL").expect("DATABASE_URL"))
         .await
         .expect("Could not connect to database.");
+//     dotenv::dotenv().expect("Couldn't find a .env file in the proct root");
 
-    let course_store = CourseStore::new(pool);
+    let pool = sqlx::PgPool::connect(&std::env::var("DATABASE_URL").expect("DATABASE_URL"))
+        .await
+        .expect("Could not connect to database.");
+
+    let openapi_config = open_api::configuration();
+    web_log!(
+        "The current term is {:#?}",
+        openapi::apis::terms_api::v3_terms_current_get(&openapi_config).await
+    );
+
+    let storage_config = StorageConfig::new(std::env::var("STORAGE_MODE").expect("STORAGE_MODE"));
+    let course_store = CourseStore::new(pool, storage_config);
 
     let cors_options = CorsLayer::new()
         .allow_methods([Method::GET, Method::POST])
         .allow_origin(Any)
         .allow_headers([CONTENT_TYPE]);
+
     let api_routes = Router::new()
         .route("/status", routing::get(hello_world))
         .route("/course/:course_code", routing::get(http::get_course))

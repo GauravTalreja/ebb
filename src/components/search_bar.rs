@@ -46,12 +46,12 @@ pub fn SearchBar<'a, G: Html>(
                     type="search",
                     bind:value=input,
                     placeholder="Search for courses",
-                    class="input input-bordered input-md md:input-lg input-primary w-full",
+                    class="input input-bordered input-md text-base xl:input-lg input-primary w-full",
                     tabindex="0"
                 )
                 ul (
                     tabindex="0",
-                    class="dropdown-content menu p-2 shadow-lg bg-base-200 rounded-box mt-2 w-full display:none focus-within:display:block",
+                    class="dropdown-content menu xl:menu-lg p-2 shadow-lg bg-base-200 rounded-box mt-2 w-full display:none focus-within:display:block",
                 ) {
                     // TODO: Used Keyed with a UID Key instead
                     Indexed(
@@ -81,6 +81,6 @@ fn SearchResult<G: Html>(
     SearchResultProps { name, link }: SearchResultProps,
 ) -> View<G> {
     view! { cx,
-        li {a (class="hover:bg-primary hover:text-primary-content", href=link) { (name) }}
+        li {a (href=link) { (name) }}
     }
 }
