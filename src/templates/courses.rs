@@ -5,7 +5,7 @@ use sycamore::prelude::*;
 use crate::global_state::AppStateRx;
 
 use crate::components::course_table::CourseTable;
-use crate::components::filter::Filter;
+use crate::components::filter::{Filter, FilterProps};
 use crate::components::layout::{Layout, SearchBarProps, ThemeProps};
 
 #[derive(Serialize, Deserialize, ReactiveState, Clone)]
@@ -17,7 +17,7 @@ pub struct CoursesState {
 
     // TODO: populate course_table with query result
     // table content
-    table_content: Vec<Vec<String>>,
+    table_content: Vec<Vec<String>>, // test version
 
     // filter
     // term
@@ -73,31 +73,33 @@ fn courses_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a CoursesStateRx
                                             "eft".to_string(),
                                             "dfs".to_string()]]);
     
-    // term
-    let currentterm = &state.currentterm;
-    let nextterm = &state.nextterm;
-    // level
-    let level1 = &state.level1;
-    let level2 = &state.level2;
-    let level3 = &state.level3;
-    let level4 = &state.level4;
-    let all_levels = &state.all_levels;
-    // status
-    let open = &state.open;
-    let closed = &state.closed;
-    let all_status = &state.all_status;
-    // period
-    let morning = &state.morning;
-    let afternoon = &state.afternoon;
-    let evening = &state.evening;
-    let all_periods = &state.all_periods;
-    // dates
-    let monday = &state.monday;
-    let tuesday = &state.tuesday;
-    let wednesday = &state.wednesday;
-    let thursday = &state.thursday;
-    let friday = &state.friday;
-    let all_dates = &state.all_dates;
+    let filterprops = FilterProps {
+        // term
+        currentterm: &state.currentterm,
+        nextterm: &state.nextterm,
+        // level
+        level1: &state.level1,
+        level2: &state.level2,
+        level3: &state.level3,
+        level4: &state.level4,
+        all_levels: &state.all_levels,
+        // status
+        open: &state.open,
+        closed: &state.closed,
+        all_status: &state.all_status,
+        // period
+        morning: &state.morning,
+        afternoon: &state.afternoon,
+        evening: &state.evening,
+        all_periods: &state.all_periods,
+        // dates
+        monday: &state.monday,
+        tuesday: &state.tuesday,
+        wednesday: &state.wednesday,
+        thursday: &state.thursday,
+        friday: &state.friday,
+        all_dates: &state.all_dates,
+    };
 
     view! { cx,
         link ( rel="stylesheet", href="/tailwind.css")
@@ -109,32 +111,7 @@ fn courses_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a CoursesStateRx
                 // the responsive part doesn't work..... 
                  div (class="md:flex md:flex-row-reverse w-full lg:w-5/6 py-6 gap-4 justify-center px-4") {
                     div (class="w-full md:flex-1 md:w-1/3") {
-                        Filter(
-                            currentterm=currentterm,
-                            nextterm = nextterm,
-                            // level
-                            level1 = level1,
-                            level2 = level2,
-                            level3 = level3,
-                            level4 = level4,
-                            all_levels = all_levels,
-                            // status
-                            open = open,
-                            closed = closed,
-                            all_status = all_status,
-                            // period
-                            morning = morning,
-                            afternoon = afternoon,
-                            evening = evening,
-                            all_periods = all_periods,
-                            // dates
-                            monday = monday,
-                            tuesday = tuesday,
-                            wednesday = wednesday,
-                            thursday = thursday,
-                            friday = friday,
-                            all_dates = all_dates,
-                        )
+                        Filter( filterprops )
                     }
                     div (class="divider md:divider-horizontal"){}                    
                     div (class = "w-full md:flex-initial md:w-2/3") {
