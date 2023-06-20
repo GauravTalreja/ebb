@@ -1,8 +1,10 @@
 use sycamore::prelude::*;
 
 
+
+
 #[derive(Prop)]
-pub struct FilterElement<'a> {
+pub struct FilterProps<'a> {
     // term
     pub currentterm: &'a RcSignal<bool>,
     pub nextterm: &'a RcSignal<bool>,
@@ -28,12 +30,7 @@ pub struct FilterElement<'a> {
     pub thursday: &'a RcSignal<bool>,
     pub friday: &'a RcSignal<bool>,
     pub all_dates: &'a RcSignal<bool>,
-}
-
-
-#[derive(Prop)]
-pub struct FilterProps<'a> {
-    filterelement: FilterElement<'a>
+    
 }
 
 // TODO: for status, use a toggle with "include closed course"
@@ -42,7 +39,33 @@ pub struct FilterProps<'a> {
 #[component]
 pub fn Filter<'a, G: Html>(
     cx: Scope<'a>,
-    FilterProps { filterelement }: FilterProps<'a>,
+    FilterProps { 
+        currentterm,
+        nextterm,
+        // level
+        level1,
+        level2,
+        level3,
+        level4,
+        all_levels,
+        // status
+        open,
+        closed,
+        all_status,
+        // period
+        morning,
+        afternoon,
+        evening,
+        all_periods,
+        // dates
+        monday,
+        tuesday,
+        wednesday,
+        thursday,
+        friday,
+        all_dates,                 
+
+     }: FilterProps<'a>,
 ) -> View<G> {
     view! { cx,
         div (class="flex flex-col shadow-md rounded-box bg-base-100") {
@@ -52,8 +75,8 @@ pub fn Filter<'a, G: Html>(
                 h3 (class="text-lg font-semibold") { "Term" }
                 div (class="flex justify-center") {
                     div (class="flex flex-row w-full gap-x-8") {
-                        CheckBox(name="Spring 2023".to_string(), checked=filterelement.currentterm)
-                        CheckBox(name="Fall 2023".to_string(), checked=filterelement.nextterm)                        
+                        CheckBox(name="Spring 2023".to_string(), checked=currentterm)
+                        CheckBox(name="Fall 2023".to_string(), checked=nextterm)                        
                     }
                 }
             }
@@ -63,11 +86,11 @@ pub fn Filter<'a, G: Html>(
                 h3 (class="text-lg font-semibold") { "Course Level" }
                 div (class="flex justify-center") {
                     div (class="flex flex-wrap w-full gap-x-8") {
-                        CheckBox(name="1--".to_string(), checked=filterelement.level1)
-                        CheckBox(name="2--".to_string(), checked=filterelement.level2) 
-                        CheckBox(name="3--".to_string(), checked=filterelement.level3)
-                        CheckBox(name="4--".to_string(), checked=filterelement.level4) 
-                        CheckBox(name="All".to_string(), checked=filterelement.all_levels) 
+                        CheckBox(name="1--".to_string(), checked=level1)
+                        CheckBox(name="2--".to_string(), checked=level2) 
+                        CheckBox(name="3--".to_string(), checked=level3)
+                        CheckBox(name="4--".to_string(), checked=level4) 
+                        CheckBox(name="All".to_string(), checked=all_levels) 
                     }
                 }
             }
@@ -76,9 +99,9 @@ pub fn Filter<'a, G: Html>(
                 h3 (class="text-lg font-semibold") { "Course status" }
                 div (class="flex justify-center") {
                     div (class="flex flex-row flex-wrap w-full gap-x-8") {
-                        CheckBox(name="Open".to_string(), checked=filterelement.open)
-                        CheckBox(name="Closed".to_string(), checked=filterelement.closed) 
-                        CheckBox(name="All".to_string(), checked=filterelement.all_status)
+                        CheckBox(name="Open".to_string(), checked=open)
+                        CheckBox(name="Closed".to_string(), checked=closed) 
+                        CheckBox(name="All".to_string(), checked=all_status)
                     }
                 }
             }
@@ -87,10 +110,10 @@ pub fn Filter<'a, G: Html>(
                 h3 (class="text-lg font-semibold") { "Period" }
                 div (class="flex justify-center") {
                     div (class="flex flex-wrap w-full gap-x-8") {
-                        CheckBox(name="Morning".to_string(), checked=filterelement.morning)
-                        CheckBox(name="Afternoon".to_string(), checked=filterelement.afternoon) 
-                        CheckBox(name="Evening".to_string(), checked=filterelement.evening)
-                        CheckBox(name="All".to_string(), checked=filterelement.all_periods)
+                        CheckBox(name="Morning".to_string(), checked=morning)
+                        CheckBox(name="Afternoon".to_string(), checked=afternoon) 
+                        CheckBox(name="Evening".to_string(), checked=evening)
+                        CheckBox(name="All".to_string(), checked=all_periods)
                     }
                 }
             }
@@ -99,12 +122,12 @@ pub fn Filter<'a, G: Html>(
                 h3 (class="text-lg font-semibold") { "Date" }
                 div (class="flex justify-center") {
                     div (class="flex flex-wrap w-full gap-x-8") {
-                        CheckBox(name="Mon".to_string(), checked=filterelement.monday)
-                        CheckBox(name="Tues".to_string(), checked=filterelement.tuesday) 
-                        CheckBox(name="Wed".to_string(), checked=filterelement.wednesday)
-                        CheckBox(name="Thur".to_string(), checked=filterelement.thursday)
-                        CheckBox(name="Fri".to_string(), checked=filterelement.friday)
-                        CheckBox(name="All".to_string(), checked=filterelement.all_dates)
+                        CheckBox(name="Mon".to_string(), checked=monday)
+                        CheckBox(name="Tues".to_string(), checked=tuesday) 
+                        CheckBox(name="Wed".to_string(), checked=wednesday)
+                        CheckBox(name="Thur".to_string(), checked=thursday)
+                        CheckBox(name="Fri".to_string(), checked=friday)
+                        CheckBox(name="All".to_string(), checked=all_dates)
                     }
                 }
             }
