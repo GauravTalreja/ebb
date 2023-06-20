@@ -4,6 +4,7 @@ use sycamore::prelude::*;
 
 use crate::global_state::AppStateRx;
 
+use crate::models::Course;
 use crate::components::course_table::CourseTable;
 use crate::components::filter::{Filter, FilterProps};
 use crate::components::layout::{Layout, SearchBarProps, ThemeProps};
@@ -17,7 +18,7 @@ pub struct CoursesState {
 
     // TODO: populate course_table with query result
     // table content
-    table_content: Vec<Vec<String>>, // test version
+    table_content: Vec<Course>, // test version
 
     // filter
     // term
@@ -58,20 +59,11 @@ fn courses_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a CoursesStateRx
         input: &state.search_input,
         results: &state.search_results,
     };
-    // course table
-    // true version: (use the true version in application)
-    //let table_content: &state.table_content
-    // test version: (remove/comment test version )
-    let table_content = create_signal(cx, vec![vec![
-                                            "abc".to_string(),
-                                            "cde".to_string(),
-                                            "eft".to_string(),
-                                            "dfs".to_string()],
-                                            vec![
-                                            "abc".to_string(),
-                                            "cde".to_string(),
-                                            "eft".to_string(),
-                                            "dfs".to_string()]]);
+    // course table 
+    // run version: (use the run version in application)
+    let table_content = &state.table_content;
+    // test version: 
+    // let table_content = create_signal(cx, vec![Course { id: 123, name: "dasfja".to_string(), department: "sdfs".to_string(),},]);
     
     let filterprops = FilterProps {
         // term

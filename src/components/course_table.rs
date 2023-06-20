@@ -1,13 +1,15 @@
 use sycamore::prelude::*;
 
+use crate::models::Course;
+
 // table input
 #[derive(Prop)]
 pub struct CourseTableProps<'a>  {
-    // true version (use true version when populatin data)
-    // pub table_content: &'a RcSignal<Vec<Vec<String>>>,
+    // run version (use true version when populatin data)
+    pub table_content: &'a RcSignal<Vec<Course>>,
 
     // test version (remove or comment when )
-    pub table_content: &'a Signal<Vec<Vec<String>>>,
+    // pub table_content: &'a Signal<Vec<Course>>,
 }
 
 
@@ -35,13 +37,14 @@ pub fn CourseTable<'a, G: Html>(
                         view=|cx, content| view! { cx,
                             TableContent(
                                 
-                                code=content[0].clone(),
-                                coursename=content[1].clone(),
-                                location=content[2].clone(),
-                                status=content[3].clone()
+                                code="course code".to_string(),
+                                coursename=content.name.clone(),
+                                location=content.department.clone(),
+                                status="status".to_string()
                             )
                         }
                     )
+                    // test content (static)
                     TableContent(
                                 code="CS136".to_string(),
                                 coursename="Elementary Algorithm Design and Data Abstraction".to_string(),
