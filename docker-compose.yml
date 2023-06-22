@@ -1,8 +1,8 @@
 version: '3.8'
 
 services:
-  postgres:
-    container_name: ebb_testdb
+  sample:
+    container_name: ebb_sample_db
     image: postgres:latest
     environment:
       POSTGRES_USER: ebb
@@ -10,7 +10,20 @@ services:
       POSTGRES_DB: ebb
       PGDATA: /data/postgres
     volumes:
-      - postgres-db:/data/postgres
+      - postgres-db:/data/ebb_sample_db
+    ports:
+      - "5431:5432"
+
+  prod:
+    container_name: ebb_prod_db
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: ebb
+      POSTGRES_PASSWORD: ebb
+      POSTGRES_DB: ebb
+      PGDATA: /data/postgres
+    volumes:
+      - postgres-db:/data/ebb_prod_db
     ports:
       - "5432:5432"
 

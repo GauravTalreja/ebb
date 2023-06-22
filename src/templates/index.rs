@@ -16,6 +16,7 @@ fn index_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a IndexPageStateRx
     let global_state = Reactor::<G>::from_cx(cx).get_global_state::<AppStateRx>(cx);
     view! { cx, div (data-theme=global_state.theme) {
         link ( rel="stylesheet", href="/tailwind.css")
+
         div (class="hero min-h-screen bg-base-300") {
             div (class="hero-content text-center") {
                 div (class="max-w-7xl") {

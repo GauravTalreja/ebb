@@ -5,7 +5,6 @@ mod backend;
 mod components;
 mod error_views;
 mod global_state;
-mod models;
 mod templates;
 
 #[perseus::main(backend::server::main)]
