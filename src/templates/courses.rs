@@ -60,7 +60,7 @@ fn courses_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a CoursesStateRx
     };
     // course table 
     // run version: (use the run version in application)
-    // let search_str = &state.search_input;
+    let search_str = &state.search_input;
     let table_content = &state.table_content;
         
     let filterprops = FilterProps {
@@ -102,7 +102,7 @@ fn courses_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a CoursesStateRx
                     div (class="divider md:divider-horizontal"){}                    
                     div (class = "w-full md:flex-initial md:w-2/3") {
                         // CourseTable(search_str=search_str, table_content=table_content)    
-                        CourseTable(table_content=table_content)    
+                        CourseTable(search_str=search_str, table_content=table_content)    
                     }
                 }
             }         

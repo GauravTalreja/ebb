@@ -7,7 +7,7 @@ use models::CourseSummary;
 // table input
 #[derive(Prop)]
 pub struct CourseTableProps<'a>  {
-    // pub search_str: &'a RcSignal<String>,
+    pub search_str: &'a RcSignal<String>,
     pub table_content: &'a RcSignal<Vec<CourseSummary>>,
 
 }
@@ -17,11 +17,13 @@ pub struct CourseTableProps<'a>  {
 #[component]
 pub fn CourseTable<'a, G: Html>(
     cx: Scope<'a>,
-    CourseTableProps { table_content }: CourseTableProps<'a>,
+    CourseTableProps { search_str, table_content }: CourseTableProps<'a>,
 ) -> View<G> {
     #[cfg(client)]
     spawn_local_scoped(cx, async {
-        let body = reqwasm::http::Request::get("/api/v1/courses/cs")
+        let body = reqwasm::http::Request::get(
+                    format!("/api/v1/courses/{}", search_str.get()).as_str(),
+                )
         .send()
         .await
         .unwrap()
