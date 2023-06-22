@@ -1,5 +1,8 @@
 use sycamore::prelude::*;
 
+#[cfg(client)]
+use perseus::prelude::spawn_local_scoped;
+
 
 use models::CourseSummary;
 
