@@ -19,9 +19,8 @@ pub struct CourseTableProps<'a>  {
 #[component]
 pub fn CourseTable<'a, G: Html>(
     cx: Scope<'a>,
-    CourseTableProps { search_str: _, table_content }: CourseTableProps<'a>,
+    CourseTableProps { search_str, table_content }: CourseTableProps<'a>,
 ) -> View<G> {
-    #[cfg(client)]
     create_effect_scoped(cx, |cx| {
         if !search_str.get().is_empty() {
                 spawn_local_scoped(cx, async {
