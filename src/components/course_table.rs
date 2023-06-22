@@ -21,7 +21,7 @@ pub fn CourseTable<'a, G: Html>(
 ) -> View<G> {
     #[cfg(client)]
     spawn_local_scoped(cx, async {
-        let body = reqwasm::http::Request::get("/api/v1/courses/")
+        let body = reqwasm::http::Request::get("/api/v1/courses/cs")
         .send()
         .await
         .unwrap()
@@ -30,6 +30,7 @@ pub fn CourseTable<'a, G: Html>(
         .unwrap()
         .to_vec();
 
+        
         table_content.set(body);
     });
 
@@ -84,6 +85,7 @@ pub fn CourseTable<'a, G: Html>(
                 }
 
             }
+            
         }
 
     }
