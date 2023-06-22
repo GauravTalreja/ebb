@@ -1,11 +1,12 @@
 use sycamore::prelude::*;
 
-use crate::models::Course;
+#[cfg(client)]
+use models::CourseSummary;
 
 // table input
 #[derive(Prop)]
 pub struct CourseTableProps<'a>  {
-    pub table_content: &'a RcSignal<Vec<Course>>,
+    pub table_content: &'a RcSignal<Vec<CourseSummary>>,
 
 }
 
@@ -32,10 +33,11 @@ pub fn CourseTable<'a, G: Html>(
                     Keyed (
                         iterable=table_content,
                         view=|cx, content| view! { cx,
+                            // need change here
                             TableContent(
-                                code="course code".to_string(),
-                                coursename=content.name.clone(),
-                                location=content.department.clone(),
+                                code=content.subject_code.clone() + &content.catalog_number.to_string(),
+                                coursename=content.title.clone(),
+                                location="UW".to_string(),
                                 status="status".to_string()
                             )
                         },

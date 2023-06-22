@@ -4,7 +4,9 @@ use sycamore::prelude::*;
 
 use crate::global_state::AppStateRx;
 
-use crate::models::Course;
+#[cfg(client)]
+use models::CourseSummary;
+
 use crate::components::course_table::CourseTable;
 use crate::components::filter::{Filter, FilterProps};
 use crate::components::layout::{Layout, SearchBarProps, ThemeProps};
@@ -18,7 +20,7 @@ pub struct CoursesState {
 
     // TODO: populate course_table with query result
     // table content
-    table_content: Vec<Course>, // test version
+    table_content: Vec<CourseSummary>, // test version
 
     // filter
     // term

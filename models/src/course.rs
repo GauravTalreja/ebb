@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, Serialize, Deserialize, Eq, PartialEq, Hash)]
 pub struct CourseSummary {
     pub id: i32,
     pub catalog_number: i16,
@@ -10,7 +10,7 @@ pub struct CourseSummary {
     pub offerings: OfferingSummaries,
 }
 
-#[derive(Clone, Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, Serialize, Deserialize, Eq, PartialEq, Hash)]
 pub struct OfferingSummary {
     pub year: i16,
     pub term: String,
@@ -18,7 +18,7 @@ pub struct OfferingSummary {
     pub current_enrollment: i16,
 }
 
-#[derive(Clone, Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, Serialize, Deserialize, Eq, PartialEq, Hash)]
 #[serde(transparent)]
 pub struct OfferingSummaries(Vec<OfferingSummary>);
 
