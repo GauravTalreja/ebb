@@ -124,23 +124,19 @@ async fn get_build_state(_info: StateGeneratorInfo<()>) -> CoursesState {
         level2: false,
         level3: false,
         level4: false,
-        all_levels: false,
         // status
         open: false,
         closed: false,
-        all_status: false,
         // period
         morning: false,
         afternoon: false,
         evening: false,
-        all_periods: false,
         // dates
         monday: false,
         tuesday: false,
         wednesday: false,
         thursday: false,
         friday: false,
-        all_dates: false,
     }
 }
 
