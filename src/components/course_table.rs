@@ -32,9 +32,7 @@ pub fn CourseTable<'a, G: Html>(
                     .json::<Vec<CourseSummary>>()
                     .await
                     .unwrap()
-                    .iter()
-                    .cloned()
-                    .collect();
+                    .to_vec();
 
                     table_content.set(body);
                 })
