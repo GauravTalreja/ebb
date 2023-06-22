@@ -1,4 +1,5 @@
 use sycamore::prelude::*;
+use perseus::Request;
 
 #[cfg(client)]
 use perseus::prelude::spawn_local_scoped;
