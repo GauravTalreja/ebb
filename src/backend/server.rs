@@ -1,7 +1,4 @@
-use crate::backend::{
-    http, open_api,
-    storage::{CourseStore, StorageConfig},
-};
+use crate::backend::{http, open_api};
 use axum::{
     http::{header::CONTENT_TYPE, Method},
     routing, Extension, Router, Server,
@@ -10,6 +7,8 @@ use perseus::{
     i18n::TranslationsManager, server::ServerOptions, stores::MutableStore, turbine::Turbine,
     web_log,
 };
+use production;
+use sample;
 use std::net::SocketAddr;
 use tower_http::cors::{Any, CorsLayer};
 
@@ -21,9 +20,18 @@ pub async fn main<M, T>(
     M: MutableStore + 'static,
     T: TranslationsManager + 'static,
 {
+    dotenvy::dotenv().expect("Couldn't find a .env file in the project root");
+
     let addr: SocketAddr = format!("{}:{}", host, port)
         .parse()
         .expect("Invalid address provided to bind to.");
+
+    let openapi_config = open_api::configuration();
+    web_log!(
+        "The current term is {:#?}",
+        openapi::apis::terms_api::v3_terms_current_get(&openapi_config).await
+    );
+
     let api_router = create_router(turbine, options).await;
 
     Server::bind(&addr)
@@ -37,20 +45,14 @@ where
     M: MutableStore + 'static,
     T: TranslationsManager + 'static,
 {
-    dotenv::dotenv().expect("Couldn't find a .env file in the proct root");
-
-    let pool = sqlx::PgPool::connect(&std::env::var("DATABASE_URL").expect("DATABASE_URL"))
-        .await
-        .expect("Could not connect to database.");
-
-    let openapi_config = open_api::configuration();
-    web_log!(
-        "The current term is {:#?}",
-        openapi::apis::terms_api::v3_terms_current_get(&openapi_config).await
-    );
-
-    let storage_config = StorageConfig::new(std::env::var("STORAGE_MODE").expect("STORAGE_MODE"));
-    let course_store = CourseStore::new(pool, storage_config);
+    let store = match std::env::var("STORAGE_MODE")
+        .expect("STORAGE_MODE must be defined in the .env file")
+        .as_str()
+    {
+        "PROD" => production::prod_store().await,
+        "SAMPLE" => sample::sample_store().await,
+        _ => unimplemented!(),
+    };
 
     let cors_options = CorsLayer::new()
         .allow_methods([Method::GET, Method::POST])
@@ -59,8 +61,8 @@ where
 
     let api_routes = Router::new()
         .route("/status", routing::get(hello_world))
-        .route("/courses/:course_name", routing::get(http::list_courses))
-        .layer(Extension(course_store))
+        .route("/courses/:course_code", routing::get(http::list_courses))
+        .layer(Extension(store))
         .layer(cors_options);
 
     perseus_axum::get_router(turbine, opts)
