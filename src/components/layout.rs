@@ -24,7 +24,7 @@ pub fn Layout<'a, G: Html>(
                 ThemeChange (state=state)
             }
         }
-        main(class = "p-4 min-h-screen") {
+        main(class = "p-0 min-h-screen bg-base-200 w-full") {
             (children)
         }
         Footer
