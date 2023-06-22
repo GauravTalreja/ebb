@@ -1,7 +1,26 @@
 # ebb
 UWaterloo Course Search Tool, CS 348 Project
 
-## Requirements
+## Workspace
+    ebb/
+    ├── models
+    ├── openapi
+    ├── production
+    ├── sample
+    ├── src/
+    │   ├── backend
+    │   ├── components
+    │   └── templates
+    └── stores
+
+`models` are shared across `backend`, frontend `components` and `templates`, and also used for queries in `sample` and `production`.
+
+`stores` defines traits implemented by `sample` and `production` and dynamically dispatched by ``backend``.
+
+
+`openapi` consists of generated bindings for the [v3 Waterloo OpenData API](https://openapi.data.uwaterloo.ca/swagger/v1/swagger.json).
+
+## Dev Requirements
 
 1. [Rust](https://www.rust-lang.org/tools/install)
 2. [npm](https://nodejs.org/en/download/package-manager)
@@ -15,7 +34,7 @@ UWaterloo Course Search Tool, CS 348 Project
     cargo install sqlx-cli --no-default-features --features native-tls,postgres
     ```
 
-## Development Setup
+## Dev Setup
 
 1. Clone the repository.
     ```sh
@@ -27,13 +46,18 @@ UWaterloo Course Search Tool, CS 348 Project
     ```sh
     npm install
     ```
-3. Copy ``env/dev.env`` to the project root and rename it to ``.env``.
-4. Run a local Postgres container.
+3. Copy ``env/sample.env`` or ``env/prod.env`` to the project root and rename it to ``.env``. Add your ``API_KEY``.
+4. Run local Postgres containers for the sample and prod databases.
     ```
     docker compose up
     ```
 5. Run ebb migrations. This is necessary because all sqlx macro queries are checked at compile time, and that requires access to a database with the correct schema. It is possible to build without this by removing ``DATABASE_URL`` from the ``.env`` file, in which case sqlx relies on the ``sqlx-data.json`` file. However, you probably want to connect to an actual database during development to test your changes.
     ```
+    cd sample
+    sqlx migrate run
+    ```
+    ```
+    cd production
     sqlx migrate run
     ```
 
