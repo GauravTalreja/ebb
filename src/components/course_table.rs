@@ -5,11 +5,8 @@ use crate::models::Course;
 // table input
 #[derive(Prop)]
 pub struct CourseTableProps<'a>  {
-    // run version (use true version when populatin data)
     pub table_content: &'a RcSignal<Vec<Course>>,
 
-    // test version (remove or comment when )
-    // pub table_content: &'a Signal<Vec<Course>>,
 }
 
 
@@ -32,17 +29,17 @@ pub fn CourseTable<'a, G: Html>(
                     }
                 }
                 tbody() {
-                    Indexed (
+                    Keyed (
                         iterable=table_content,
                         view=|cx, content| view! { cx,
                             TableContent(
-                                
                                 code="course code".to_string(),
                                 coursename=content.name.clone(),
                                 location=content.department.clone(),
                                 status="status".to_string()
                             )
-                        }
+                        },
+                        key=|content| content.clone(),
                     )
                     // test content (static)
                     TableContent(

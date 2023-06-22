@@ -88,7 +88,6 @@ pub fn Filter<'a, G: Html>(
                         CheckBox(name="2--".to_string(), checked=level2) 
                         CheckBox(name="3--".to_string(), checked=level3)
                         CheckBox(name="4--".to_string(), checked=level4) 
-                        CheckBox(name="All".to_string(), checked=all_levels) 
                     }
                 }
             }
@@ -99,7 +98,6 @@ pub fn Filter<'a, G: Html>(
                     div (class="flex flex-row flex-wrap w-full gap-x-8") {
                         CheckBox(name="Open".to_string(), checked=open)
                         CheckBox(name="Closed".to_string(), checked=closed) 
-                        CheckBox(name="All".to_string(), checked=all_status)
                     }
                 }
             }
@@ -111,7 +109,6 @@ pub fn Filter<'a, G: Html>(
                         CheckBox(name="Morning".to_string(), checked=morning)
                         CheckBox(name="Afternoon".to_string(), checked=afternoon) 
                         CheckBox(name="Evening".to_string(), checked=evening)
-                        CheckBox(name="All".to_string(), checked=all_periods)
                     }
                 }
             }
@@ -125,7 +122,6 @@ pub fn Filter<'a, G: Html>(
                         CheckBox(name="Wed".to_string(), checked=wednesday)
                         CheckBox(name="Thur".to_string(), checked=thursday)
                         CheckBox(name="Fri".to_string(), checked=friday)
-                        CheckBox(name="All".to_string(), checked=all_dates)
                     }
                 }
             }
@@ -137,31 +133,6 @@ pub fn Filter<'a, G: Html>(
     }        
 }
 
-// // filter section
-// #[derive(Prop)]
-// pub struct FilterScetionProps {
-//     title: String,
-//     // TODO: allow multiple filter selections 
-//     // names: Vec<String>,
-// }
-
-// #[component]
-// pub fn FilterSection<G: Html>(
-//     cx: Scope,
-//     FilterScetionProps { title }: FilterScetionProps,
-// ) -> View<G> {
-//     view! {cx,
-//         div(class="p-4 bg-base-100 rounded-md w-full shadow-md") {
-//             h3 (class="text-lg font-semibold") { (title) }
-//             div (class="flex justify-center") {
-//                 div (class="flex flex-col w-1/2") {
-//                     CheckBox(name="testing".to_string())
-//                     CheckBox(name="testing".to_string())  
-//                 }
-//             }          
-//         }
-//     }
-// }
 
 // check box
 #[derive(Prop)]
