@@ -50,6 +50,33 @@ pub struct CoursesState {
 
 
 fn courses_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a CoursesStateRx) -> View<G> {
+    // temp table_content
+    let input = &state.search_input;
+    let table_content = &state.table_content;
+    #[cfg(client)]
+    create_effect_scoped(cx, |cx| {
+        if !input.get().is_empty() {
+            spawn_local_scoped(cx, async {
+                let body = reqwasm::http::Request::get(
+                    format!("/api/v1/courses/{}", input.get()).as_str(),
+                )
+                .send()
+                .await
+                .unwrap()
+                .json::<Vec<CourseSummary>>()
+                .await
+                .unwrap()
+                .to_vec();
+
+                table_content.set(body);
+                
+            })
+        } else {
+            table_content.set(vec![]);
+        }
+    });
+
+    // variables
     let global_state = Reactor::<G>::from_cx(cx).get_global_state::<AppStateRx>(cx);
     let theme_props = ThemeProps {
         state: &global_state.theme,
@@ -59,9 +86,7 @@ fn courses_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a CoursesStateRx
         results: &state.search_results,
     };
     // course table 
-    // run version: (use the run version in application)
-    let search_str = &state.search_input;
-    let table_content = &state.table_content;
+    // let table_content = &state.table_content;
         
     let filterprops = FilterProps {
         // term
@@ -102,7 +127,7 @@ fn courses_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a CoursesStateRx
                     div (class="divider md:divider-horizontal"){}                    
                     div (class = "w-full md:flex-initial md:w-2/3") {
                         // CourseTable(search_str=search_str, table_content=table_content)    
-                        CourseTable(search_str=search_str, table_content=table_content)    
+                        CourseTable(table_content=table_content)    
                     }
                 }
             }         
