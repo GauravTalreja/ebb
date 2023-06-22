@@ -20,6 +20,7 @@ pub struct CoursesState {
 
     // TODO: populate course_table with query result
     // table content
+
     table_content: Vec<CourseSummary>, // test version
 
     // filter
@@ -59,10 +60,9 @@ fn courses_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a CoursesStateRx
     };
     // course table 
     // run version: (use the run version in application)
+    let search_str = &state.search_input;
     let table_content = &state.table_content;
-    // test version: 
-    // let table_content = create_signal(cx, vec![Course { id: 123, name: "dasfja".to_string(), department: "sdfs".to_string(),},]);
-    
+        
     let filterprops = FilterProps {
         // term
         currentterm: &state.currentterm,
@@ -101,7 +101,7 @@ fn courses_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a CoursesStateRx
                     }
                     div (class="divider md:divider-horizontal"){}                    
                     div (class = "w-full md:flex-initial md:w-2/3") {
-                        CourseTable(table_content=table_content)        
+                        CourseTable(search_str=search_str, table_content=table_content)        
                     }
                 }
             }         

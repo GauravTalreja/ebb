@@ -1,4 +1,5 @@
 use sycamore::prelude::*;
+use perseus::prelude::*;
 
 
 use models::CourseSummary;
@@ -6,6 +7,7 @@ use models::CourseSummary;
 // table input
 #[derive(Prop)]
 pub struct CourseTableProps<'a>  {
+    pub search_str: &'a RcSignal<String>,
     pub table_content: &'a RcSignal<Vec<CourseSummary>>,
 
 }
@@ -15,8 +17,32 @@ pub struct CourseTableProps<'a>  {
 #[component]
 pub fn CourseTable<'a, G: Html>(
     cx: Scope<'a>,
-    CourseTableProps { table_content }: CourseTableProps<'a>,
+    CourseTableProps { search_str, table_content }: CourseTableProps<'a>,
 ) -> View<G> {
+    #[cfg(client)]
+    create_effect_scoped(cx, |cx| {
+        if !search_str.get().is_empty() {
+                spawn_local_scoped(cx, async {
+                    let body = reqwasm::http::Request::get(
+                        format!("/api/v1/courses/{}", search_str.get()).as_str(),
+                    )
+                    .send()
+                    .await
+                    .unwrap()
+                    .json::<Vec<CourseSummary>>()
+                    .await
+                    .unwrap()
+                    .iter()
+                    .cloned()
+                    .collect();
+
+                    table_content.set(body);
+                })
+            } else {
+                table_content.set(vec![]);
+            }
+    });
+
     view! { cx,
         div (class="overflow-x-auto w-full shadow-md bg-base-200") {
             // TODO: change header color, change hover color
