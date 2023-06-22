@@ -7,7 +7,7 @@ use models::CourseSummary;
 // table input
 #[derive(Prop)]
 pub struct CourseTableProps<'a>  {
-    pub search_str: &'a RcSignal<String>,
+    // pub search_str: &'a RcSignal<String>,
     pub table_content: &'a RcSignal<Vec<CourseSummary>>,
 
 }
@@ -17,27 +17,20 @@ pub struct CourseTableProps<'a>  {
 #[component]
 pub fn CourseTable<'a, G: Html>(
     cx: Scope<'a>,
-    CourseTableProps { search_str, table_content }: CourseTableProps<'a>,
+    CourseTableProps { table_content }: CourseTableProps<'a>,
 ) -> View<G> {
-    create_effect_scoped(cx, |cx| {
-        if !search_str.get().is_empty() {
-                spawn_local_scoped(cx, async {
-                    let body = reqwasm::http::Request::get(
-                        format!("/api/v1/courses/{}", search_str.get()).as_str(),
-                    )
-                    .send()
-                    .await
-                    .unwrap()
-                    .json::<Vec<CourseSummary>>()
-                    .await
-                    .unwrap()
-                    .to_vec();
+    #[cfg(client)]
+    spawn_local_scoped(cx, async {
+        let body = reqwasm::http::Request::get("/api/v1/courses/")
+        .send()
+        .await
+        .unwrap()
+        .json::<Vec<CourseSummary>>()
+        .await
+        .unwrap()
+        .to_vec();
 
-                    table_content.set(body);
-                })
-            } else {
-                table_content.set(vec![]);
-            }
+        table_content.set(body);
     });
 
     view! { cx,
