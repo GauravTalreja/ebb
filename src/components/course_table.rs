@@ -1,5 +1,4 @@
 use sycamore::prelude::*;
-use perseus::prelude::*;
 
 
 use models::CourseSummary;
