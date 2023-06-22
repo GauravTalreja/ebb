@@ -14,6 +14,7 @@ jobs:
   clippy_check_client:
     runs-on: ubuntu-latest
     env:
+      SQLX_OFFLINE: true
       RUSTFLAGS: "-Dwarnings --cfg=client"
     steps:
       - uses: actions/checkout@v3
@@ -23,6 +24,7 @@ jobs:
   clippy_check_engine:
     runs-on: ubuntu-latest
     env:
+      SQLX_OFFLINE: true
       RUSTFLAGS: "-Dwarnings --cfg=engine"
     steps:
       - uses: actions/checkout@v3
@@ -32,6 +34,8 @@ jobs:
     
   perseus_check:
     runs-on: ubuntu-latest
+    env:
+      SQLX_OFFLINE: true
     steps:
         - uses: actions/checkout@v3
         # Cache Cargo binaries
