@@ -1,6 +1,6 @@
 use sycamore::prelude::*;
 
-#[cfg(client)]
+
 use models::CourseSummary;
 
 // table input

@@ -4,7 +4,7 @@ use sycamore::prelude::*;
 
 use crate::global_state::AppStateRx;
 
-#[cfg(client)]
+
 use models::CourseSummary;
 
 use crate::components::course_table::CourseTable;
