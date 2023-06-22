@@ -20,7 +20,6 @@ pub fn CourseTable<'a, G: Html>(
     CourseTableProps { search_str, table_content }: CourseTableProps<'a>,
 ) -> View<G> {
     create_effect_scoped(cx, |cx| {
-        #[cfg(client)]
         if !search_str.get().is_empty() {
                 spawn_local_scoped(cx, async {
                     let body = reqwasm::http::Request::get(
