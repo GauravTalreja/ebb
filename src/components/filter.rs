@@ -10,24 +10,20 @@ pub struct FilterProps<'a> {
     pub level1: &'a RcSignal<bool>,
     pub level2: &'a RcSignal<bool>,
     pub level3: &'a RcSignal<bool>,
-    pub level4: &'a RcSignal<bool>,
-    pub all_levels: &'a RcSignal<bool>,    
+    pub level4: &'a RcSignal<bool>,  
     // status
     pub open: &'a RcSignal<bool>,
     pub closed: &'a RcSignal<bool>,
-    pub all_status: &'a RcSignal<bool>,
     // period
     pub morning: &'a RcSignal<bool>,
     pub afternoon: &'a RcSignal<bool>,
     pub evening: &'a RcSignal<bool>,
-    pub all_periods: &'a RcSignal<bool>,
     // dates
     pub monday: &'a RcSignal<bool>,
     pub tuesday: &'a RcSignal<bool>,
     pub wednesday: &'a RcSignal<bool>,
     pub thursday: &'a RcSignal<bool>,
     pub friday: &'a RcSignal<bool>,
-    pub all_dates: &'a RcSignal<bool>,
     
 }
 
@@ -45,23 +41,19 @@ pub fn Filter<'a, G: Html>(
         level2,
         level3,
         level4,
-        all_levels,
         // status
         open,
         closed,
-        all_status,
         // period
         morning,
         afternoon,
         evening,
-        all_periods,
         // dates
         monday,
         tuesday,
         wednesday,
         thursday,
-        friday,
-        all_dates,                 
+        friday,              
 
      }: FilterProps<'a>,
 ) -> View<G> {

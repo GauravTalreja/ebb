@@ -31,23 +31,19 @@ pub struct CoursesState {
     level2: bool,
     level3: bool,
     level4: bool,
-    all_levels: bool,
     // status
     open: bool,
     closed: bool,
-    all_status: bool,
     // period
     morning: bool,
     afternoon: bool,
     evening: bool,
-    all_periods: bool,
     // dates
     monday: bool,
     tuesday: bool,
     wednesday: bool,
     thursday: bool,
     friday: bool,
-    all_dates: bool,
 
 }
 
@@ -76,23 +72,19 @@ fn courses_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a CoursesStateRx
         level2: &state.level2,
         level3: &state.level3,
         level4: &state.level4,
-        all_levels: &state.all_levels,
         // status
         open: &state.open,
         closed: &state.closed,
-        all_status: &state.all_status,
         // period
         morning: &state.morning,
         afternoon: &state.afternoon,
         evening: &state.evening,
-        all_periods: &state.all_periods,
         // dates
         monday: &state.monday,
         tuesday: &state.tuesday,
         wednesday: &state.wednesday,
         thursday: &state.thursday,
         friday: &state.friday,
-        all_dates: &state.all_dates,
     };
 
     view! { cx,
