@@ -1,7 +1,8 @@
-#[cfg(client)]
-use crate::models::Course;
 use perseus::prelude::*;
 use sycamore::prelude::*;
+
+#[cfg(client)]
+use models::CourseSummary;
 
 #[derive(Prop)]
 pub struct SearchBarProps<'a> {
@@ -26,11 +27,11 @@ pub fn SearchBar<'a, G: Html>(
                 .send()
                 .await
                 .unwrap()
-                .json::<Vec<Course>>()
+                .json::<Vec<CourseSummary>>()
                 .await
                 .unwrap()
                 .iter()
-                .map(|course| course.name.clone())
+                .map(|course| course.title.clone())
                 .collect();
                 results.set(body);
             })

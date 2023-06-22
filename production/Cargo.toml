@@ -1,0 +1,17 @@
+[package]
+name = "production"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+dotenvy = "0.15.7"
+sqlx = { version = "0.6", features = [
+    "runtime-tokio-native-tls",
+    "offline",
+    "postgres",
+    "macros",
+] }
+stores = { path = "../stores" }
+models = { path = "../models", features = ["sqlx"] }
