@@ -51,14 +51,13 @@ pub struct CoursesState {
 
 fn courses_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a CoursesStateRx) -> View<G> {
     // temp table_content
-    let input = &state.search_input;
     let table_content = &state.table_content;
     #[cfg(client)]
     create_effect_scoped(cx, |cx| {
-        if !input.get().is_empty() {
+        if !&state.search_input.get().is_empty() {
             spawn_local_scoped(cx, async {
                 let body = reqwasm::http::Request::get(
-                    format!("/api/v1/courses/{}", input.get()).as_str(),
+                    format!("/api/v1/courses/{}", &state.search_input.get()).as_str(),
                 )
                 .send()
                 .await
