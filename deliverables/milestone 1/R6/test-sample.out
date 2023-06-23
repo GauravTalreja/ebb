@@ -1,0 +1,16 @@
++-----+----------------+--------------+--------------------------------------------------------------------+-------------+-----------------------------------------------------------------------------------------------------------+
+| id  | catalog_number | subject_code | title                                                              | external_id | offerings!: _                                                                                             |
+|-----+----------------+--------------+--------------------------------------------------------------------+-------------+-----------------------------------------------------------------------------------------------------------|
+| 27  | 105            | CS           | Introduction to Computer Programming 1                             | 015054      | []                                                                                                        |
+| 134 | 245            | CS           | Logic and Computation                                              | 011405      | []                                                                                                        |
+| 33  | 399            | CS           | Readings in Computer Science                                       | 011410      | []                                                                                                        |
+| 50  | 448            | CS           | Database Systems Implementation                                    | 012300      | []                                                                                                        |
+| 265 | 636            | CS           | Introduction to Computer Networks and Distributed Computer Systems | 014935      | []                                                                                                        |
+| 250 | 679            | CS           | Neural Networks                                                    | 016281      | []                                                                                                        |
+| 87  | 697            | CS           | Graduate Research Skills Seminar                                   | 009076      | []                                                                                                        |
+| 205 | 741            | CS           | Non-Traditional Databases                                          | 011294      | []                                                                                                        |
+| 70  | 779            | CS           | Splines and Their Use in Computer Graphics                         | 000725      | []                                                                                                        |
+| 5   | 867            | CS           | Advanced Topics in Quantum Computing                               | 013470      | [{"id": 2, "term": "spring", "year": 2023, "course_id": 5, "max_enrollment": 2, "current_enrollment": 2}] |
++-----+----------------+--------------+--------------------------------------------------------------------+-------------+-----------------------------------------------------------------------------------------------------------+
+SELECT 10
+Time: 0.017s
