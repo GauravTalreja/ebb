@@ -33,15 +33,12 @@ pub fn SearchBar<'a, G: Html>(
                 .iter()
                 .map(|course| course.title.clone())
                 .collect();
-                
+
                 let max_len = 6;
                 if body.len() > max_len {
                     body.resize(max_len, "".to_string())
                 }
                 results.set(body);
-                
-                
-
             })
         } else {
             results.set(vec![]);
@@ -50,7 +47,7 @@ pub fn SearchBar<'a, G: Html>(
 
     view! { cx,
         div (class="w-full px-2") {
-            div ( class="dropdown dropdown-bottom w-full") {
+            div ( class="dropdown dropdown-bottom w-full z-30") {
                 input (
                     type="search",
                     bind:value=input,
