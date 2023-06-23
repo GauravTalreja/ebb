@@ -21,7 +21,7 @@ pub fn SearchBar<'a, G: Html>(
     create_effect_scoped(cx, |cx| {
         if !input.get().is_empty() {
             spawn_local_scoped(cx, async {
-                let body = reqwasm::http::Request::get(
+                let mut body: Vec<String> = reqwasm::http::Request::get(
                     format!("/api/v1/courses/{}", input.get()).as_str(),
                 )
                 .send()
@@ -33,7 +33,15 @@ pub fn SearchBar<'a, G: Html>(
                 .iter()
                 .map(|course| course.title.clone())
                 .collect();
+                
+                let max_len = 6;
+                if body.len() > max_len {
+                    body.resize(max_len, "".to_string())
+                }
                 results.set(body);
+                
+                
+
             })
         } else {
             results.set(vec![]);
@@ -61,7 +69,7 @@ pub fn SearchBar<'a, G: Html>(
                             SearchResult(name=result.clone(), link=format!("c/{}",result))
                         },
                     )
-                    SearchResult(name="BOTTOM TEXT".to_string(), link="courses".to_string())
+                    SearchResult(name="View all courses".to_string(), link="courses".to_string())
                 }
             }
         }
