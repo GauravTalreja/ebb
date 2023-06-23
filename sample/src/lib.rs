@@ -36,6 +36,11 @@ impl CourseSync for SampleCourseSync {
             .execute(&pool.clone())
             .await
             .unwrap();
+
+        sqlx::query_file!("./queries/insert_schedules.sql")
+            .execute(&pool.clone())
+            .await
+            .unwrap();
     }
 }
 
