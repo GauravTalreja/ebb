@@ -1,7 +1,9 @@
-use crate::components::layout::{Layout, SearchBarProps};
+use crate::components::layout::{Layout, SearchBarProps, ThemeProps};
 use crate::components::schedule::Shcedule;
 use crate::components::course_intro::CourseIntro;
-use crate::components::filter::Filter;
+
+use crate::global_state::AppStateRx;
+
 use perseus::prelude::*;
 use serde::{Deserialize, Serialize};
 use sycamore::prelude::*;
@@ -14,13 +16,19 @@ pub struct CourseDetailState {
 }
 
 fn course_detail<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a CourseDetailStateRx) -> View<G> {
+
+     // variables
+    let global_state = Reactor::<G>::from_cx(cx).get_global_state::<AppStateRx>(cx);
+    let theme_props = ThemeProps {
+        state: &global_state.theme,
+    };
     let search_bar_props = SearchBarProps {
         input: &state.search_input,
         results: &state.search_results,
     };
     view! { cx,
         link ( rel="stylesheet", href="/tailwind.css")
-        Layout (search_bar=search_bar_props) { 
+        Layout (search_bar=search_bar_props, theme=theme_props) { 
             div (class="flex justify-center w-full") {  
 
                 div (class="flex flex-col w-full lg:w-5/6 py-6 gap-8 px-4") {           
