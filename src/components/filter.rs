@@ -5,8 +5,6 @@ use sycamore::prelude::*;
 pub struct FilterProps<'a> {
     // term
     pub selectterm: &'a RcSignal<String>,
-    pub currentterm: &'a RcSignal<bool>,
-    pub nextterm: &'a RcSignal<bool>,
     //level
     pub level1: &'a RcSignal<bool>,
     pub level2: &'a RcSignal<bool>,
@@ -35,9 +33,8 @@ pub struct FilterProps<'a> {
 pub fn Filter<'a, G: Html>(
     cx: Scope<'a>,
     FilterProps { 
+        // term
         selectterm,
-        currentterm,
-        nextterm,
         // level
         level1,
         level2,
@@ -66,32 +63,15 @@ pub fn Filter<'a, G: Html>(
 
             // todo: associate state with the selected values
             div(class="p-4") {
-                h3 (class="text-lg font-semibold") { "Term" }
+                h3 (class="text-lg font-semibold mb-2") { "Term" }
 
-                select (class="select select-primary w-full max-w-xs", bind:value=) {
-                    option (disabled=true, selected=true) { "Select term"}
-                    option (selected=selectcurrent) { "Spring 2023" }
-                    option () { "Fall 2023" }
+                select (class="select select-primary w-full max-w-xs", bind:value=selectterm) {
+                    option (disabled=true, selected=true, value="selectterm".to_string()) { "Select term"}
+                    option (value="currentterm") { "Spring 2023" }
+                    option (value="nextterm") { "Fall 2023" }
                 }
-                
 
 
-                // div (class="dropdown") {
-                //     label (tabindex="0", class="btn m-1") {
-                //         "test"
-                //     }
-                //     ul (tabindex="0", class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52") {
-                //         li { a {"Spring 2023"} }
-                //         li { a {"Fall 2023"} }
-                //     }
-                // }
-
-                // div (class="flex justify-center") {
-                //     div (class="flex flex-row w-full gap-x-8") {
-                //         CheckBox(name="Spring 2023".to_string(), checked=currentterm)
-                //         CheckBox(name="Fall 2023".to_string(), checked=nextterm)                        
-                //     }
-                // }
             }
 
             // level    

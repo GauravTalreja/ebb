@@ -18,15 +18,12 @@ pub struct CoursesState {
     search_input: String,
     search_results: Vec<String>,
 
-    // TODO: populate course_table with query result
-    // table content
-
+    // query resut for table
     table_content: Vec<CourseSummary>, // test version
 
     // filter
     // term
-    currentterm: bool,
-    nextterm: bool,
+    selectterm: String,
     // level
     level1: bool,
     level2: bool,
@@ -87,8 +84,7 @@ fn courses_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a CoursesStateRx
         
     let filterprops = FilterProps {
         // term
-        currentterm: &state.currentterm,
-        nextterm: &state.nextterm,
+        selectterm: &state.selectterm,
         // level
         level1: &state.level1,
         level2: &state.level2,
@@ -138,8 +134,9 @@ async fn get_build_state(_info: StateGeneratorInfo<()>) -> CoursesState {
         search_input: "".to_string(),
         search_results: vec![],
         table_content: vec![],
-        currentterm: false,
-        nextterm: false,
+
+        // term
+        selectterm: "".to_string(),
         // level
         level1: false,
         level2: false,
