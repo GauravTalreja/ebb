@@ -30,8 +30,7 @@ pub struct CoursesState {
     level3: bool,
     level4: bool,
     // status
-    open: bool,
-    closed: bool,
+    include_closed: bool,
     // period
     morning: bool,
     afternoon: bool,
@@ -91,8 +90,7 @@ fn courses_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a CoursesStateRx
         level3: &state.level3,
         level4: &state.level4,
         // status
-        open: &state.open,
-        closed: &state.closed,
+        include_closed: &state.include_closed,
         // period
         morning: &state.morning,
         afternoon: &state.afternoon,
@@ -143,8 +141,7 @@ async fn get_build_state(_info: StateGeneratorInfo<()>) -> CoursesState {
         level3: false,
         level4: false,
         // status
-        open: false,
-        closed: false,
+        include_closed: false,
         // period
         morning: false,
         afternoon: false,

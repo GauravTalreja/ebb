@@ -11,8 +11,7 @@ pub struct FilterProps<'a> {
     pub level3: &'a RcSignal<bool>,
     pub level4: &'a RcSignal<bool>,  
     // status
-    pub open: &'a RcSignal<bool>,
-    pub closed: &'a RcSignal<bool>,
+    pub include_closed: &'a RcSignal<bool>,
     // period
     pub morning: &'a RcSignal<bool>,
     pub afternoon: &'a RcSignal<bool>,
@@ -41,8 +40,7 @@ pub fn Filter<'a, G: Html>(
         level3,
         level4,
         // status
-        open,
-        closed,
+        include_closed,
         // period
         morning,
         afternoon,
@@ -89,11 +87,18 @@ pub fn Filter<'a, G: Html>(
 
             div(class="p-4") {
                 h3 (class="text-lg font-semibold") { "Course status" }
-                div (class="flex justify-center") {
-                    div (class="flex flex-row flex-wrap w-full gap-x-8") {
-                        CheckBox(name="Open".to_string(), checked=open)
-                        CheckBox(name="Closed".to_string(), checked=closed) 
+                div (class="flex") {
+                    div (class="form-control w-52") {
+                        label (class="cursor-pointer label") {
+                            input (
+                                    type="checkbox", 
+                                    class="toggle toggle-primary",
+                                    bind:checked=include_closed,
+                                )
+                            span (class="label-text") {"Include closed courses"}
+                        }
                     }
+                   
                 }
             }
 
