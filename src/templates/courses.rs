@@ -18,12 +18,13 @@ pub struct CoursesState {
     search_input: String,
     search_results: Vec<String>,
 
-    // query resut for table
-    table_content: Vec<CourseSummary>, // test version
+    // query resut for table, 
+    // TODO: should based on user input & filter
+    table_content: Vec<CourseSummary>,
 
     // filter
     // term
-    selectterm: String,
+    selectterm: String, // values: "currentterm", "nextterm"
     // level
     level1: bool,
     level2: bool,
