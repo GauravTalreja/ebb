@@ -56,14 +56,14 @@ pub fn Filter<'a, G: Html>(
 ) -> View<G> {
 
     view! { cx,
-        div (class="flex flex-col shadow-md rounded-box bg-base-100") {
-            p(class="rounded-box bg-primary p-4 font-bold text-primary-content text-lg") { "Filters" }
+        div (class="flex flex-col shadow-md bg-base-100") {
+            p(class="bg-primary p-4 font-bold text-primary-content text-lg") { "Filters" }
 
             // todo: associate state with the selected values
             div(class="p-4") {
                 h3 (class="text-lg font-semibold mb-2") { "Term" }
 
-                select (class="select select-primary w-full max-w-xs", bind:value=selectterm) {
+                select (class="select select-primary w-full max-w-xs select-md", bind:value=selectterm) {
                     option (disabled=true, selected=true, value="selectterm".to_string()) { "Select term"}
                     option (value="currentterm") { "Spring 2023" }
                     option (value="nextterm") { "Fall 2023" }
@@ -73,7 +73,7 @@ pub fn Filter<'a, G: Html>(
             }
 
             // level    
-            div(class="p-4 bg-base-100 rounded-md w-full ") {
+            div(class="p-4 bg-base-100 w-full ") {
                 h3 (class="text-lg font-semibold") { "Course Level" }
                 div (class="flex justify-center") {
                     div (class="flex flex-wrap w-full gap-x-8") {
@@ -81,6 +81,12 @@ pub fn Filter<'a, G: Html>(
                         CheckBox(name="2--".to_string(), checked=level2) 
                         CheckBox(name="3--".to_string(), checked=level3)
                         CheckBox(name="4--".to_string(), checked=level4) 
+                        // div (class="h-10 w-10") {
+                        //     input (
+                        //             type="checkbox",
+                        //             class="btn btn-primary"
+                        //         ) 
+                        // }
                     }
                 }
             }
