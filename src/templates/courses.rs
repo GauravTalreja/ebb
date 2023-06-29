@@ -81,7 +81,7 @@ fn courses_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a CoursesStateRx
         input: &state.search_input,
         results: &state.search_results,
     };
-        
+
     let filterprops = FilterProps {
         // term
         selectterm: &state.selectterm,
@@ -133,7 +133,6 @@ async fn get_build_state(_info: StateGeneratorInfo<()>) -> CoursesState {
         search_input: "".to_string(),
         search_results: vec![],
         table_content: vec![],
-
         // term
         selectterm: "".to_string(),
         // level

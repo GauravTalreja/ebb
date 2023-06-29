@@ -68,12 +68,11 @@ pub fn Filter<'a, G: Html>(
                     option (value="currentterm") { "Spring 2023" }
                     option (value="nextterm") { "Fall 2023" }
                 }
-
-
             }
 
             // level    
             div(class="p-4 bg-base-100 w-full ") {
+
                 h3 (class="text-lg font-semibold") { "Course Level" }
                 div (class="flex justify-center") {
                     div (class="flex flex-wrap w-full gap-x-8") {
@@ -81,18 +80,21 @@ pub fn Filter<'a, G: Html>(
                         CheckBox(name="2--".to_string(), checked=level2) 
                         CheckBox(name="3--".to_string(), checked=level3)
                         CheckBox(name="4--".to_string(), checked=level4) 
+
                         // div (class="h-10 w-10") {
                         //     input (
                         //             type="checkbox",
                         //             class="btn btn-primary"
                         //         ) 
                         // }
+
                     }
                 }
             }
 
             div(class="p-4") {
                 h3 (class="text-lg font-semibold") { "Course status" }
+
                 div (class="flex") {
                     div (class="form-control w-52") {
                         label (class="cursor-pointer label") {
