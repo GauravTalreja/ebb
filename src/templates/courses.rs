@@ -4,7 +4,6 @@ use sycamore::prelude::*;
 
 use crate::global_state::AppStateRx;
 
-
 use models::CourseSummary;
 
 use crate::components::course_table::CourseTable;
@@ -36,15 +35,14 @@ pub struct CoursesState {
     morning: bool,
     afternoon: bool,
     evening: bool,
-    // dates
     monday: bool,
     tuesday: bool,
     wednesday: bool,
     thursday: bool,
     friday: bool,
-
+    saturday: bool,
+    sunday: bool,
 }
-
 
 fn courses_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a CoursesStateRx) -> View<G> {
     // temp table_content
@@ -65,7 +63,6 @@ fn courses_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a CoursesStateRx
                 .to_vec();
 
                 table_content.set(body);
-                
             })
         } else {
             table_content.set(vec![]);
@@ -96,12 +93,13 @@ fn courses_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a CoursesStateRx
         morning: &state.morning,
         afternoon: &state.afternoon,
         evening: &state.evening,
-        // dates
         monday: &state.monday,
         tuesday: &state.tuesday,
         wednesday: &state.wednesday,
         thursday: &state.thursday,
         friday: &state.friday,
+        saturday: &state.saturday,
+        sunday: &state.sunday,
     };
 
     view! { cx,
@@ -120,9 +118,9 @@ fn courses_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a CoursesStateRx
                         CourseTable(table_content=table_content)    
                     }
                 }
-            }         
-               
-            
+            }
+
+
         }
     }
 }
@@ -147,12 +145,13 @@ async fn get_build_state(_info: StateGeneratorInfo<()>) -> CoursesState {
         morning: false,
         afternoon: false,
         evening: false,
-        // dates
         monday: false,
         tuesday: false,
         wednesday: false,
         thursday: false,
         friday: false,
+        saturday: false,
+        sunday: false,
     }
 }
 
