@@ -1,9 +1,17 @@
 use sycamore::prelude::*;
 
+
+// schedule input
+#[derive(Prop)]
+pub struct ScheduleProps<'a> {
+    pub schedule_content: &'a RcSignal<Vec<i32>>,
+}
+
 // table structure
 #[component]
-pub fn Shcedule<G: Html>(
-    cx: Scope,
+pub fn Schedule<'a, G: Html>(
+    cx: Scope<'a>,
+    ScheduleProps {schedule_content}: ScheduleProps<'a>,
 ) -> View<G> {
     view! { cx,
                 div (class="overflow-x-auto w-full shadow-md rounded-md") {
@@ -24,6 +32,22 @@ pub fn Shcedule<G: Html>(
                         }
                         // table content
                         tbody() {
+                            // TODO: waiting to be fullfiled
+                            // Keyed (
+                            //     iterable=schedule_content,
+                            //     view=|cx, content| view! { cx,
+                            //         // need change here
+                            //         TableContent(section="001".to_string(),
+                            //             class_num="1247".to_string(), 
+                            //             enrolled="50/80".to_string(),
+                            //             time="9:00-11:00".to_string(),
+                            //             date="MWF".to_string(),
+                            //             location="UW".to_string(),
+                            //             instructor="Henry Lans".to_string(),
+                            //         )  
+                            //     },
+                            //     key=|content| content.clone(),
+                            // )
                             
                             TableContent(section="001".to_string(),
                                         class_num="1247".to_string(), 
