@@ -16,11 +16,27 @@ pub struct OfferingSummary {
     pub term: String,
     pub max_enrollment: i16,
     pub current_enrollment: i16,
+    pub schedule: CourseSchedules
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize, Eq, PartialEq, Hash)]
+pub struct CourseSchedule {
+    pub section: String,
+    pub start_time: String,
+    pub end_time: String,
+    pub meeting_days: String,
+    pub instructor_name: String,
+    pub room_name: String,
+    pub campus_name: String
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize, Eq, PartialEq, Hash)]
 #[serde(transparent)]
 pub struct OfferingSummaries(Vec<OfferingSummary>);
+
+#[derive(Clone, Debug, Serialize, Deserialize, Eq, PartialEq, Hash)]
+#[serde(transparent)]
+pub struct CourseSchedules(Vec<CourseSchedule>);
 
 #[cfg(feature = "sqlx")]
 use sqlx::{Database, Postgres, Type};
