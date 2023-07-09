@@ -10,7 +10,7 @@ use prelude::*;
 
 #[derive(Clone)]
 pub struct EbbStore {
-    pool: PgPool,
+    pub pool: PgPool,
     pub course_store: Arc<dyn CourseStore + Send + Sync>,
 }
 

@@ -1,5 +1,6 @@
 use models::*;
 use stores::prelude::*;
+pub mod synch;
 
 pub async fn prod_store() -> EbbStore {
     dotenvy::dotenv().expect("Unable to find a prod .env file");

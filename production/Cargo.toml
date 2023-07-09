@@ -10,8 +10,11 @@ dotenvy = "0.15.7"
 sqlx = { version = "0.6", features = [
     "runtime-tokio-native-tls",
     "offline",
-    "postgres",
-    "macros",
+    "postgres"
 ] }
+log = "0.4.19"
+simple_logger = "4.2.0"
+tokio = { version = "1.29.1", features = ["full"] }
+openapi = { path = "../openapi" }
 stores = { path = "../stores" }
 models = { path = "../models", features = ["sqlx"] }
