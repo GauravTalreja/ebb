@@ -10,7 +10,8 @@ dotenvy = "0.15.7"
 sqlx = { version = "0.6", features = [
     "runtime-tokio-native-tls",
     "offline",
-    "postgres"
+    "postgres",
+    "macros"
 ] }
 log = "0.4.19"
 simple_logger = "4.2.0"
