@@ -29,6 +29,8 @@ openapi = { path = "./openapi" }
 stores = { path = "./stores" }
 production = { path = "./production" }
 sample = { path = "./sample" }
+log = "0.4.19"
+simple_logger = "4.2.0"
 
 # Browser-only dependencies go here
 [target.'cfg(client)'.dependencies]
