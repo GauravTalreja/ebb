@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Clone, Debug, Serialize, Deserialize, Eq, PartialEq, Hash)]
 pub struct CourseSummary {
     pub id: i32,
-    pub catalog_number: i16,
+    pub catalog_number: String,
     pub subject_code: String,
     pub title: String,
     pub external_id: String,
@@ -13,9 +13,7 @@ pub struct CourseSummary {
 #[derive(Clone, Debug, Serialize, Deserialize, Eq, PartialEq, Hash)]
 pub struct OfferingSummary {
     pub year: i16,
-    pub term: String,
-    pub max_enrollment: i16,
-    pub current_enrollment: i16,
+    pub term: String
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize, Eq, PartialEq, Hash)]
