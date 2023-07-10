@@ -1,5 +1,40 @@
 use serde::{Deserialize, Serialize};
 
+// struct for course_search page table display
+// #[derive(Clone, Debug, Serialize, Deserialize, Eq, PartialEq, Hash)]
+// pub struct CourseSummaryDisplay {
+//     pub catalog_number: String,
+//     pub subject_code: String,
+//     pub title: String,
+//     pub location: String,
+//     pub status: String/bool,
+// }
+
+// struct for course_detail course intro display
+// #[derive(Clone, Debug, Serialize, Deserialize, Eq, PartialEq, Hash)]
+// pub struct CourseIntro {
+//     pub catalog_number: String,
+//     pub subject_code: String,
+//     pub title: String,
+//     pub course_description: String,
+//     pub prerequisite_description: String,
+// }
+
+// struct for course_detail section sehcdule display
+// #[derive(Clone, Debug, Serialize, Deserialize, Eq, PartialEq, Hash)]
+// pub struct CourseSchedule {
+//     pub section: String, // LEC001, LEC002, TUT002 etc
+//     pub class_number: String,
+//     pub current_enroll: i32,
+//     pub max_enroll: i32,
+//     pub start_time: String/Time,
+//     pub end_time: String/Time,
+//     pub date: String, // "MTWTF"
+//     pub location: String, // building + room number
+//     pub instructor: String,
+// }
+
+
 #[derive(Clone, Debug, Serialize, Deserialize, Eq, PartialEq, Hash)]
 pub struct CourseSummary {
     pub id: i32,
