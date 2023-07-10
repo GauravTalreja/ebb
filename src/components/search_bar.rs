@@ -33,12 +33,15 @@ pub fn SearchBar<'a, G: Html>(
                 .iter()
                 .map(|course| course.title.clone())
                 .collect();
-
+                
                 let max_len = 6;
                 if body.len() > max_len {
                     body.resize(max_len, "".to_string())
                 }
                 results.set(body);
+                
+                
+
             })
         } else {
             results.set(vec![]);

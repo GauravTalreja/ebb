@@ -2,12 +2,16 @@ use sycamore::prelude::*;
 
 #[derive(Prop)]
 pub struct FilterProps<'a> {
-    pub term: &'a RcSignal<String>,
+    // term
+    pub selectterm: &'a RcSignal<String>,
+    //level
     pub level1: &'a RcSignal<bool>,
     pub level2: &'a RcSignal<bool>,
     pub level3: &'a RcSignal<bool>,
-    pub level4: &'a RcSignal<bool>,
+    pub level4: &'a RcSignal<bool>,  
+    // status
     pub include_closed: &'a RcSignal<bool>,
+    // period
     pub morning: &'a RcSignal<bool>,
     pub afternoon: &'a RcSignal<bool>,
     pub evening: &'a RcSignal<bool>,
@@ -26,13 +30,17 @@ pub struct FilterProps<'a> {
 #[component]
 pub fn Filter<'a, G: Html>(
     cx: Scope<'a>,
-    FilterProps {
-        term,
+    FilterProps { 
+        // term
+        selectterm,
+        // level
         level1,
         level2,
         level3,
         level4,
+        // status
         include_closed,
+        // period
         morning,
         afternoon,
         evening,
@@ -45,6 +53,7 @@ pub fn Filter<'a, G: Html>(
         sunday,
     }: FilterProps<'a>,
 ) -> View<G> {
+    
     view! { cx,
         div (class="flex flex-col shadow-md bg-base-100") {
             p(class="bg-primary p-4 font-bold text-primary-content text-lg") { "Filters" }
@@ -52,28 +61,50 @@ pub fn Filter<'a, G: Html>(
             // todo: associate state with the selected values
             div(class="p-4") {
                 h3 (class="text-lg font-semibold mb-2") { "Term" }
-                select (bind:value=term, class="select select-primary w-full") {
-                    option (disabled=true) { "Select term"}
-                    option (value="Spring 2023") { "Spring 2023" }
-                    option (value="Fall 2023") { "Fall 2023" }
+
+                select (class="select select-primary w-full max-w-xs select-md", bind:value=selectterm) {
+                    option (disabled=true, selected=true, value="selectterm".to_string()) { "Select term"}
+                    option (value="currentterm") { "Spring 2023" }
+                    option (value="nextterm") { "Fall 2023" }
                 }
+
+
             }
 
+            // level    
             div(class="p-4 bg-base-100 w-full ") {
-                h3 (class="text-lg font-semibold") { "Level" }
+                h3 (class="text-lg font-semibold") { "Course Level" }
                 div (class="flex justify-center") {
                     div (class="flex flex-wrap w-full gap-x-8") {
-                        CheckBox(name="1XX".to_string(), checked=level1)
-                        CheckBox(name="2XX".to_string(), checked=level2)
-                        CheckBox(name="3XX".to_string(), checked=level3)
-                        CheckBox(name="4XX".to_string(), checked=level4)
+                        CheckBox(name="1--".to_string(), checked=level1)
+                        CheckBox(name="2--".to_string(), checked=level2) 
+                        CheckBox(name="3--".to_string(), checked=level3)
+                        CheckBox(name="4--".to_string(), checked=level4) 
+                        // div (class="h-10 w-10") {
+                        //     input (
+                        //             type="checkbox",
+                        //             class="btn btn-primary"
+                        //         ) 
+                        // }
                     }
                 }
             }
 
             div(class="p-4") {
-                h3 (class="text-lg font-semibold") { "Status" }
-                Toggle(name="Include closed".to_string(), checked=include_closed)
+                h3 (class="text-lg font-semibold") { "Course status" }
+                div (class="flex") {
+                    div (class="form-control w-52") {
+                        label (class="cursor-pointer label") {
+                            input (
+                                    type="checkbox", 
+                                    class="toggle toggle-primary",
+                                    bind:checked=include_closed,
+                                )
+                            span (class="label-text") {"Include closed courses"}
+                        }
+                    }
+                   
+                }
             }
 
             div(class="p-4") {
