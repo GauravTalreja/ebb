@@ -64,11 +64,11 @@ CREATE TABLE IF NOT EXISTS course_schedule (
     campus_name VARCHAR(50) NOT NULL,
     course_offering_id INTEGER NOT NULL,
     max_enrollment SMALLINT NOT NULL DEFAULT 0,
-    current_enrollment SMALLINT NOT NULL DEFAULT 0,
-    CONSTRAINT fk_course_schedule_to_courses FOREIGN KEY (course_offering_id)
-        REFERENCES course_offerings (id)
-        ON DELETE CASCADE,
-    CONSTRAINT chk_meeting_days CHECK (meeting_days ~ '^[YN]{7}$'),
-    CONSTRAINT chk_course_schedule_current_enrollment CHECK (current_enrollment <= max_enrollment),
-    CONSTRAINT chk_course_schedule_times CHECK (end_time > start_time)
+    current_enrollment SMALLINT NOT NULL DEFAULT 0
+    -- CONSTRAINT fk_course_schedule_to_courses FOREIGN KEY (course_offering_id)
+    --     REFERENCES course_offerings (id)
+    --     ON DELETE CASCADE,
+    -- CONSTRAINT chk_meeting_days CHECK (meeting_days ~ '^[YN]{7}$'),
+    -- CONSTRAINT chk_course_schedule_current_enrollment CHECK (current_enrollment <= max_enrollment),
+    -- CONSTRAINT chk_course_schedule_times CHECK (end_time > start_time)
 );

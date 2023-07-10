@@ -17,17 +17,21 @@ pub struct CoursesState {
     search_input: String,
     search_results: Vec<String>,
 
-    // query resut for table,
+    // query resut for table, 
     // TODO: should based on user input & filter
     table_content: Vec<CourseSummary>,
 
-    // filters
-    term: String,
+    // filter
+    // term
+    selectterm: String, // values: "currentterm", "nextterm"
+    // level
     level1: bool,
     level2: bool,
     level3: bool,
     level4: bool,
+    // status
     include_closed: bool,
+    // period
     morning: bool,
     afternoon: bool,
     evening: bool,
@@ -74,14 +78,18 @@ fn courses_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a CoursesStateRx
         input: &state.search_input,
         results: &state.search_results,
     };
-
+        
     let filterprops = FilterProps {
-        term: &state.term,
+        // term
+        selectterm: &state.selectterm,
+        // level
         level1: &state.level1,
         level2: &state.level2,
         level3: &state.level3,
         level4: &state.level4,
+        // status
         include_closed: &state.include_closed,
+        // period
         morning: &state.morning,
         afternoon: &state.afternoon,
         evening: &state.evening,
@@ -101,13 +109,13 @@ fn courses_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a CoursesStateRx
                 p(class="absolute bottom-3 font-bold text-2xl text-primary-content") {"Result for testing"}
             }
             div (class="flex justify-center w-full") {
-                 div (class="md:flex md:flex-row-reverse py-6 px-5") {
-                    div (class="w-full md:flex-1 md:w-2/6") {
+                 div (class="md:flex md:flex-row-reverse w-full lg:w-5/6 py-6 gap-4 justify-center px-4") {
+                    div (class="w-full md:flex-1 md:w-1/3") {
                         Filter( filterprops )
                     }
-                    div (class="divider md:divider-horizontal"){}
-                    div (class = "w-full md:flex-initial md:w-4/6") {
-                        CourseTable(table_content=table_content)
+                    div (class="divider md:divider-horizontal"){}                    
+                    div (class = "w-full md:flex-initial md:w-2/3") {
+                        CourseTable(table_content=table_content)    
                     }
                 }
             }
@@ -123,12 +131,17 @@ async fn get_build_state(_info: StateGeneratorInfo<()>) -> CoursesState {
         search_input: "".to_string(),
         search_results: vec![],
         table_content: vec![],
-        term: "".to_string(),
+
+        // term
+        selectterm: "".to_string(),
+        // level
         level1: false,
         level2: false,
         level3: false,
         level4: false,
+        // status
         include_closed: false,
+        // period
         morning: false,
         afternoon: false,
         evening: false,
