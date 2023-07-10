@@ -41,10 +41,13 @@ fn personal_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a PersonalPageS
     view! { cx,
         link ( rel="stylesheet", href="/tailwind.css")
         Layout (search_bar=search_bar_props, theme=theme_props) {
-            Schedule(schedule_content=schedule_content)
-            
+            div (class="md:flex justify-center py-6 px-5") {
+                    div (class = "w-full md:flex-initial md:w-4/6") {
+                       Schedule(schedule_content=schedule_content)
+                    }
+            }
+ 
         }
-        script (src="../components/component.js")
     }
 }
 
