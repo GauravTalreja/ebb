@@ -1,27 +1,29 @@
+use crate::{
+    components::{
+        course_table::CourseTable,
+        filter::{Filter, FilterProps},
+        layout::{Layout, SearchBarProps, ThemeProps},
+    },
+    global_state::AppStateRx,
+};
+use models::CourseSummary;
 use perseus::prelude::*;
 use serde::{Deserialize, Serialize};
 use sycamore::prelude::*;
 
-use crate::global_state::AppStateRx;
-
-use models::CourseSummary;
-
-use crate::components::course_table::CourseTable;
-use crate::components::filter::{Filter, FilterProps};
-use crate::components::layout::{Layout, SearchBarProps, ThemeProps};
-
 #[derive(Serialize, Deserialize, ReactiveState, Clone)]
 #[rx(alias = "CoursesStateRx")]
 pub struct CoursesState {
-    // search bar props
+    path: String,
+
+    // Searchbar
     search_input: String,
     search_results: Vec<String>,
 
-    // query resut for table,
-    // TODO: should based on user input & filter
+    // TODO: Change based on filters
     table_content: Vec<CourseSummary>,
 
-    // filters
+    // Filters
     term: String,
     level1: bool,
     level2: bool,
@@ -41,32 +43,27 @@ pub struct CoursesState {
 }
 
 fn courses_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a CoursesStateRx) -> View<G> {
-    // temp table_content
-    let table_content = &state.table_content;
-    #[cfg(client)]
-    create_effect_scoped(cx, |cx| {
-        if !&state.search_input.get().is_empty() {
-            spawn_local_scoped(cx, async {
-                let body = reqwasm::http::Request::get(
-                    format!("/api/v1/courses/{}", &state.search_input.get()).as_str(),
-                )
-                .send()
-                .await
-                .unwrap()
-                .json::<Vec<CourseSummary>>()
-                .await
-                .unwrap()
-                .to_vec();
-
-                table_content.set(body);
-            })
-        } else {
-            table_content.set(vec![]);
-        }
-    });
-
-    // variables
     let global_state = Reactor::<G>::from_cx(cx).get_global_state::<AppStateRx>(cx);
+    let table_content = &state.table_content;
+
+    #[cfg(client)]
+    if !&state.path.get_untracked().is_empty() {
+        spawn_local_scoped(cx, async {
+            let body = reqwasm::http::Request::get(
+                format!("/api/v1/courses/{}", &state.path.get_untracked()).as_str(),
+            )
+            .send()
+            .await
+            .unwrap()
+            .json::<Vec<CourseSummary>>()
+            .await
+            .unwrap()
+            .to_vec();
+
+            table_content.set(body);
+        })
+    }
+
     let theme_props = ThemeProps {
         state: &global_state.theme,
     };
@@ -74,7 +71,6 @@ fn courses_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a CoursesStateRx
         input: &state.search_input,
         results: &state.search_results,
     };
-
     let filterprops = FilterProps {
         term: &state.term,
         level1: &state.level1,
@@ -98,7 +94,7 @@ fn courses_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a CoursesStateRx
         link ( rel="stylesheet", href="/tailwind.css")
         Layout (search_bar=search_bar_props, theme=theme_props) {
             div (class="w-full px-8 h-20 bg-primary relative") {
-                p(class="absolute bottom-3 font-bold text-2xl text-primary-content") {"Result for testing"}
+                p(class="absolute bottom-3 font-bold text-2xl text-primary-content") {"Search results for " (state.path.get_untracked())}
             }
             div (class="flex justify-center w-full") {
                  div (class="md:flex md:flex-row-reverse py-6 px-5") {
@@ -111,15 +107,14 @@ fn courses_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a CoursesStateRx
                     }
                 }
             }
-
-
         }
     }
 }
 
 #[engine_only_fn]
-async fn get_build_state(_info: StateGeneratorInfo<()>) -> CoursesState {
+async fn get_build_state(info: StateGeneratorInfo<()>) -> CoursesState {
     CoursesState {
+        path: info.path,
         search_input: "".to_string(),
         search_results: vec![],
         table_content: vec![],
@@ -143,6 +138,14 @@ async fn get_build_state(_info: StateGeneratorInfo<()>) -> CoursesState {
 }
 
 #[engine_only_fn]
+async fn get_build_paths() -> BuildPaths {
+    BuildPaths {
+        paths: vec!["".to_string()],
+        extra: ().into(),
+    }
+}
+
+#[engine_only_fn]
 fn head(cx: Scope, _state: CoursesState) -> View<SsrNode> {
     view! { cx,
         title { "Search for courses" }
@@ -151,7 +154,9 @@ fn head(cx: Scope, _state: CoursesState) -> View<SsrNode> {
 
 pub fn get_template<G: Html>() -> Template<G> {
     Template::build("courses")
+        .build_paths_fn(get_build_paths)
         .build_state_fn(get_build_state)
+        .incremental_generation()
         .view_with_state(courses_page)
         .head_with_state(head)
         .build()
