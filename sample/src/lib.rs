@@ -18,7 +18,10 @@ struct SampleMigrate;
 #[async_trait]
 impl Migrate for SampleMigrate {
     async fn migrate(pool: &PgPool) {
-        sqlx::migrate!("./migrations").run(pool).await.unwrap()
+        sqlx::migrate!("./migrations")
+            .run(pool)
+            .await
+            .expect("cannot run sample database migrations")
     }
 }
 
@@ -28,17 +31,17 @@ struct SampleCourseSync;
 impl CourseSync for SampleCourseSync {
     async fn init_sync(pool: PgPool) {
         sqlx::query_file!("./queries/insert_courses.sql")
-            .execute(&pool.clone())
+            .execute(&pool)
             .await
             .unwrap();
 
         sqlx::query_file!("./queries/insert_offerings.sql")
-            .execute(&pool.clone())
+            .execute(&pool)
             .await
             .unwrap();
 
         sqlx::query_file!("./queries/insert_schedules.sql")
-            .execute(&pool.clone())
+            .execute(&pool)
             .await
             .unwrap();
     }
@@ -59,6 +62,32 @@ impl CourseStore for SampleCourseStore {
             "./queries/select_courses.sql",
             2023,
             ["%", &course_code.to_uppercase(), "%"].concat()
+        )
+        .fetch_all(&self.pool)
+        .await
+    }
+
+    async fn select_course(
+        self: Arc<Self>,
+        course_code: &str,
+    ) -> Result<Option<CourseDetail>, Error> {
+        sqlx::query_file_as!(
+            CourseDetail,
+            "./queries/select_course.sql",
+            &course_code.to_uppercase()
+        )
+        .fetch_optional(&self.pool)
+        .await
+    }
+
+    async fn select_course_offerings(
+        self: Arc<Self>,
+        course_code: &str,
+    ) -> Result<Vec<OfferingDetail>, Error> {
+        sqlx::query_file_as!(
+            OfferingDetail,
+            "./queries/select_class_schedules.sql",
+            &course_code.to_uppercase()
         )
         .fetch_all(&self.pool)
         .await
