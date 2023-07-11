@@ -12,6 +12,8 @@ sqlx = { version = "0.6", features = [
     "offline",
     "postgres",
     "macros",
+    "chrono",
+    "json",
 ] }
 stores = { path = "../stores" }
 models = { path = "../models", features = ["sqlx"] }

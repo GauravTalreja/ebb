@@ -62,6 +62,8 @@ where
     let api_routes = Router::new()
         .route("/status", routing::get(hello_world))
         .route("/courses/:course_code", routing::get(http::list_courses))
+        .route("/course/:course_code", routing::get(http::get_course))
+        .route("/course_offerings/:course_code", routing::get(http::list_course_offerings))
         .layer(Extension(store))
         .layer(cors_options);
 
