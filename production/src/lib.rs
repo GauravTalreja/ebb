@@ -19,9 +19,11 @@ struct ProdMigrate;
 
 #[async_trait]
 impl Migrate for ProdMigrate {
-    async fn migrate(_pool: &PgPool) {
-        // sqlx::migrate!("./migrations").run(pool).await.unwrap()
-        todo!()
+    async fn migrate(pool: &PgPool) {
+        sqlx::migrate!("./migrations")
+            .run(pool)
+            .await
+            .expect("cannot run production database migrations")
     }
 }
 
@@ -29,8 +31,26 @@ struct ProdCourseSync;
 
 #[async_trait]
 impl CourseSync for ProdCourseSync {
-    async fn init_sync(_pool: PgPool) {
-        todo!()
+    async fn init_sync(pool: PgPool) {
+        sqlx::query_file!("./queries/insert_courses.sql")
+            .execute(&pool)
+            .await
+            .unwrap();
+
+        sqlx::query_file!("./queries/insert_offerings.sql")
+            .execute(&pool)
+            .await
+            .unwrap();
+
+        sqlx::query_file!("./queries/insert_schedules.sql")
+            .execute(&pool)
+            .await
+            .unwrap();
+
+        sqlx::query_file!("./queries/refresh_courses_mv.sql")
+            .execute(&pool)
+            .await
+            .unwrap();
     }
 }
 
@@ -42,9 +62,40 @@ struct ProdCourseStore {
 impl CourseStore for ProdCourseStore {
     async fn select_courses(
         self: Arc<Self>,
-        _course_code: &str,
+        course_code: &str,
     ) -> Result<Vec<CourseSummary>, Error> {
-        let _pool = &self.pool;
-        todo!()
+        sqlx::query_file_as!(
+            CourseSummary,
+            "./queries/select_courses.sql",
+            ["%", &course_code.to_uppercase(), "%"].concat()
+        )
+        .fetch_all(&self.pool)
+        .await
+    }
+
+    async fn select_course(
+        self: Arc<Self>,
+        course_code: &str,
+    ) -> Result<Option<CourseDetail>, Error> {
+        sqlx::query_file_as!(
+            CourseDetail,
+            "./queries/select_course.sql",
+            &course_code.to_uppercase()
+        )
+        .fetch_optional(&self.pool)
+        .await
+    }
+
+    async fn select_course_offerings(
+        self: Arc<Self>,
+        course_code: &str,
+    ) -> Result<Vec<OfferingDetail>, Error> {
+        sqlx::query_file_as!(
+            OfferingDetail,
+            "./queries/select_class_schedules.sql",
+            &course_code.to_uppercase()
+        )
+        .fetch_all(&self.pool)
+        .await
     }
 }

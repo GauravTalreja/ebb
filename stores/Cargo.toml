@@ -13,7 +13,7 @@ sqlx = { version = "0.6", features = [
     "offline",
     "postgres",
     "macros",
-    "chrono",
     "json",
 ] }
+chrono = { version = "0.4.23", features = ["serde"] }
 models = { path = "../models" }
