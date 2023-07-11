@@ -69,12 +69,16 @@ async fn get_build_state(_info: StateGeneratorInfo<()>) -> CourseDetailState {
     CourseDetailState {
         search_input: "".to_string(),
         search_results: vec![],
-        intro_content: CourseIntro {
+        intro_content: CourseDetail {
+            id: 0,
             catalog_number: "".to_string(),
             subject_code: "".to_string(),
             title: "".to_string(),
-            course_description: "".to_string(),
-            prerequisite_description: "".to_string(),
+            external_id: "".to_string(),
+            description: "".to_string(),
+            academic_level: "".to_string(),
+            optional_prerequisites: vec![],
+            required_prerequisites: vec![],
         },
         schedule_content: vec![],
     }

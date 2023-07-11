@@ -2,7 +2,7 @@ use perseus::prelude::*;
 use sycamore::prelude::*;
 
 
-use models::CourseDetail;
+use models::CourseSummary;
 
 // table input
 #[derive(Prop)]

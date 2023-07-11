@@ -34,12 +34,12 @@ pub fn CourseIntro<'a, G: Html>(
                     div { p (class="text-bold") { "Prerequisites:" } 
 
                         Keyed (
-                        iterable=intro_content.get().required_prerequisites(),
-                        view=|cx, content| view! { cx,
-                            p { (content)}
-                        },
-                        key=|content| content.clone(),
-                    )
+                            iterable=create_signal(cx, intro_content.get().required_prerequisites.clone()),
+                            view=|cx, content| view! { cx,
+                                p { (content)}
+                            },
+                            key=|content| content.clone(),
+                        )
                         
                     }
                 }

@@ -54,22 +54,22 @@ pub struct ScheduleDetails(Vec<ClassSchedule>);
 
 #[derive(Clone, Debug, Serialize, Deserialize, Eq, PartialEq, Hash)]
 pub struct ClassSchedule {
-    class_section: i16,
-    class_number: i16,
-    component: Option<String>,
-    start_time: NaiveTime,
-    end_time: NaiveTime,
-    monday: bool,
-    tuesday: bool,
-    wednesday: bool,
-    thursday: bool,
-    friday: bool,
-    saturday: bool,
-    sunday: bool,
-    instructor_name: Option<String>,
-    location: Option<String>,
-    max_enrollment: i16,
-    current_enrollment: i16,
+    pub class_section: i16,
+    pub class_number: i16,
+    pub component: Option<String>,
+    pub start_time: NaiveTime,
+    pub end_time: NaiveTime,
+    pub monday: bool,
+    pub tuesday: bool,
+    pub wednesday: bool,
+    pub thursday: bool,
+    pub friday: bool,
+    pub saturday: bool,
+    pub sunday: bool,
+    pub instructor_name: Option<String>,
+    pub location: Option<String>,
+    pub max_enrollment: i16,
+    pub current_enrollment: i16,
 }
 
 #[cfg(feature = "sqlx")]

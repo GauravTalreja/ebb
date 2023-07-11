@@ -37,13 +37,13 @@ pub fn Schedule<'a, G: Html>(
                                 iterable=schedule_content,
                                 view=|cx, content| view! { cx,
                                     // need change here
-                                    TableContent(section=content.component.unwrap_or_default() + content.class_section.to_string(),
-                                        class_num=content.class_number.clone(), 
+                                    TableContent(section=content.component.unwrap_or_default() + &content.class_section.to_string(),
+                                        class_num=content.class_number, 
                                         enrolled=format!("{}/{}", content.current_enrollment.to_string(), content.max_enrollment.to_string()),
                                         time=format!("{}--{}", content.start_time.clone(), content.end_time.clone()),
                                         date="MTUW".to_string(), // TODO: create adjust to proper display
                                         location=content.location.unwrap_or_default(),
-                                        instructor=content.instructor.unwrap_or_default(),
+                                        instructor=content.instructor_name.unwrap_or_default(),
                                     )  
                                 },
                                 key=|content| content.clone(),
@@ -51,7 +51,7 @@ pub fn Schedule<'a, G: Html>(
                             
                             TableContent (
                                 section="001".to_string(),
-                                class_num="1247".to_string(), 
+                                class_num=1247, 
                                 enrolled="50/80".to_string(),
                                 time="9:00-11:00".to_string(),
                                 date="MWF".to_string(),
@@ -60,7 +60,7 @@ pub fn Schedule<'a, G: Html>(
                             )     
                             TableContent (
                                 section="002".to_string(),
-                                class_num="1248".to_string(), 
+                                class_num=1248, 
                                 enrolled="10/20".to_string(),
                                 time="12:00-14:00".to_string(),
                                 date="MWF".to_string(),
@@ -99,7 +99,7 @@ pub struct TableContentProps {
     
     // TODO: include more content
     section: String,
-    class_num: String,
+    class_num: i16,
     enrolled: String,
     time: String,
     date: String,
