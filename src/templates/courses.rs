@@ -4,7 +4,7 @@ use sycamore::prelude::*;
 
 use crate::global_state::AppStateRx;
 
-use models::CourseSummary;
+use models::CourseSummaryDisplay;
 
 use crate::components::course_table::CourseTable;
 use crate::components::filter::{Filter, FilterProps};
@@ -19,7 +19,7 @@ pub struct CoursesState {
 
     // query resut for table, 
     // TODO: should based on user input & filter
-    table_content: Vec<CourseSummary>,
+    table_content: Vec<CourseSummaryDisplay>,
 
     // filter
     // term
@@ -57,7 +57,7 @@ fn courses_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a CoursesStateRx
                 .send()
                 .await
                 .unwrap()
-                .json::<Vec<CourseSummary>>()
+                .json::<Vec<CourseSummaryDisplay>>()
                 .await
                 .unwrap()
                 .to_vec();

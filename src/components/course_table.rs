@@ -2,12 +2,12 @@ use perseus::prelude::*;
 use sycamore::prelude::*;
 
 
-use models::CourseSummary;
+use models::CourseSummaryDisplay;
 
 // table input
 #[derive(Prop)]
 pub struct CourseTableProps<'a>  {
-    pub table_content: &'a RcSignal<Vec<CourseSummary>>,
+    pub table_content: &'a RcSignal<Vec<CourseSummaryDisplay>>,
 
 }
 
@@ -39,8 +39,8 @@ pub fn CourseTable<'a, G: Html>(
                             TableContent(
                                 code=content.subject_code.clone() + &content.catalog_number.to_string(),
                                 coursename=content.title.clone(),
-                                location="UW".to_string(),
-                                status="status".to_string()
+                                location=content.location.clone(),
+                                status=content.status.clone()
                             )
                         },
                         key=|content| content.clone(),
