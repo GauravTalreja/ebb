@@ -5,7 +5,7 @@ use crate::global_state::AppStateRx;
 use perseus::prelude::*;
 use serde::{Deserialize, Serialize};
 use sycamore::prelude::*;
-use models::{CourseIntro, CourseSchedule};
+use models::{CourseDetail, ClassSchedule};
 
 #[derive(Serialize, Deserialize, ReactiveState, Clone)]
 #[rx(alias = "CourseDetailStateRx")]
@@ -16,11 +16,11 @@ pub struct CourseDetailState {
 
     // description props
     // TODO: change it to corresponding backend structure (model/src/course.rs)
-    intro_content: CourseIntro,
+    intro_content: CourseDetail,
 
     // schedule table query
     // TODO: change it to corresponding backend structure
-    schedule_content: Vec<CourseSchedule>,
+    schedule_content: Vec<ClassSchedule>,
 }
 
 fn course_detail<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a CourseDetailStateRx) -> View<G> {

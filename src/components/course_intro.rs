@@ -1,10 +1,10 @@
 use sycamore::prelude::*;
-use models::CourseIntro;
+use models::CourseDetail;
 
 // table heading
 #[derive(Prop)]
 pub struct CourseIntroProps<'a> {
-    pub intro_content: &'a RcSignal<CourseIntro>,
+    pub intro_content: &'a RcSignal<CourseDetail>,
 }
 // #[derive(Prop)]
 // pub struct CourseIntroProps {
@@ -24,7 +24,7 @@ pub fn CourseIntro<'a, G: Html>(
                 div (class="w-full md:flex-initial md:w-2/3") {
                     div { p (class="text-xl font-bold") { (intro_content.get().subject_code.clone() + &intro_content.get().catalog_number.clone()) } }
                     div { p (class="text-xl font-bold mb-4") { (intro_content.get().title.clone()) } }
-                    div (class="mb-4") { p  { (intro_content.get().course_description.clone()) } }
+                    div (class="mb-4") { p  { (intro_content.get().description.clone()) } }
                     
                     button (class="btn btn-primary") {"Add to wish list"} 
                     
@@ -32,8 +32,16 @@ pub fn CourseIntro<'a, G: Html>(
                 div (class="divider md:divider-horizontal")
                 div (class="w-full md:flex-1 md:w-1/3") {
                     div { p (class="text-bold") { "Prerequisites:" } 
-                        p { (intro_content.get().prerequisite_description.clone()) }
-                        }
+
+                        Keyed (
+                        iterable=intro_content.get().required_prerequisites(),
+                        view=|cx, content| view! { cx,
+                            p { (content)}
+                        },
+                        key=|content| content.clone(),
+                    )
+                        
+                    }
                 }
             }
         }

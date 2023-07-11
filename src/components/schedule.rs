@@ -1,11 +1,10 @@
 use sycamore::prelude::*;
-use models::CourseSchedule;
-
+use models::ClassSchedule;
 
 // schedule input
 #[derive(Prop)]
 pub struct ScheduleProps<'a> {
-    pub schedule_content: &'a RcSignal<Vec<CourseSchedule>>,
+    pub schedule_content: &'a RcSignal<Vec<ClassSchedule>>,
 }
 
 // table structure
@@ -38,13 +37,13 @@ pub fn Schedule<'a, G: Html>(
                                 iterable=schedule_content,
                                 view=|cx, content| view! { cx,
                                     // need change here
-                                    TableContent(section=content.section.clone(),
+                                    TableContent(section=content.component.unwrap_or_default() + content.class_section.to_string(),
                                         class_num=content.class_number.clone(), 
-                                        enrolled=format!("{}/{}", content.current_enroll.to_string(), content.max_enroll.to_string()),
+                                        enrolled=format!("{}/{}", content.current_enrollment.to_string(), content.max_enrollment.to_string()),
                                         time=format!("{}--{}", content.start_time.clone(), content.end_time.clone()),
-                                        date=content.date.clone(),
-                                        location=content.location.clone(),
-                                        instructor=content.instructor.clone(),
+                                        date="MTUW".to_string(), // TODO: create adjust to proper display
+                                        location=content.location.unwrap_or_default(),
+                                        instructor=content.instructor.unwrap_or_default(),
                                     )  
                                 },
                                 key=|content| content.clone(),

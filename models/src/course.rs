@@ -1,39 +1,7 @@
+use chrono::NaiveTime;
 use serde::{Deserialize, Serialize};
-
-// struct for course_search page table display
-#[derive(Clone, Debug, Serialize, Deserialize, Eq, PartialEq, Hash)]
-pub struct CourseSummaryDisplay {
-    pub catalog_number: String,
-    pub subject_code: String,
-    pub title: String,
-    pub location: String,
-    pub status: String,
-}
-
-// struct for course_detail course intro display
-#[derive(Clone, Debug, Serialize, Deserialize, Eq, PartialEq, Hash)]
-pub struct CourseIntro {
-    pub catalog_number: String,
-    pub subject_code: String,
-    pub title: String,
-    pub course_description: String,
-    pub prerequisite_description: String,
-}
-
-// struct for course_detail section sehcdule display
-#[derive(Clone, Debug, Serialize, Deserialize, Eq, PartialEq, Hash)]
-pub struct CourseSchedule {
-    pub section: String, // LEC001, LEC002, TUT002 etc
-    pub class_number: String,
-    pub current_enroll: i32,
-    pub max_enroll: i32,
-    pub start_time: String,
-    pub end_time: String,
-    pub date: String, // "MTWTF"
-    pub location: String, // building + room number
-    pub instructor: String,
-}
-
+#[cfg(feature = "sqlx")]
+use sqlx::{Database, Postgres, Type};
 
 #[derive(Clone, Debug, Serialize, Deserialize, Eq, PartialEq, Hash)]
 pub struct CourseSummary {
@@ -48,15 +16,61 @@ pub struct CourseSummary {
 #[derive(Clone, Debug, Serialize, Deserialize, Eq, PartialEq, Hash)]
 pub struct OfferingSummary {
     pub year: i16,
-    pub term: String
+    pub term: String,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize, Eq, PartialEq, Hash)]
 #[serde(transparent)]
 pub struct OfferingSummaries(Vec<OfferingSummary>);
 
-#[cfg(feature = "sqlx")]
-use sqlx::{Database, Postgres, Type};
+#[derive(Clone, Debug, Serialize, Deserialize, Eq, PartialEq, Hash)]
+pub struct CourseDetail {
+    // TODO: Store CourseSummary as a field
+    pub id: i32,
+    pub catalog_number: String,
+    pub subject_code: String,
+    pub title: String,
+    pub external_id: String,
+    pub description: String,
+    pub academic_level: String,
+    pub optional_prerequisites: Vec<String>,
+    pub required_prerequisites: Vec<String>,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize, Eq, PartialEq, Hash)]
+pub struct OfferingDetail {
+    // TODO: Store OfferingSummary as a field
+    pub course_id: i32,
+    pub course_catalog_number: String,
+    pub course_subject_code: String,
+    pub year: i16,
+    pub term: String,
+    pub schedules: ScheduleDetails,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize, Eq, PartialEq, Hash)]
+#[serde(transparent)]
+pub struct ScheduleDetails(Vec<ClassSchedule>);
+
+#[derive(Clone, Debug, Serialize, Deserialize, Eq, PartialEq, Hash)]
+pub struct ClassSchedule {
+    class_section: i16,
+    class_number: i16,
+    component: Option<String>,
+    start_time: NaiveTime,
+    end_time: NaiveTime,
+    monday: bool,
+    tuesday: bool,
+    wednesday: bool,
+    thursday: bool,
+    friday: bool,
+    saturday: bool,
+    sunday: bool,
+    instructor_name: Option<String>,
+    location: Option<String>,
+    max_enrollment: i16,
+    current_enrollment: i16,
+}
 
 #[cfg(feature = "sqlx")]
 impl Type<Postgres> for OfferingSummaries {
@@ -67,6 +81,24 @@ impl Type<Postgres> for OfferingSummaries {
 
 #[cfg(feature = "sqlx")]
 impl<'r> sqlx::Decode<'r, Postgres> for OfferingSummaries {
+    fn decode(
+        value: <Postgres as sqlx::database::HasValueRef<'r>>::ValueRef,
+    ) -> std::result::Result<Self, sqlx::error::BoxDynError> {
+        // decode it to JSON, and then convert it
+        let as_json = serde_json::Value::decode(value)?;
+        serde_json::from_value(as_json).map_err(sqlx::error::BoxDynError::from)
+    }
+}
+
+#[cfg(feature = "sqlx")]
+impl Type<Postgres> for ScheduleDetails {
+    fn type_info() -> <Postgres as Database>::TypeInfo {
+        <serde_json::Value as Type<Postgres>>::type_info()
+    }
+}
+
+#[cfg(feature = "sqlx")]
+impl<'r> sqlx::Decode<'r, Postgres> for ScheduleDetails {
     fn decode(
         value: <Postgres as sqlx::database::HasValueRef<'r>>::ValueRef,
     ) -> std::result::Result<Self, sqlx::error::BoxDynError> {

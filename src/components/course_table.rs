@@ -2,12 +2,12 @@ use perseus::prelude::*;
 use sycamore::prelude::*;
 
 
-use models::CourseSummaryDisplay;
+use models::CourseDetail;
 
 // table input
 #[derive(Prop)]
 pub struct CourseTableProps<'a>  {
-    pub table_content: &'a RcSignal<Vec<CourseSummaryDisplay>>,
+    pub table_content: &'a RcSignal<Vec<CourseSummary>>,
 
 }
 
@@ -27,8 +27,8 @@ pub fn CourseTable<'a, G: Html>(
                     tr() {
                         TableColumnHead(name="Code".to_string())
                         TableColumnHead(name="Course Name".to_string())
-                        TableColumnHead(name="Location".to_string())
-                        TableColumnHead(name="Status".to_string())
+                        // TableColumnHead(name="Location".to_string())
+                        // TableColumnHead(name="Status".to_string())
                     }
                 }
                 tbody() {
@@ -39,8 +39,8 @@ pub fn CourseTable<'a, G: Html>(
                             TableContent(
                                 code=content.subject_code.clone() + &content.catalog_number.to_string(),
                                 coursename=content.title.clone(),
-                                location=content.location.clone(),
-                                status=content.status.clone()
+                                // location=content.location.clone(),
+                                // status=content.status.clone()
                             )
                         },
                         key=|content| content.clone(),
@@ -49,23 +49,27 @@ pub fn CourseTable<'a, G: Html>(
                     TableContent(
                                 code="CS136".to_string(),
                                 coursename="Elementary Algorithm Design and Data Abstraction".to_string(),
-                                location="ONLN/UW".to_string(),
-                                status="Open".to_string())
+                                // location="ONLN/UW".to_string(),
+                                // status="Open".to_string()
+                            )
                     TableContent(
                                 code="CS246".to_string(),
                                 coursename="Object-Oriented Software Development".to_string(),
-                                location="ONLN/UW".to_string(),
-                                status="Closed".to_string())
+                                // location="ONLN/UW".to_string(),
+                                // status="Closed".to_string()
+                            )
                     TableContent(
                                 code="MUSIC140".to_string(),
                                 coursename="Popular Music and Culture".to_string(),
-                                location="ONLN".to_string(),
-                                status="Open".to_string())
+                                // location="ONLN".to_string(),
+                                // status="Open".to_string()
+                            )
                     TableContent(
                                 code="ECON102".to_string(),
                                 coursename="Introduction to Macroeconomics".to_string(),
-                                location="REN".to_string(),
-                                status="Open".to_string())
+                                // location="REN".to_string(),
+                                // status="Open".to_string()
+                            )
 
                 }
 
@@ -99,8 +103,8 @@ pub struct TableContentProps {
     
     code: String,
     coursename: String,
-    location: String,
-    status: String,
+    // location: String,
+    // status: String,
     
 }
 // TODO: Make results fancier than plain text
@@ -112,8 +116,8 @@ fn TableContent<G: Html>(
     TableContentProps {
         code,
         coursename,
-        location,
-        status,
+        // location,
+        // status,
     }: TableContentProps,
 ) -> View<G> {
     view! { cx,
@@ -122,8 +126,8 @@ fn TableContent<G: Html>(
             
             td() { (code) }
             td() { (coursename) }
-            td() { (location) }
-            td() { (status) }
+            // td() { (location) }
+            // td() { (status) }
 
         }
     }

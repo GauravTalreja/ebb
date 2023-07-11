@@ -6,7 +6,7 @@ use crate::{
     },
     global_state::AppStateRx,
 };
-use models::CourseSummaryDisplay;
+use models::CourseSummary;
 use perseus::prelude::*;
 use serde::{Deserialize, Serialize};
 use sycamore::prelude::*;
@@ -21,7 +21,7 @@ pub struct CoursesState {
     search_results: Vec<String>,
 
     // TODO: Change based on filters
-    table_content: Vec<CourseSummaryDisplay>,
+    table_content: Vec<CourseSummary>,
 
     // Filters
     selectterm: String,
@@ -55,7 +55,7 @@ fn courses_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a CoursesStateRx
             .send()
             .await
             .unwrap()
-            .json::<Vec<CourseSummaryDisplay>>()
+            .json::<Vec<CourseSummary>>()
             .await
             .unwrap()
             .to_vec();
