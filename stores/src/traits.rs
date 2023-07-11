@@ -17,4 +17,12 @@ pub trait CourseStore {
         self: Arc<Self>,
         course_code: &str,
     ) -> Result<Vec<CourseSummary>, Error>;
+    async fn select_course(
+        self: Arc<Self>,
+        course_code: &str,
+    ) -> Result<Option<CourseDetail>, Error>;
+    async fn select_course_offerings(
+        self: Arc<Self>,
+        course_code: &str,
+    ) -> Result<Vec<OfferingDetail>, Error>;
 }
