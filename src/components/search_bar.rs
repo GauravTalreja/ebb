@@ -69,7 +69,11 @@ pub fn SearchBar<'a, G: Html>(
                             SearchResult(name=result.clone(), link=format!("c/{}",result))
                         },
                     )
-                    SearchResult(name="View all courses".to_string(), link="courses".to_string())
+                    li {
+                        a (href=format!("courses/{}", input.get().as_str())) {
+                            (format!("View all {} courses", input.get().as_str()))
+                        }
+                    }
                 }
             }
         }
