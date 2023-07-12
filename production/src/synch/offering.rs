@@ -75,9 +75,10 @@ pub fn map_course_ids_to_offering_query(course_ids: &Vec<i32>, term_name: String
     file.write_all(start_of_query.as_bytes()).expect(fail_msg);
 
     for (idx, id) in course_ids.iter().enumerate() {
-        let mut val: String = format!("\t({}, {}, '{}'),\n", id, year, term);
+        let mut val: String = format!("({}, {}, '{}'),\n", id, year, term);
         // Last tuple does not have comma.
         if idx == course_ids.len() - 1 {
+            error!("LAST OFFERING VALUE: {}", val);
             val.pop(); // Remove newline.
             val.pop(); // Remove comma.
             val.push('\n'); // Insert newline back.
