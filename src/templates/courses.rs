@@ -6,7 +6,7 @@ use crate::{
     },
     global_state::AppStateRx,
 };
-use models::CourseSummary;
+use models::{CourseSummary, OfferingDetail};
 use perseus::prelude::*;
 use serde::{Deserialize, Serialize};
 use sycamore::prelude::*;
@@ -22,6 +22,9 @@ pub struct CoursesState {
 
     // TODO: Change based on filters
     table_content: Vec<CourseSummary>,
+
+    // Offering details per course. Order consistent with order in table_content.
+    course_offering_details: Vec<Vec<OfferingDetail>>,
 
     // Filters
     selectterm: String,
@@ -45,6 +48,7 @@ pub struct CoursesState {
 fn courses_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a CoursesStateRx) -> View<G> {
     let global_state = Reactor::<G>::from_cx(cx).get_global_state::<AppStateRx>(cx);
     let table_content = &state.table_content;
+    let course_offering_details = &state.course_offering_details;
 
     #[cfg(client)]
     if !&state.path.get_untracked().is_empty() {
@@ -59,6 +63,29 @@ fn courses_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a CoursesStateRx
             .await
             .unwrap()
             .to_vec();
+
+            for course_index in 0..body.len() {
+                let course_code = format!(
+                    "{}{}",
+                    &body.get(course_index).unwrap().subject_code,
+                    &body.get(course_index).unwrap().catalog_number,
+                );
+                let offering_summary = reqwasm::http::Request::get(
+                    format!(
+                        "api/v1/course_offerings/{}",
+                        course_code
+                    ).as_str(),
+                )
+                .send()
+                .await
+                .unwrap()
+                .json::<Vec<OfferingDetail>>()
+                .await
+                .unwrap()
+                .to_vec();
+
+                course_offering_summaries.modify().push(offering_summary.clone());
+            }
 
             table_content.set(body);
         })
@@ -118,6 +145,7 @@ async fn get_build_state(info: StateGeneratorInfo<()>) -> CoursesState {
         search_input: "".to_string(),
         search_results: vec![],
         table_content: vec![],
+        course_offering_details: vec![],
         selectterm: "".to_string(),
         level1: false,
         level2: false,
