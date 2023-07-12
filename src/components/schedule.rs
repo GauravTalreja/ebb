@@ -41,7 +41,11 @@ pub fn Schedule<'a, G: Html>(
                                         class_num=content.class_number, 
                                         enrolled=format!("{}/{}", content.current_enrollment.to_string(), content.max_enrollment.to_string()),
                                         time=format!("{}--{}", content.start_time.clone(), content.end_time.clone()),
-                                        date="MTUW".to_string(), // TODO: create adjust to proper display
+                                        mon=content.monday,
+                                        tue=content.tuesday,
+                                        wed=content.wednesday,
+                                        thur=content.thursday,
+                                        fri=content.friday,
                                         location=content.location.unwrap_or_default(),
                                         instructor=content.instructor_name.unwrap_or_default(),
                                     )  
@@ -54,7 +58,11 @@ pub fn Schedule<'a, G: Html>(
                                 class_num=1247, 
                                 enrolled="50/80".to_string(),
                                 time="9:00-11:00".to_string(),
-                                date="MWF".to_string(),
+                                mon=true,
+                                tue=false,
+                                wed=true,
+                                thur=false,
+                                fri=false,
                                 location="UW".to_string(),
                                 instructor="Henry Lans".to_string(),
                             )     
@@ -63,7 +71,11 @@ pub fn Schedule<'a, G: Html>(
                                 class_num=1248, 
                                 enrolled="10/20".to_string(),
                                 time="12:00-14:00".to_string(),
-                                date="MWF".to_string(),
+                                mon=false,
+                                tue=false,
+                                wed=true,
+                                thur=true,
+                                fri=false,
                                 location="ONLN".to_string(),
                                 instructor="Henry Lans".to_string(),
                             )     
@@ -102,7 +114,11 @@ pub struct TableContentProps {
     class_num: i16,
     enrolled: String,
     time: String,
-    date: String,
+    mon: bool,
+    tue: bool,
+    wed: bool,
+    thur: bool,
+    fri: bool,
     location: String,
     instructor: String
     
@@ -112,7 +128,24 @@ pub struct TableContentProps {
 // (ex. Math Course -> Primary Color, Eng Course -> Secondary Color etc.)
 #[component]
 fn TableContent<G: Html>(cx: Scope, 
-    TableContentProps { section, class_num, enrolled, time, date, location, instructor }: TableContentProps) -> View<G> {
+    TableContentProps { section, class_num, enrolled, time, mon, tue, wed, thur, fri, location, instructor }: TableContentProps) -> View<G> {
+    
+    let mut dates = String::new();
+    if mon {
+        dates += "M ";
+    }
+    if tue {
+        dates += "Tu ";
+    }
+    if wed {
+        dates += "W ";
+    }
+    if thur {
+        dates += "Th ";
+    }
+    if fri {
+        dates += "F";
+    }
     view! { cx,
         // TODO: change hover color hover:bg-primary-content
         tr (class="hover ") {
@@ -120,7 +153,7 @@ fn TableContent<G: Html>(cx: Scope,
             td() { (class_num) }
             td() { (enrolled) }
             td() { (time) } 
-            td() { (date) }  
+            td() { (dates) }  
             td() { (location) }
             td() { (instructor) }  
             td() {
