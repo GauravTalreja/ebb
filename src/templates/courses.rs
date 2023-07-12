@@ -70,7 +70,7 @@ fn courses_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a CoursesStateRx
                     &body.get(course_index).unwrap().subject_code,
                     &body.get(course_index).unwrap().catalog_number,
                 );
-                let offering_summary = reqwasm::http::Request::get(
+                let offering_details = reqwasm::http::Request::get(
                     format!(
                         "api/v1/course_offerings/{}",
                         course_code
@@ -84,7 +84,7 @@ fn courses_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a CoursesStateRx
                 .unwrap()
                 .to_vec();
 
-                course_offering_summaries.modify().push(offering_summary.clone());
+                course_offering_details.modify().push(offering_details);
             }
 
             table_content.set(body);
