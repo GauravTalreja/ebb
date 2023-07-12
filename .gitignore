@@ -6,3 +6,7 @@ tailwindcss-*
 node_modules/
 /.env
 .DS_Store
+.vscode/
+production/src/synch/queries/sync_courses.sql
+production/src/synch/queries/sync_offerings.sql
+production/src/synch/queries/sync_schedules.sql
