@@ -9,8 +9,6 @@ services:
       POSTGRES_PASSWORD: ebb
       POSTGRES_DB: ebb
       PGDATA: /data/postgres
-    volumes:
-      - postgres-db:/data/ebb_sample_db
     ports:
       - "5431:5432"
 
@@ -22,8 +20,6 @@ services:
       POSTGRES_PASSWORD: ebb
       POSTGRES_DB: ebb
       PGDATA: /data/postgres
-    volumes:
-      - postgres-db:/data/ebb_prod_db
     ports:
       - "5432:5432"
 
