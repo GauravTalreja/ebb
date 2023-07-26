@@ -1,5 +1,6 @@
 use crate::components::{footer::Footer, search_bar::SearchBar};
 use crate::global_state::AppStateRx;
+use models::CourseSummary;
 use perseus::prelude::*;
 use serde::{Deserialize, Serialize};
 use sycamore::prelude::*;
@@ -9,7 +10,7 @@ use sycamore::prelude::*;
 #[rx(alias = "IndexPageStateRx")]
 pub struct IndexPageState {
     search_input: String,
-    search_results: Vec<String>,
+    search_results: Vec<CourseSummary>,
 }
 
 fn index_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a IndexPageStateRx) -> View<G> {
