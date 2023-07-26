@@ -54,8 +54,8 @@ pub fn Filter<'a, G: Html>(
                 h3 (class="text-lg font-semibold mb-2") { "Term" }
                 select (bind:value=term, class="select select-primary w-full") {
                     option (disabled=true) { "Select term"}
-                    option (value="Spring 2023") { "Spring 2023" }
-                    option (value="Fall 2023") { "Fall 2023" }
+                    option (value="Spring") { "Spring 2023" }
+                    option (value="Fall") { "Fall 2023" }
                 }
             }
 

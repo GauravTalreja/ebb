@@ -90,6 +90,85 @@ fn courses_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a CoursesStateRx
         sunday: &state.sunday,
     };
 
+    #[cfg(client)]
+    create_effect_scoped(cx, |cx| {
+        filterprops.term.get();
+        filterprops.level1.get();
+        filterprops.level2.get();
+        filterprops.level3.get();
+        filterprops.level4.get();
+        filterprops.include_closed.get();
+        filterprops.morning.get();
+        filterprops.afternoon.get();
+        filterprops.evening.get();
+        filterprops.monday.get();
+        filterprops.tuesday.get();
+        filterprops.wednesday.get();
+        filterprops.thursday.get();
+        filterprops.friday.get();
+        filterprops.saturday.get();
+        filterprops.sunday.get();
+
+        let filtered_content: Vec<CourseSummary> = vec![];
+        spawn_local_scoped(cx, async {
+            let body = reqwasm::http::Request::get(
+                format!("/api/v1/courses/{}/term/{}/{}/{}/{}/{}/{}/{}/{}/{}/{}/{}/{}/{}/{}/{}/{}", 
+                &state.path.get_untracked(),
+                &state.term.get_untracked(),
+                &state.level1.get_untracked(),
+                &state.level2.get_untracked(),
+                &state.level3.get_untracked(),
+                &state.level4.get_untracked(),
+                &state.include_closed.get_untracked(),
+                &state.morning.get_untracked(),
+                &state.afternoon.get_untracked(),
+                &state.evening.get_untracked(),
+                &state.monday.get_untracked(),
+                &state.tuesday.get_untracked(),
+                &state.wednesday.get_untracked(),
+                &state.thursday.get_untracked(),
+                &state.friday.get_untracked(),
+                &state.saturday.get_untracked(),
+                &state.sunday.get_untracked(),
+            ).as_str(),
+                
+            )
+            .send()
+            .await
+            .unwrap()
+            .json::<Vec<CourseSummary>>()
+            .await
+            .unwrap()
+            .to_vec();
+
+            // for course_index in 0..body.len() {
+            //     let course_code = format!(
+            //         "{}{}",
+            //         &body.get(course_index).unwrap().subject_code,
+            //         &body.get(course_index).unwrap().catalog_number,
+            //     );
+            //     let offering_details = reqwasm::http::Request::get(
+            //         format!(
+            //             "api/v1/course_offerings/{}",
+            //             course_code
+            //         ).as_str(),
+            //     )
+            //     .send()
+            //     .await
+            //     .unwrap()
+            //     .json::<Vec<OfferingDetail>>()
+            //     .await
+            //     .unwrap()
+            //     .to_vec();
+
+            //     course_offering_details.modify().push(offering_details);
+            // }
+
+            table_content.set(body);
+        })
+    });
+
+
     view! { cx,
         link ( rel="stylesheet", href="/tailwind.css")
         Layout (search_bar=search_bar_props, theme=theme_props) {

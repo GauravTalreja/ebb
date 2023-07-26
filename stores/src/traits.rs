@@ -21,6 +21,25 @@ pub trait CourseStore {
         self: Arc<Self>,
         course_code: &str,
     ) -> Result<Option<CourseDetail>, Error>;
+    async fn select_courses_with_filters(
+        self: Arc<Self>,
+        course_code: &str,
+        term: &str,
+        level1: bool,
+        level2: bool,
+        level3: bool,
+        level4: bool,
+        include_closed: bool,
+        morning: bool,
+        afternoon: bool,
+        evening: bool,
+        monday: bool,
+        tuesday: bool,
+        wednesday: bool,
+        thursday: bool,
+        friday: bool,
+        saturday: bool,
+    ) -> Result<Vec<CourseSummary>, Error>;
     async fn select_course_offerings(
         self: Arc<Self>,
         course_code: &str,

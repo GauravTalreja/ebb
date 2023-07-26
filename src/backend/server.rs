@@ -62,6 +62,7 @@ where
     let api_routes = Router::new()
         .route("/status", routing::get(hello_world))
         .route("/courses/:course_code", routing::get(http::list_courses))
+        .route("/courses/:course_code/term/:term/:level_1/:level_2/:level_3/:level_4/:include_closed/:morning/:afternoon/:evening/:monday/:tuesday/:wednesday/:thursday/:friday/:saturday/:sunday", routing::get(http::list_courses_with_filters))
         .route("/course/:course_code", routing::get(http::get_course))
         .route("/course_offerings/:course_code", routing::get(http::list_course_offerings))
         .layer(Extension(store))
