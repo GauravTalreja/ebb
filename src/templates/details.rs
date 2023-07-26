@@ -47,7 +47,8 @@ fn details_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a DetailStateRx)
         view! { cx,
             link ( rel="stylesheet", href="/tailwind.css")
             Layout (search_bar=search_bar_props, theme=theme_props) {
-                div (class="prose m-16") {
+                div (class="prose prose-2xl w-full mx-16") {
+                    div (class = "h-16")
                     h1 { (state.course_detail.get().subject_code.clone() + " " + &state.course_detail.get().catalog_number + " - " + &state.course_detail.get().title) }
                     p { (state.course_detail.get().description) }
                     (if !state.course_detail.get().required_prerequisites.is_empty() {
@@ -102,8 +103,8 @@ async fn get_build_state(info: StateGeneratorInfo<()>) -> DetailState {
             external_id: "".to_owned(),
             description: "".to_owned(),
             academic_level: "".to_owned(),
-            optional_prerequisites: vec!["".to_owned()],
-            required_prerequisites: vec!["".to_owned()],
+            optional_prerequisites: vec!["null".to_owned()],
+            required_prerequisites: vec!["undefined".to_owned()],
         },
         search_input: "".to_string(),
         search_results: vec![],
