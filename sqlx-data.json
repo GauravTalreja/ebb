@@ -233,6 +233,35 @@
         },
         "hash": "1369ada1b329643cba0a87ecca3b36a7c0bbaed87d526e040d99e7d64ca357fb"
     },
+    "a1cef2fdda9a8956194270dfd6c15e09863cd0552a9e2f81aa7d9c65830e7b24": {
+        "query": "INSERT INTO class_schedule (class_section, class_number, component, start_time, end_time, monday, tuesday, wednesday, thursday, friday, saturday, sunday, instructor_name, location, course_offering_id, max_enrollment, current_enrollment) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17) ON CONFLICT (class_number, course_offering_id) DO UPDATE SET max_enrollment = EXCLUDED.max_enrollment, current_enrollment = EXCLUDED.current_enrollment;",
+        "describe": {
+            "columns": [],
+            "parameters": {
+                "Left": [
+                    "Int2",
+                    "Int2",
+                    "Varchar",
+                    "Time",
+                    "Time",
+                    "Bool",
+                    "Bool",
+                    "Bool",
+                    "Bool",
+                    "Bool",
+                    "Bool",
+                    "Bool",
+                    "Text",
+                    "Varchar",
+                    "Int4",
+                    "Int2",
+                    "Int2"
+                ]
+            },
+            "nullable": []
+        },
+        "hash": "a1cef2fdda9a8956194270dfd6c15e09863cd0552a9e2f81aa7d9c65830e7b24"
+    },
     "82b4ddf7ce4b9f36a47094d72403c63ad65998bdb3fa3894f97b3e33a34ea34d": {
         "query": "SELECT\n    c.id AS \"course_id!\",\n    c.catalog_number as course_catalog_number,\n    c.subject_code AS course_subject_code,\n    year AS \"year!\",\n    term AS \"term!\",\n    COALESCE(\n        NULLIF(jsonb_agg(DISTINCT cs.*)::TEXT, '[null]'),\n        '[]'\n    )::jsonb AS \"schedules!: _\"\nFROM\n    course_offerings co\n    LEFT JOIN courses c ON c.id = co.course_id\n    LEFT JOIN class_schedule cs ON cs.course_offering_id = co.id\nWHERE\n    UPPER(c.subject_code) || c.catalog_number::VARCHAR = UPPER($1)\nGROUP BY\n    c.id,\n    co.id;\n",
         "describe": {
