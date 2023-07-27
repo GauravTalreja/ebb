@@ -18,7 +18,7 @@ pub struct CoursesState {
 
     // Searchbar
     search_input: String,
-    search_results: Vec<String>,
+    search_results: Vec<CourseSummary>,
 
     // TODO: Change based on filters
     table_content: Vec<CourseSummary>,
@@ -173,7 +173,13 @@ fn courses_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a CoursesStateRx
         link ( rel="stylesheet", href="/tailwind.css")
         Layout (search_bar=search_bar_props, theme=theme_props) {
             div (class="w-full px-8 h-20 bg-primary relative") {
-                p(class="absolute bottom-3 font-bold text-2xl text-primary-content") {"Search results for " (state.path.get_untracked())}
+                p(class="absolute bottom-3 font-bold text-2xl text-primary-content") {
+                    (if state.path.get_untracked().is_empty() {
+                        "Showing all courses".to_owned()
+                    } else {
+                        format!("Search results for {}", state.path.get_untracked())
+                    })
+                }
             }
             div (class="flex justify-center w-full") {
                  div (class="md:flex md:flex-row-reverse py-6 px-5") {
