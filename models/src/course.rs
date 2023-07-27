@@ -21,7 +21,9 @@ pub struct OfferingSummary {
 
 #[derive(Clone, Debug, Serialize, Deserialize, Eq, PartialEq, Hash)]
 #[serde(transparent)]
-pub struct OfferingSummaries(Vec<OfferingSummary>);
+pub struct OfferingSummaries{
+    pub summaries: Vec<OfferingSummary>,
+}
 
 #[derive(Clone, Debug, Serialize, Deserialize, Eq, PartialEq, Hash)]
 pub struct CourseDetail {

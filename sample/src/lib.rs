@@ -80,6 +80,77 @@ impl CourseStore for SampleCourseStore {
         .await
     }
 
+    async fn select_courses_with_filters(
+        self: Arc<Self>,
+        course_code: &str,
+        term: &str,
+        level1: bool,
+        level2: bool,
+        level3: bool,
+        level4: bool,
+        include_closed: bool,
+        morning: bool,
+        afternoon: bool,
+        evening: bool,
+        monday: bool,
+        tuesday: bool,
+        wednesday: bool,
+        thursday: bool,
+        friday: bool,
+        saturday: bool,
+    ) -> Result<Vec<CourseSummary>, Error> {
+
+        let mut valid_codes: [String; 4] = ["".to_string(), "".to_string(), "".to_string(), "".to_string()];
+        if !level1 && !level2 && !level3 && !level4 {
+            valid_codes[0] = "%".to_string();
+        }
+        if level1 {
+            valid_codes[0] = "1%".to_string();
+        };
+        if level2 {
+            valid_codes[1] = "2%".to_string();
+        };
+        if level3 {
+            valid_codes[2] = "3%".to_string();
+        };
+        if level4 {
+            valid_codes[3] = "4%".to_string();
+        };
+
+        let mut check_days = true;
+        if !monday && !tuesday && !wednesday && !thursday && !friday && !saturday {
+            check_days = false;
+        }
+
+        let mut check_time = true;
+        if !morning && !afternoon && !evening {
+            check_time = false;
+        }
+
+        sqlx::query_file_as!(
+            CourseSummary,
+            "./queries/select_courses_with_filters.sql",
+            2023,
+            ["%", &course_code.to_uppercase(), "%"].concat(),
+            &valid_codes,
+            check_days,
+            monday,
+            tuesday,
+            wednesday,
+            thursday,
+            friday,
+            saturday,
+            check_time,
+            morning,
+            afternoon,
+            evening,
+            include_closed,
+            ["%", &term, "%"].concat(),
+        )
+        .fetch_all(&self.pool)
+        .await
+    }
+
     async fn select_course_offerings(
         self: Arc<Self>,
         course_code: &str,
@@ -87,7 +158,7 @@ impl CourseStore for SampleCourseStore {
         sqlx::query_file_as!(
             OfferingDetail,
             "./queries/select_class_schedules.sql",
-            &course_code.to_uppercase()
+            &course_code.to_uppercase(),
         )
         .fetch_all(&self.pool)
         .await

@@ -25,7 +25,6 @@ pub fn CourseTable<'a, G: Html>(
                             TableColumnHead(name="Code".to_string())
                             TableColumnHead(name="Course Name".to_string())
                             TableColumnHead(name="Location".to_string())
-                            TableColumnHead(name="Status".to_string())
                         }
                     }
                     tbody() {
@@ -35,8 +34,14 @@ pub fn CourseTable<'a, G: Html>(
                                 TableContent(
                                     code=content.subject_code.clone() + &content.catalog_number.to_string(),
                                     coursename=content.title.clone(),
-                                    location="UW".to_string(),
-                                    status="status".to_string()
+                                    location={
+                                        if !content.offerings.summaries.is_empty() {
+                                            "UW"
+                                        }
+                                        else {
+                                            "N/A"
+                                        }
+                                    }.to_string(),
                                 )
                             },
                             key=|content| content.clone(),
@@ -76,7 +81,6 @@ pub struct TableContentProps {
     code: String,
     coursename: String,
     location: String,
-    status: String,
 }
 // TODO: Make results fancier than plain text
 // TODO: Use custom styles based on what the search result is, would require pattern matching a more strongly typed result
@@ -88,17 +92,17 @@ fn TableContent<G: Html>(
         code,
         coursename,
         location,
-        status,
     }: TableContentProps,
 ) -> View<G> {
+    let code_copy = code.clone();
     view! { cx,
         // TODO: change hover color hover:bg-primary-content
-        tr (class="hover ") {
+        
+        tr (class="hover ", style="cursor:pointer;", onclick=format!("window.location='c/{}';", code_copy)) {
 
             td() { (code) }
             td() { (coursename) }
             td() { (location) }
-            td() { (status) }
 
         }
     }
