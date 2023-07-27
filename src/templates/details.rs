@@ -83,6 +83,8 @@ fn details_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a DetailStateRx)
                     div (class = "h-16")
                     h1 { (state.course_detail.get().subject_code.clone() + " " + &state.course_detail.get().catalog_number + " - " + &state.course_detail.get().title) }
                     p { (state.course_detail.get().description) }
+                    h3 { (String::from("Course Requirements")) }
+                    p { (state.course_detail.get().requirements_description.clone().unwrap_or(String::from("This course has no requirements!"))) }
                     (if !state.course_detail.get().required_prerequisites.is_empty() {
                         view! { cx,
                             div {
@@ -118,11 +120,11 @@ fn details_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a DetailStateRx)
                     Keyed (
                         iterable=&state.offering_details,
                         view=|cx, offering| view! { cx,
-                            h2 { (format!("{} {}", offering.term, offering.year)) }
+                            h3 { (format!("{} {}", offering.term, offering.year)) }
                             Keyed (
                                 iterable=create_signal(cx, offering.schedules.0.clone()),
                                 view=|cx, schedule| view! { cx,
-                                    h3 {(format!("{} {}\n",
+                                    h4 {(format!("{} {}\n",
                                         schedule.component.as_ref().unwrap_or(&"".to_owned()),
                                         schedule.class_section,
                                     ))
@@ -213,6 +215,7 @@ async fn get_build_state(info: StateGeneratorInfo<()>) -> DetailState {
             title: "Loading...".to_owned(),
             external_id: "".to_owned(),
             description: "".to_owned(),
+            requirements_description: Some("".to_owned()),
             academic_level: "".to_owned(),
             optional_prerequisites: vec!["null".to_owned()],
             required_prerequisites: vec!["undefined".to_owned()],

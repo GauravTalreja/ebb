@@ -32,6 +32,7 @@ pub struct CourseDetail {
     pub title: String,
     pub external_id: String,
     pub description: String,
+    pub requirements_description: Option<String>,
     pub academic_level: String,
     pub optional_prerequisites: Vec<String>,
     pub required_prerequisites: Vec<String>,
