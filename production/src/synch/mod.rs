@@ -4,5 +4,5 @@ mod course;
 mod util;
 mod offering;
 mod schedule;
-mod sample_db_models;
+mod db_models;
 pub mod synchronizer;

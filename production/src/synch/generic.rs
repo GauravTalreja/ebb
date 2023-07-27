@@ -2,32 +2,37 @@ use openapi::apis::configuration::Configuration;
 use openapi::models;
 use log::{debug, info};
 use stores::prelude::PgPool;
-use super::{sample_db_models, course, term, offering, schedule};
-use std::fs::read_to_string;
+use super::{db_models, course, term, offering, schedule};
+use std::time::Instant;
 
-#[allow(dead_code, unused)]
-pub async fn synchronize_data(config: &Configuration, pool: &PgPool) {
-    let code: String = term::get_term_code_for_current_term(config).await;
-    debug!("The term code for current term is: {:?}", code);
+pub async fn synchronize_data(config: &Configuration, pool: &PgPool) -> Result<(), String> {
+    let code: Result<String, String> = term::get_term_code_for_current_term(config).await;
+
+    // If code is incorrect, return early. GOOD.
+    if let Err(err) = code { return Err(err); }
+    let code: String = code.unwrap();
+    info!("The term code for current term is: {:?}", code);
     
-    let courses_from_api: Vec<models::Course> = 
+    // Get courses from the OpenData API. GOOD.
+    let get_courses_resp: Result<Vec<models::Course>, String> = 
         term::get_active_courses_for_term(&code, config).await;
+    if let Err(err) = get_courses_resp { return Err(err); }
+    let courses_from_api: Vec<models::Course> = get_courses_resp.unwrap();
     debug!("Total number of courses returned by courses/{code} endpoint: {}", courses_from_api.len());
-    
-    let insert_query_file_path: &str = "./production/src/synch/queries/sync_courses.sql";
-    course::map_courses_to_insert_query(&courses_from_api, insert_query_file_path);
-    info!("Wrote query to insert courses.");
 
-    // For sample case, do everything in one large transaction.
-    let mut tr = pool.begin().await.unwrap();
+    let txn_obj: Result<sqlx::Transaction<'_, sqlx::Postgres>, sqlx::Error> = pool.begin().await;
+    if let Err(err) = txn_obj { return Err(err.to_string()); }
+    let tr: sqlx::Transaction<'_, sqlx::Postgres> = txn_obj.unwrap();
+
+    // Insert courses.
+    let start_time: Instant = Instant::now();
+    let insert_courses_resp: Result<(), String> = course::insert_courses(pool, &courses_from_api).await;
+    if let Err(err) = insert_courses_resp { return Err(err); }
+    let end_time: Instant = Instant::now();
+    info!("INSERT INTO courses query took: {} secs", (end_time - start_time).as_secs());
     
-    // Execute inserts into courses table.
-    let query: String = read_to_string("./production/src/synch/queries/sync_courses.sql").unwrap();
-    sqlx::query(&query).execute(pool).await.unwrap();
-    info!("Executed query to insert courses.");
-    
-    let courses_from_table: Vec<sample_db_models::Course> = course::get_courses_from_table(pool).await;
-    debug!("Table size is now: {}", courses_from_table.len());
+    let courses_from_table: Vec<db_models::Course> = course::get_courses_from_table(pool).await;
+    info!("Table size is now: {}", courses_from_table.len());
 
     // Get classes data for courses listed in the courses table.
     let course_id_to_class_map: Vec<(i32, Vec<models::Class>)> = 
@@ -38,35 +43,38 @@ pub async fn synchronize_data(config: &Configuration, pool: &PgPool) {
     let mut course_ids : Vec<i32> = Vec::<i32>::new();
     for (id, _) in course_id_to_class_map.iter() { course_ids.push(id.clone()); }
 
-    // Write the insert query for the course_offerings table.
-    let offering_query_file_path: &str = "./production/src/synch/queries/sync_offerings.sql";
-    offering::map_course_ids_to_offering_query(
-        &course_ids, 
-        term::get_term_name_for_current_term(config).await, 
-        offering_query_file_path);
-    info!("Wrote query for offerings table");
-    
-    // Execute query for offerings table.
-    let offering_query: String = read_to_string("./production/src/synch/queries/sync_offerings.sql").unwrap();
-    sqlx::query(&offering_query).execute(pool).await.unwrap();
-    info!("Executed query for offerings table");
+    // Insert offerings.
+    let start_time: Instant = Instant::now();
+    let term_name: Result<String, String> = term::get_term_name_for_current_term(config).await;
+    if let Err(err) = term_name { return Err(err); }
+    let term_name: String = term_name.unwrap();
+    let insert_offerings_resp: Result<(), String> = 
+        offering::insert_offerings(&course_ids, term_name, pool).await;
+    if let Err(err) = insert_offerings_resp { return Err(err); }
+    let end_time = Instant::now();
+    info!("INSERT INTO course_offerings query took: {} secs", (end_time - start_time).as_secs());
 
     // Get course offerings from table.
-    let offerings_from_table: Vec<sample_db_models::CourseOffering> = 
+    let offerings_from_table: Vec<db_models::CourseOffering> = 
         offering::get_offerings_from_table(pool).await;
+
+    // Insert class schedules.
+    let start_time: Instant = Instant::now();
+    let insert_schedules_resp: Result<(), String> = 
+        schedule::insert_class_schedules(&course_id_to_class_map, &offerings_from_table, pool).await;
+    if let Err(err) = insert_schedules_resp { return Err(err); }
+    let end_time: Instant = Instant::now();
+    info!("INSERT INTO class_schedule query took: {} secs", (end_time - start_time).as_secs());
+
+    // Refresh materialized view.
+    let refresh_mv_resp: Result<_, _> = 
+        sqlx::query_file!("./queries/refresh_courses_mv.sql").execute(pool).await;
+    if let Err(_) = refresh_mv_resp { 
+        return Err(String::from("Could not refresh materialized view mv_courses.")) 
+    }
+
+    let commit_result: Result<(), sqlx::Error> = tr.commit().await;
+    if let Err(_) = commit_result { return Err(String::from("Could not commit full transaction.")); } 
     
-    // Write the query for class schedules.
-    schedule::map_class_data_to_class_schedule_query(
-       &course_id_to_class_map,
-       &offerings_from_table,
-       "./production/src/synch/queries/sync_schedules.sql"
-    );
-    info!("Wrote class schedule query");
-
-    // Execute query file.
-    let schedule_query: String = read_to_string("./production/src/synch/queries/sync_schedules.sql").unwrap();
-    sqlx::query(&schedule_query).execute(pool).await.unwrap();
-    info!("Executed query for schedules table");
-
-    tr.commit();
+    Ok(())
 }

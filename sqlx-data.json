@@ -359,6 +359,21 @@
         },
         "hash": "c1b7484405299bed29583e0e9fd7a053f13cf5d4549d4588f92ae1ee206d06a2"
     },
+    "f495e8e5e3aeb17dd49bfcb26e87e4e42e604831345e28890cfe52a1bcf22fbb": {
+        "query": "INSERT INTO course_offerings (course_id, term, year) SELECT * FROM UNNEST($1::int[], $2::text[], $3::int2[]) ON CONFLICT (course_id, term, year) DO NOTHING;",
+        "describe": {
+            "columns": [],
+            "parameters": {
+                "Left": [
+                    "Int4Array",
+                    "TextArray",
+                    "Int2Array"
+                ]
+            },
+            "nullable": []
+        },
+        "hash": "f495e8e5e3aeb17dd49bfcb26e87e4e42e604831345e28890cfe52a1bcf22fbb"
+    },
     "9e512198394c4755065c52316a7fb8e3dc02dee54392393ab5c69bb0c23ba586": {
         "query": "-- Selecting course list from single Materialized View instead of\n-- more expensive query with left join across course to offerings\n-- table with sub-query to aggregate offerings into an array.\n--\n-- Materialized view must be refreshed upon every import sync job\n-- to update with latest base table data.\nSELECT\n    id AS \"id!\",\n    catalog_number AS \"catalog_number!\",\n    subject_code AS \"subject_code!\",\n    title AS \"title!\",\n    external_id AS \"external_id!\",\n    offerings::jsonb AS \"offerings!: _\"\nFROM\n    mv_courses\nWHERE\n    subject_code || catalog_number ILIKE $1\nGROUP BY\n    id,\n    title,\n    external_id,\n    subject_code,\n    catalog_number,\n    offerings\nORDER BY\n    catalog_number\nLIMIT\n    100;\n",
         "describe": {

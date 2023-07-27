@@ -1485,6 +1485,7 @@ dependencies = [
 name = "production"
 version = "0.1.0"
 dependencies = [
+ "chrono",
  "dotenvy",
  "log",
  "models",
