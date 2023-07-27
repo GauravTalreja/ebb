@@ -52,6 +52,11 @@ impl CourseSync for ProdCourseSync {
             .execute(&pool)
             .await
             .unwrap();
+
+        sqlx::query_file!("./queries/update_timestamp.sql")
+        .execute(&pool)
+        .await
+        .unwrap();
     }
 }
 

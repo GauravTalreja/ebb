@@ -4,6 +4,7 @@ use openapi::apis::configuration::Configuration;
 use openapi::models;
 use std::time::Instant;
 use stores::prelude::PgPool;
+use std::env;
 
 pub async fn synchronize_data(config: &Configuration, pool: &PgPool) -> Result<(), String> {
     let code: Result<String, String> = term::get_term_code_for_current_term(config).await;
@@ -100,14 +101,30 @@ pub async fn synchronize_data(config: &Configuration, pool: &PgPool) -> Result<(
         (end_time - start_time).as_secs()
     );
 
-    // Refresh materialized view.
-    let refresh_mv_resp: Result<_, _> = sqlx::query_file!("./queries/refresh_courses_mv.sql")
+    
+    let storage_mode: Result<String, env::VarError> = env::var("STORAGE_MODE");
+    if let Err(e) = storage_mode { return Err(e.to_string()) }
+    let storage_mode: String = storage_mode.unwrap();
+
+    // Refresh materialized view. This view only exists for PROD.
+    if storage_mode.to_ascii_uppercase() == "PROD" {
+        let refresh_mv_resp: Result<_, _> = sqlx::query_file!("./queries/refresh_courses_mv.sql")
         .execute(pool)
         .await;
-    if let Err(_) = refresh_mv_resp {
-        return Err(String::from(
-            "Could not refresh materialized view mv_courses.",
-        ));
+        if let Err(_) = refresh_mv_resp {
+            return Err(String::from(
+                "Could not refresh materialized view mv_courses.",
+            ));
+        }
+    }
+
+    // Insert current time into last_updated table.
+    let update_timestamp_resp: Result<_, _> = sqlx::query_file!("./queries/update_timestamp.sql")
+        .execute(pool)
+        .await;
+
+    if let Err(_) = update_timestamp_resp {
+        return Err(String::from("Could not execute update_timestamp query."))
     }
 
     let commit_result: Result<(), sqlx::Error> = tr.commit().await;

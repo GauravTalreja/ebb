@@ -1,0 +1,1 @@
+INSERT INTO last_updated (date_time) VALUES (CURRENT_TIMESTAMP);
