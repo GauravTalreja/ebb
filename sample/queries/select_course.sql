@@ -6,6 +6,7 @@ SELECT
     c.academic_level AS academic_level,
     c.title AS title,
     c.description AS description,
+    c.requirements AS requirements_description,
     COALESCE(
         NULLIF(array_agg(DISTINCT rc.subject_code || rc.catalog_number::TEXT), '{null}'),
         '{}'
