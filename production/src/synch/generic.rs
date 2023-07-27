@@ -8,14 +8,14 @@ use stores::prelude::PgPool;
 pub async fn synchronize_data(config: &Configuration, pool: &PgPool) -> Result<(), String> {
     let code: Result<String, String> = term::get_term_code_for_current_term(config).await;
 
-    // If code is incorrect, return early. GOOD.
+    // If code is incorrect, return early.
     if let Err(err) = code {
         return Err(err);
     }
     let code: String = code.unwrap();
     info!("The term code for current term is: {:?}", code);
 
-    // Get courses from the OpenData API. GOOD.
+    // Get courses from the OpenData API.
     let get_courses_resp: Result<Vec<models::Course>, String> =
         term::get_active_courses_for_term(&code, config).await;
     if let Err(err) = get_courses_resp {
