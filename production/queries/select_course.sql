@@ -6,6 +6,7 @@ SELECT
     academic_level AS "academic_level!",
     title AS "title!",
     description AS "description!",
+    requirements_description AS "requirements_description",
     required_prerequisites AS "required_prerequisites!: _",
     optional_prerequisites AS "optional_prerequisites!: _"
 FROM
@@ -20,6 +21,7 @@ GROUP BY
     c.academic_level,
     c.title,
     c.description,
+    c.requirements_description,
     c.required_prerequisites,
     c.optional_prerequisites
 LIMIT 1;

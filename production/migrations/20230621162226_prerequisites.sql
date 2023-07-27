@@ -36,6 +36,7 @@ SELECT
     c.external_id AS external_id,
     c.academic_level AS academic_level,
     c.description AS description,
+    c.requirements AS requirements_description,
     (
         SELECT
             COALESCE(NULLIF(jsonb_agg(DISTINCT co.*)::TEXT, '[null]'), '[]')

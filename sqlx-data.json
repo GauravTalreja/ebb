@@ -62,8 +62,8 @@
         },
         "hash": "ad2f4c57d530e4d73f507bf2fd2b8ac4a3ac8f1a5b7d945a1858c06e5e227582"
     },
-    "936e18b5cef35429c8357d9ad79a92d27124ce3e54e55ef2f5ef516203e26769": {
-        "query": "SELECT\n    c.id AS id,\n    c.catalog_number AS catalog_number,\n    c.subject_code AS subject_code,\n    c.external_id AS external_id,\n    c.academic_level AS academic_level,\n    c.title AS title,\n    c.description AS description,\n    COALESCE(\n        NULLIF(array_agg(DISTINCT rc.subject_code || rc.catalog_number::TEXT), '{null}'),\n        '{}'\n    ) AS \"required_prerequisites!: _\",\n    COALESCE(\n        NULLIF(array_agg(DISTINCT oc.subject_code || oc.catalog_number::TEXT), '{null}'),\n        '{}'\n    ) AS \"optional_prerequisites!: _\"\nFROM\n    courses c\n    LEFT JOIN course_offerings co ON c.id = co.course_id\n    LEFT JOIN prerequisites p ON c.prerequisites_id = p.id\n    LEFT JOIN required_prerequisites rp ON p.id = rp.prerequisite_id\n    LEFT JOIN courses rc ON rp.course_id = rc.id\n    LEFT JOIN optional_prerequisites op ON p.id = op.prerequisite_id\n    LEFT JOIN courses oc ON op.course_id = oc.id\nWHERE\n    UPPER(c.subject_code) || c.catalog_number::VARCHAR = UPPER($1)\nGROUP BY\n    c.id\nLIMIT 1;\n",
+    "fac1e11a5a1e1ed3409dcd5f8ab747a3a4d37a4b672b066e7a446809bdaa2e63": {
+        "query": "SELECT\n    c.id AS id,\n    c.catalog_number AS catalog_number,\n    c.subject_code AS subject_code,\n    c.external_id AS external_id,\n    c.academic_level AS academic_level,\n    c.title AS title,\n    c.description AS description,\n    c.requirements AS requirements_description,\n    COALESCE(\n        NULLIF(array_agg(DISTINCT rc.subject_code || rc.catalog_number::TEXT), '{null}'),\n        '{}'\n    ) AS \"required_prerequisites!: _\",\n    COALESCE(\n        NULLIF(array_agg(DISTINCT oc.subject_code || oc.catalog_number::TEXT), '{null}'),\n        '{}'\n    ) AS \"optional_prerequisites!: _\"\nFROM\n    courses c\n    LEFT JOIN course_offerings co ON c.id = co.course_id\n    LEFT JOIN prerequisites p ON c.prerequisites_id = p.id\n    LEFT JOIN required_prerequisites rp ON p.id = rp.prerequisite_id\n    LEFT JOIN courses rc ON rp.course_id = rc.id\n    LEFT JOIN optional_prerequisites op ON p.id = op.prerequisite_id\n    LEFT JOIN courses oc ON op.course_id = oc.id\nWHERE\n    UPPER(c.subject_code) || c.catalog_number::VARCHAR = UPPER($1)\nGROUP BY\n    c.id\nLIMIT 1;\n",
         "describe": {
             "columns": [
                 {
@@ -103,11 +103,16 @@
                 },
                 {
                     "ordinal": 7,
+                    "name": "requirements_description",
+                    "type_info": "Text"
+                },
+                {
+                    "ordinal": 8,
                     "name": "required_prerequisites!: _",
                     "type_info": "TextArray"
                 },
                 {
-                    "ordinal": 8,
+                    "ordinal": 9,
                     "name": "optional_prerequisites!: _",
                     "type_info": "TextArray"
                 }
@@ -125,11 +130,12 @@
                 false,
                 false,
                 false,
+                true,
                 null,
                 null
             ]
         },
-        "hash": "936e18b5cef35429c8357d9ad79a92d27124ce3e54e55ef2f5ef516203e26769"
+        "hash": "fac1e11a5a1e1ed3409dcd5f8ab747a3a4d37a4b672b066e7a446809bdaa2e63"
     },
     "2928bab612a4ceb9a821eead693f369ab4afdc72ac56e12dd173f67de95e95fc": {
         "query": "SELECT\n    c.id,\n    c.catalog_number,\n    c.subject_code,\n    c.title,\n    c.external_id,\n    (\n        SELECT\n            COALESCE(NULLIF(jsonb_agg(DISTINCT co.*), '[null]'), '[]'::jsonb)\n        FROM\n            course_offerings co\n        WHERE\n            c.id = co.course_id\n            AND co.year = $1\n    ) AS \"offerings!: _\"\nFROM\n    courses c\n    LEFT JOIN course_offerings co ON c.id = co.course_id\nWHERE\n    c.subject_code || c.catalog_number ILIKE $2\nGROUP BY\n    c.id,\n    c.subject_code\nORDER BY\n    c.catalog_number;\n",
@@ -278,8 +284,8 @@
         },
         "hash": "82b4ddf7ce4b9f36a47094d72403c63ad65998bdb3fa3894f97b3e33a34ea34d"
     },
-    "129bedb64e7930b6cddf8699c7d2d3b9c2e79a9844f12e1aac924e7fb904f674": {
-        "query": "SELECT\n    id AS \"id!\",\n    catalog_number AS \"catalog_number!\",\n    subject_code AS \"subject_code!\",\n    external_id AS \"external_id!\",\n    academic_level AS \"academic_level!\",\n    title AS \"title!\",\n    description AS \"description!\",\n    required_prerequisites AS \"required_prerequisites!: _\",\n    optional_prerequisites AS \"optional_prerequisites!: _\"\nFROM\n    mv_courses c\nWHERE\n    UPPER(c.subject_code) || c.catalog_number::VARCHAR = UPPER($1)\nGROUP BY\n    c.id,\n    c.catalog_number,\n    c.subject_code,\n    c.external_id,\n    c.academic_level,\n    c.title,\n    c.description,\n    c.required_prerequisites,\n    c.optional_prerequisites\nLIMIT 1;\n",
+    "c1b7484405299bed29583e0e9fd7a053f13cf5d4549d4588f92ae1ee206d06a2": {
+        "query": "SELECT\n    id AS \"id!\",\n    catalog_number AS \"catalog_number!\",\n    subject_code AS \"subject_code!\",\n    external_id AS \"external_id!\",\n    academic_level AS \"academic_level!\",\n    title AS \"title!\",\n    description AS \"description!\",\n    requirements_description AS \"requirements_description\",\n    required_prerequisites AS \"required_prerequisites!: _\",\n    optional_prerequisites AS \"optional_prerequisites!: _\"\nFROM\n    mv_courses c\nWHERE\n    UPPER(c.subject_code) || c.catalog_number::VARCHAR = UPPER($1)\nGROUP BY\n    c.id,\n    c.catalog_number,\n    c.subject_code,\n    c.external_id,\n    c.academic_level,\n    c.title,\n    c.description,\n    c.requirements_description,\n    c.required_prerequisites,\n    c.optional_prerequisites\nLIMIT 1;\n",
         "describe": {
             "columns": [
                 {
@@ -319,11 +325,16 @@
                 },
                 {
                     "ordinal": 7,
+                    "name": "requirements_description",
+                    "type_info": "Text"
+                },
+                {
+                    "ordinal": 8,
                     "name": "required_prerequisites!: _",
                     "type_info": "TextArray"
                 },
                 {
-                    "ordinal": 8,
+                    "ordinal": 9,
                     "name": "optional_prerequisites!: _",
                     "type_info": "TextArray"
                 }
@@ -342,10 +353,11 @@
                 true,
                 true,
                 true,
+                true,
                 true
             ]
         },
-        "hash": "129bedb64e7930b6cddf8699c7d2d3b9c2e79a9844f12e1aac924e7fb904f674"
+        "hash": "c1b7484405299bed29583e0e9fd7a053f13cf5d4549d4588f92ae1ee206d06a2"
     },
     "9e512198394c4755065c52316a7fb8e3dc02dee54392393ab5c69bb0c23ba586": {
         "query": "-- Selecting course list from single Materialized View instead of\n-- more expensive query with left join across course to offerings\n-- table with sub-query to aggregate offerings into an array.\n--\n-- Materialized view must be refreshed upon every import sync job\n-- to update with latest base table data.\nSELECT\n    id AS \"id!\",\n    catalog_number AS \"catalog_number!\",\n    subject_code AS \"subject_code!\",\n    title AS \"title!\",\n    external_id AS \"external_id!\",\n    offerings::jsonb AS \"offerings!: _\"\nFROM\n    mv_courses\nWHERE\n    subject_code || catalog_number ILIKE $1\nGROUP BY\n    id,\n    title,\n    external_id,\n    subject_code,\n    catalog_number,\n    offerings\nORDER BY\n    catalog_number\nLIMIT\n    100;\n",
