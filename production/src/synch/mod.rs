@@ -1,8 +1,8 @@
-mod generic;
-mod term;
 mod course;
-mod util;
+mod db_models;
+mod generic;
 mod offering;
 mod schedule;
-mod db_models;
 pub mod synchronizer;
+mod term;
+mod util;

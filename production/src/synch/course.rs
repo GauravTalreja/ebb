@@ -1,13 +1,13 @@
-use log::error;
 use super::db_models;
-use stores::prelude::PgPool;
+use log::error;
 use openapi::models;
+use stores::prelude::PgPool;
 
 pub async fn get_courses_from_table(pool: &PgPool) -> Vec<db_models::Course> {
-    let courses_from_table: Result<Vec<db_models::Course>, sqlx::Error> = 
+    let courses_from_table: Result<Vec<db_models::Course>, sqlx::Error> =
         sqlx::query_as::<_, db_models::Course>("SELECT * FROM courses")
-        .fetch_all(pool)
-        .await;
+            .fetch_all(pool)
+            .await;
 
     match courses_from_table {
         Ok(courses) => courses,
@@ -42,7 +42,7 @@ pub async fn insert_courses(pool: &PgPool, courses: &Vec<models::Course>) -> Res
         let result: Result<_, _> = insert_query.execute(pool).await;
         match result {
             Err(_) => error!("Could not insert {}{}", c.subject_code, c.catalog_number),
-            _ => ()
+            _ => (),
         }
     }
     Ok(())

@@ -468,7 +468,6 @@ version = "0.1.0"
 dependencies = [
  "axum",
  "dotenvy",
- "log",
  "models",
  "openapi",
  "perseus",
@@ -479,7 +478,6 @@ dependencies = [
  "sample",
  "serde",
  "serde_json",
- "simple_logger",
  "stores",
  "sycamore",
  "tokio",
