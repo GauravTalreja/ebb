@@ -94,9 +94,11 @@ fn TableContent<G: Html>(
         location,
     }: TableContentProps,
 ) -> View<G> {
+    let code_copy = code.clone();
     view! { cx,
         // TODO: change hover color hover:bg-primary-content
-        tr (class="hover ") {
+        
+        tr (class="hover ", style="cursor:pointer;", onclick=format!("window.location='c/{}';", code_copy)) {
 
             td() { (code) }
             td() { (coursename) }
