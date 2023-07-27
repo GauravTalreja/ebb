@@ -35,7 +35,7 @@ pub fn CourseTable<'a, G: Html>(
                                     code=content.subject_code.clone() + &content.catalog_number.to_string(),
                                     coursename=content.title.clone(),
                                     location={
-                                        if content.offerings.summaries.len() >= 1 {
+                                        if !content.offerings.summaries.is_empty() {
                                             "UW"
                                         }
                                         else {

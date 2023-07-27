@@ -92,24 +92,23 @@ fn courses_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a CoursesStateRx
 
     #[cfg(client)]
     create_effect_scoped(cx, |cx| {
-        filterprops.term.get();
-        filterprops.level1.get();
-        filterprops.level2.get();
-        filterprops.level3.get();
-        filterprops.level4.get();
-        filterprops.include_closed.get();
-        filterprops.morning.get();
-        filterprops.afternoon.get();
-        filterprops.evening.get();
-        filterprops.monday.get();
-        filterprops.tuesday.get();
-        filterprops.wednesday.get();
-        filterprops.thursday.get();
-        filterprops.friday.get();
-        filterprops.saturday.get();
-        filterprops.sunday.get();
+        let _ = filterprops.term.get();
+        let _ = filterprops.level1.get();
+        let _ = filterprops.level2.get();
+        let _ = filterprops.level3.get();
+        let _ = filterprops.level4.get();
+        let _ = filterprops.include_closed.get();
+        let _ = filterprops.morning.get();
+        let _ = filterprops.afternoon.get();
+        let _ = filterprops.evening.get();
+        let _ = filterprops.monday.get();
+        let _ = filterprops.tuesday.get();
+        let _ = filterprops.wednesday.get();
+        let _ = filterprops.thursday.get();
+        let _ = filterprops.friday.get();
+        let _ = filterprops.saturday.get();
+        let _ = filterprops.sunday.get();
 
-        let filtered_content: Vec<CourseSummary> = vec![];
         spawn_local_scoped(cx, async {
             let body = reqwasm::http::Request::get(
                 format!("/api/v1/courses/{}/term/{}/{}/{}/{}/{}/{}/{}/{}/{}/{}/{}/{}/{}/{}/{}/{}", 
