@@ -45,7 +45,9 @@ pub async fn synchronize() -> ! {
             "Ending data synchronization for DB. Iteration: {}",
             iteration
         );
-        time::sleep(Duration::from_secs(120)).await;
+
+        // 24 hrs = 86,400 secs.
+        time::sleep(Duration::from_secs(86400)).await;
         iteration += 1;
     }
 }
