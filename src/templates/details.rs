@@ -1,5 +1,3 @@
-use std::cmp::Ordering;
-
 use crate::{
     components::layout::{Layout, SearchBarProps, ThemeProps},
     global_state::AppStateRx,
@@ -52,6 +50,7 @@ fn details_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a DetailStateRx)
             .send()
             .await
             .unwrap();
+            use std::cmp::Ordering;
             match body.json::<Vec<OfferingDetail>>().await {
                 Ok(mut details) => state.offering_details.set({
                     details.iter_mut().for_each(|offering| {
