@@ -1,3 +1,4 @@
+
 SELECT
     c.id,
     c.catalog_number,
@@ -34,9 +35,9 @@ WHERE
             OR ($14 AND cs.start_time >= TIME '17:00:00' AND cs.start_time < TIME '24:00:00'))
     )
     AND (
-        (NOT $15)
+        (NOT $15 AND cs.current_enrollment < cs.max_enrollment)
         OR
-        ($15 AND cs.current_enrollment < cs.max_enrollment)
+        ($15)
     )
     AND co.term ILIKE $16
 GROUP BY

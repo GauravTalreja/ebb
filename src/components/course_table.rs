@@ -39,7 +39,15 @@ pub fn CourseTable<'a, G: Html>(
                             TableContent(
                                 code=content.subject_code.clone() + &content.catalog_number.to_string(),
                                 coursename=content.title.clone(),
-                                location="UW".to_string(),
+                                location={
+                                    web_log!("{}", content.offerings.summaries.len());
+                                    if content.offerings.summaries.len() >= 1 {
+                                        "UW"
+                                    }
+                                    else {
+                                        "N/A"
+                                    }
+                                }.to_string(),
                                 status="status".to_string()
                             )
                         },
