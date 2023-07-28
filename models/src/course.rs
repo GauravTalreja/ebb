@@ -1,7 +1,12 @@
-use chrono::NaiveTime;
+use chrono::{NaiveTime, DateTime, Utc};
 use serde::{Deserialize, Serialize};
 #[cfg(feature = "sqlx")]
 use sqlx::{Database, Postgres, Type};
+
+#[derive(Clone, Debug, Serialize, Deserialize, Eq, PartialEq, Hash)]
+pub struct LastUpdated {
+    pub date_time: Option<DateTime<Utc>>
+}
 
 #[derive(Clone, Debug, Serialize, Deserialize, Eq, PartialEq, Hash)]
 pub struct CourseSummary {

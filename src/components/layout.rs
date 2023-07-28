@@ -1,5 +1,5 @@
 use crate::components::{footer::Footer, search_bar::SearchBar, theme_change::ThemeChange};
-pub use crate::components::{search_bar::SearchBarProps, theme_change::ThemeProps};
+pub use crate::components::{search_bar::SearchBarProps, theme_change::ThemeProps, footer::FooterProps};
 use sycamore::prelude::*;
 
 #[component]
@@ -9,6 +9,7 @@ pub fn Layout<'a, G: Html>(
         children,
         search_bar: SearchBarProps { input, results },
         theme: ThemeProps { state },
+        footer: FooterProps { last_updated_time },
     }: LayoutProps<'a, G>,
 ) -> View<G> {
     let children = children.call(cx);
@@ -27,7 +28,7 @@ pub fn Layout<'a, G: Html>(
         main(class = "p-0 min-h-screen bg-base-200 w-full") {
             (children)
         }
-        Footer
+        Footer (last_updated_time=last_updated_time)
     }}
 }
 
@@ -36,4 +37,5 @@ pub struct LayoutProps<'a, G: Html> {
     pub children: Children<'a, G>,
     pub search_bar: SearchBarProps<'a>,
     pub theme: ThemeProps<'a>,
+    pub footer: FooterProps<'a>,
 }

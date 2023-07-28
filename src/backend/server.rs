@@ -62,6 +62,7 @@ where
         .route("/courses/:course_code", routing::get(http::list_courses))
         .route("/course/:course_code", routing::get(http::get_course))
         .route("/course_offerings/:course_code", routing::get(http::list_course_offerings))
+        .route("/last_updated_time", routing::get(http::get_last_updated_time))
         .layer(Extension(store))
         .layer(cors_options);
 

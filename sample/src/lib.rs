@@ -1,5 +1,6 @@
 use models::*;
 use stores::prelude::*;
+use chrono::{DateTime, Utc};
 
 pub async fn sample_store() -> EbbStore {
     dotenvy::dotenv().expect("Unable to find a sample .env file");
@@ -97,4 +98,25 @@ impl CourseStore for SampleCourseStore {
         .fetch_all(&self.pool)
         .await
     }
+    async fn get_last_updated_time(
+        self: Arc<Self>
+    ) -> Result<LastUpdated, Error> {
+        let q: Result<TempSampleUpdated, Error> = sqlx::query_file_as!(
+            TempSampleUpdated,
+            "./queries/select_last_updated.sql"
+        )
+        .fetch_one(&self.pool)
+        .await;
+
+        if let Err(e) = q {
+            return Err(e);
+        } else {
+            return Ok(LastUpdated{ date_time: Some(q.unwrap().date_time) })
+        }
+        
+    }
+}
+
+struct TempSampleUpdated {
+    pub date_time: DateTime<Utc>
 }

@@ -1,6 +1,7 @@
 use models::*;
 use stores::prelude::*;
 pub mod synch;
+use chrono::{DateTime, Utc};
 
 pub async fn prod_store() -> EbbStore {
     dotenvy::dotenv().expect("Unable to find a prod .env file");
@@ -104,4 +105,26 @@ impl CourseStore for ProdCourseStore {
         .fetch_all(&self.pool)
         .await
     }
+
+    async fn get_last_updated_time(
+        self: Arc<Self>
+    ) -> Result<LastUpdated, Error> {
+        let q: Result<TempProdUpdated, Error> = sqlx::query_file_as!(
+            TempProdUpdated,
+            "./queries/select_last_updated.sql"
+        )
+        .fetch_one(&self.pool)
+        .await;
+
+        if let Err(e) = q {
+            return Err(e);
+        } else {
+            return Ok(LastUpdated { date_time: Some(q.unwrap().date_time) })
+        }
+    
+    }
+}
+
+struct TempProdUpdated {
+    date_time: DateTime<Utc>
 }

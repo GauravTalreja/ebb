@@ -25,4 +25,8 @@ pub trait CourseStore {
         self: Arc<Self>,
         course_code: &str,
     ) -> Result<Vec<OfferingDetail>, Error>;
+
+    async fn get_last_updated_time(
+        self: Arc<Self>,
+    ) -> Result<LastUpdated, Error>;
 }

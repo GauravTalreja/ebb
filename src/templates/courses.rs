@@ -2,11 +2,11 @@ use crate::{
     components::{
         course_table::CourseTable,
         filter::{Filter, FilterProps},
-        layout::{Layout, SearchBarProps, ThemeProps},
+        layout::{Layout, SearchBarProps, ThemeProps, FooterProps},
     },
     global_state::AppStateRx,
 };
-use models::CourseSummary;
+use models::{CourseSummary, LastUpdated};
 use perseus::prelude::*;
 use serde::{Deserialize, Serialize};
 use sycamore::prelude::*;
@@ -40,11 +40,18 @@ pub struct CoursesState {
     friday: bool,
     saturday: bool,
     sunday: bool,
+
+    // Last Updated time.
+    last_updated_time: LastUpdated,
 }
 
 fn courses_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a CoursesStateRx) -> View<G> {
     let global_state = Reactor::<G>::from_cx(cx).get_global_state::<AppStateRx>(cx);
     let table_content = &state.table_content;
+
+    let footer_props = FooterProps {
+        last_updated_time: &state.last_updated_time,
+    };
 
     #[cfg(client)]
     if !&state.path.get_untracked().is_empty() {
@@ -61,7 +68,18 @@ fn courses_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a CoursesStateRx
             .to_vec();
 
             table_content.set(body);
-        })
+        });
+
+        spawn_local_scoped(cx, async {
+            let body = reqwasm::http::Request::get("/api/v1/last_updated_time")
+            .send()
+            .await
+            .unwrap()
+            .json::<LastUpdated>()
+            .await
+            .unwrap();
+            state.last_updated_time.set(body);
+        });
     }
 
     let theme_props = ThemeProps {
@@ -92,7 +110,7 @@ fn courses_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a CoursesStateRx
 
     view! { cx,
         link ( rel="stylesheet", href="/tailwind.css")
-        Layout (search_bar=search_bar_props, theme=theme_props) {
+        Layout (search_bar=search_bar_props, theme=theme_props, footer=footer_props) {
             div (class="w-full px-8 h-20 bg-primary relative") {
                 p(class="absolute bottom-3 font-bold text-2xl text-primary-content") {
                     (if state.path.get_untracked().is_empty() {
@@ -123,6 +141,7 @@ async fn get_build_state(info: StateGeneratorInfo<()>) -> CoursesState {
         path: info.path,
         search_input: "".to_string(),
         search_results: vec![],
+        last_updated_time: LastUpdated { date_time: None },
         table_content: vec![],
         term: "".to_string(),
         level1: false,

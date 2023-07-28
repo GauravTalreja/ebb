@@ -80,5 +80,5 @@ CREATE TABLE IF NOT EXISTS class_schedule (
 
 -- Last Updated table to represent when DB was last updated.
 CREATE TABLE IF NOT EXISTS last_updated (
-    date_time timestamp without time zone
+    date_time timestamp with time zone NOT NULL
 );

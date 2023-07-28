@@ -1,8 +1,8 @@
 use crate::{
-    components::layout::{Layout, SearchBarProps, ThemeProps},
+    components::layout::{Layout, SearchBarProps, ThemeProps, FooterProps},
     global_state::AppStateRx,
 };
-use models::{CourseDetail, CourseSummary, OfferingDetail};
+use models::{CourseDetail, CourseSummary, OfferingDetail, LastUpdated};
 use perseus::prelude::*;
 use serde::{Deserialize, Serialize};
 use sycamore::prelude::*;
@@ -15,6 +15,7 @@ pub struct DetailState {
     offering_details: Vec<OfferingDetail>,
     search_input: String,
     search_results: Vec<CourseSummary>,
+    last_updated_time: LastUpdated,
 }
 
 fn details_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a DetailStateRx) -> View<G> {
@@ -25,6 +26,10 @@ fn details_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a DetailStateRx)
     let search_bar_props = SearchBarProps {
         input: &state.search_input,
         results: &state.search_results,
+    };
+
+    let footer_props = FooterProps {
+        last_updated_time: &state.last_updated_time,
     };
 
     #[cfg(client)]
@@ -73,15 +78,27 @@ fn details_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a DetailStateRx)
                 Err(e) => web_log!("{body:?} {e}"),
             }
         });
+
+        spawn_local_scoped(cx, async {
+            let body = reqwasm::http::Request::get("/api/v1/last_updated_time")
+            .send()
+            .await
+            .unwrap()
+            .json::<LastUpdated>()
+            .await
+            .unwrap();
+            state.last_updated_time.set(body);
+        });
     }
 
     if !state.path.get().is_empty() {
         view! { cx,
             link ( rel="stylesheet", href="/tailwind.css")
-            Layout (search_bar=search_bar_props, theme=theme_props) {
+            Layout (search_bar=search_bar_props, theme=theme_props, footer=footer_props) {
                 div (class="prose prose-xl w-full mx-16") {
                     div (class = "h-16")
                     h1 { (state.course_detail.get().subject_code.clone() + " " + &state.course_detail.get().catalog_number + " - " + &state.course_detail.get().title) }
+                    h3 { (String::from("Course Description")) }
                     p { (state.course_detail.get().description) }
                     h3 { (String::from("Course Requirements")) }
                     p { (state.course_detail.get().requirements_description.clone().unwrap_or(String::from("This course has no requirements!"))) }
@@ -223,6 +240,7 @@ async fn get_build_state(info: StateGeneratorInfo<()>) -> DetailState {
         offering_details: vec![],
         search_input: "".to_string(),
         search_results: vec![],
+        last_updated_time: LastUpdated { date_time: None },
     }
 }
 
