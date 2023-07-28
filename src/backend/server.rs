@@ -1,16 +1,17 @@
-use crate::backend::{http, open_api};
+use crate::backend::http;
 use axum::{
     http::{header::CONTENT_TYPE, Method},
     routing, Extension, Router, Server,
 };
 use perseus::{
     i18n::TranslationsManager, server::ServerOptions, stores::MutableStore, turbine::Turbine,
-    web_log,
 };
 use production;
 use sample;
 use std::net::SocketAddr;
 use tower_http::cors::{Any, CorsLayer};
+use tokio::task;
+
 
 pub async fn main<M, T>(
     turbine: &'static Turbine<M, T>,
@@ -22,15 +23,12 @@ pub async fn main<M, T>(
 {
     dotenvy::dotenv().expect("Couldn't find a .env file in the project root");
 
+    // Run the synchronizer in the background via a separate thread.
+    task::spawn(production::synch::synchronizer::synchronize());
+
     let addr: SocketAddr = format!("{}:{}", host, port)
         .parse()
         .expect("Invalid address provided to bind to.");
-
-    let openapi_config = open_api::configuration();
-    web_log!(
-        "The current term is {:#?}",
-        openapi::apis::terms_api::v3_terms_current_get(&openapi_config).await
-    );
 
     let api_router = create_router(turbine, options).await;
 
@@ -64,6 +62,7 @@ where
         .route("/courses/:course_code", routing::get(http::list_courses))
         .route("/course/:course_code", routing::get(http::get_course))
         .route("/course_offerings/:course_code", routing::get(http::list_course_offerings))
+        .route("/last_updated_time", routing::get(http::get_last_updated_time))
         .layer(Extension(store))
         .layer(cors_options);
 

@@ -77,3 +77,8 @@ CREATE TABLE IF NOT EXISTS class_schedule (
     CONSTRAINT chk_class_schedule_times CHECK (end_time >= start_time),
     CONSTRAINT uk_class_num_course_offering UNIQUE (class_number, course_offering_id)
 );
+
+-- Last Updated table to represent when DB was last updated.
+CREATE TABLE IF NOT EXISTS last_updated (
+    date_time timestamp with time zone NOT NULL
+);

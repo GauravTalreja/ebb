@@ -1,7 +1,7 @@
 use axum::{extract::Path, http::StatusCode, Extension, Json};
 use perseus::web_log;
 
-use models::{CourseDetail, CourseSummary, OfferingDetail};
+use models::{CourseDetail, CourseSummary, OfferingDetail, LastUpdated};
 use stores::prelude::*;
 
 pub async fn list_courses(
@@ -43,6 +43,20 @@ pub async fn list_course_offerings(
         .await
         .map_err(|e| {
             web_log!("course_store.select_course_offerings: {}", e);
+            StatusCode::INTERNAL_SERVER_ERROR
+        })
+        .map(Json)
+}
+
+pub async fn get_last_updated_time(
+    Extension(store): Extension<EbbStore>
+) -> Result<Json<LastUpdated>, StatusCode> {
+    store
+        .course_store
+        .get_last_updated_time()
+        .await
+        .map_err(|e| {
+            web_log!("course_store.get_last_updated_time ERROR: {}", e);
             StatusCode::INTERNAL_SERVER_ERROR
         })
         .map(Json)

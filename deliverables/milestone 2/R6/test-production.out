@@ -1,0 +1,6 @@
+-- Note that these are log outputs. Because these queries are dynamically generated + executed on live tables (not fresh database), 
+-- the total # of rows affected is not necessarily the total number of rows present in the table after the query is executed.
+
+INSERT INTO courses (catalog_number, …; rows affected: 4314, rows returned: 0, elapsed: 309.934ms
+INSERT INTO course_offerings (course_id, …; rows affected: 857, rows returned: 0, elapsed: 68.136ms
+INSERT INTO class_schedule (class_section, …; rows affected: 1502, rows returned: 0, elapsed: 110.723ms

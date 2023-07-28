@@ -33,3 +33,4 @@ sample = { path = "./sample" }
 # Browser-only dependencies go here
 [target.'cfg(client)'.dependencies]
 reqwasm = "0.5.0"
+chrono = "0.4.23"
