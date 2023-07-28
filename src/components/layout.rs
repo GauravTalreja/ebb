@@ -1,5 +1,7 @@
 use crate::components::{footer::Footer, search_bar::SearchBar, theme_change::ThemeChange};
-pub use crate::components::{search_bar::SearchBarProps, theme_change::ThemeProps, footer::FooterProps};
+pub use crate::components::{
+    footer::FooterProps, search_bar::SearchBarProps, theme_change::ThemeProps,
+};
 use sycamore::prelude::*;
 
 #[component]

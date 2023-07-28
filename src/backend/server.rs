@@ -9,9 +9,8 @@ use perseus::{
 use production;
 use sample;
 use std::net::SocketAddr;
-use tower_http::cors::{Any, CorsLayer};
 use tokio::task;
-
+use tower_http::cors::{Any, CorsLayer};
 
 pub async fn main<M, T>(
     turbine: &'static Turbine<M, T>,
@@ -59,10 +58,21 @@ where
 
     let api_routes = Router::new()
         .route("/status", routing::get(hello_world))
+        .route("/subjects", routing::get(http::list_top_subjects))
         .route("/courses/:course_code", routing::get(http::list_courses))
         .route("/course/:course_code", routing::get(http::get_course))
-        .route("/course_offerings/:course_code", routing::get(http::list_course_offerings))
-        .route("/last_updated_time", routing::get(http::get_last_updated_time))
+        .route(
+            "/tagged_courses/:course_tags",
+            routing::get(http::list_courses_by_tags),
+        )
+        .route(
+            "/course_offerings/:course_code",
+            routing::get(http::list_course_offerings),
+        )
+        .route(
+            "/last_updated_time",
+            routing::get(http::get_last_updated_time),
+        )
         .layer(Extension(store))
         .layer(cors_options);
 

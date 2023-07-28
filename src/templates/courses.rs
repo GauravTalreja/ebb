@@ -2,7 +2,7 @@ use crate::{
     components::{
         course_table::CourseTable,
         filter::{Filter, FilterProps},
-        layout::{Layout, SearchBarProps, ThemeProps, FooterProps},
+        layout::{FooterProps, Layout, SearchBarProps, ThemeProps},
     },
     global_state::AppStateRx,
 };
@@ -72,12 +72,12 @@ fn courses_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a CoursesStateRx
 
         spawn_local_scoped(cx, async {
             let body = reqwasm::http::Request::get("/api/v1/last_updated_time")
-            .send()
-            .await
-            .unwrap()
-            .json::<LastUpdated>()
-            .await
-            .unwrap();
+                .send()
+                .await
+                .unwrap()
+                .json::<LastUpdated>()
+                .await
+                .unwrap();
             state.last_updated_time.set(body);
         });
     }
