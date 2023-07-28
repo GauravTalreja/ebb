@@ -55,9 +55,14 @@ impl CourseSync for ProdCourseSync {
             .unwrap();
 
         sqlx::query_file!("./queries/update_timestamp.sql")
-        .execute(&pool)
-        .await
-        .unwrap();
+            .execute(&pool)
+            .await
+            .unwrap();
+
+        sqlx::query_file!("./queries/insert_course_tags.sql")
+            .execute(&pool)
+            .await
+            .unwrap();
     }
 }
 
@@ -93,6 +98,25 @@ impl CourseStore for ProdCourseStore {
         .await
     }
 
+    async fn select_courses_by_tags(
+        self: Arc<Self>,
+        tags: &[String],
+    ) -> Result<Vec<CourseSummary>, Error> {
+        sqlx::query_file_as!(
+            CourseSummary,
+            "./queries/select_courses_by_tags.sql",
+            &["%(", &tags.join("|"), ")%"].concat(),
+        )
+        .fetch_all(&self.pool)
+        .await
+    }
+
+    async fn select_top_subjects(self: Arc<Self>) -> Result<Vec<SubjectSummary>, Error> {
+        sqlx::query_file_as!(SubjectSummary, "./queries/select_top_tags.sql",)
+            .fetch_all(&self.pool)
+            .await
+    }
+
     async fn select_course_offerings(
         self: Arc<Self>,
         course_code: &str,
@@ -106,25 +130,22 @@ impl CourseStore for ProdCourseStore {
         .await
     }
 
-    async fn get_last_updated_time(
-        self: Arc<Self>
-    ) -> Result<LastUpdated, Error> {
-        let q: Result<TempProdUpdated, Error> = sqlx::query_file_as!(
-            TempProdUpdated,
-            "./queries/select_last_updated.sql"
-        )
-        .fetch_one(&self.pool)
-        .await;
+    async fn get_last_updated_time(self: Arc<Self>) -> Result<LastUpdated, Error> {
+        let q: Result<TempProdUpdated, Error> =
+            sqlx::query_file_as!(TempProdUpdated, "./queries/select_last_updated.sql")
+                .fetch_one(&self.pool)
+                .await;
 
         if let Err(e) = q {
             return Err(e);
         } else {
-            return Ok(LastUpdated { date_time: Some(q.unwrap().date_time) })
+            return Ok(LastUpdated {
+                date_time: Some(q.unwrap().date_time),
+            });
         }
-    
     }
 }
 
 struct TempProdUpdated {
-    date_time: DateTime<Utc>
+    date_time: DateTime<Utc>,
 }

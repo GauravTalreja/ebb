@@ -1,6 +1,6 @@
+use chrono::{DateTime, Utc};
 use models::*;
 use stores::prelude::*;
-use chrono::{DateTime, Utc};
 
 pub async fn sample_store() -> EbbStore {
     dotenvy::dotenv().expect("Unable to find a sample .env file");
@@ -47,6 +47,11 @@ impl CourseSync for SampleCourseSync {
             .unwrap();
 
         sqlx::query_file!("./queries/update_timestamp.sql")
+            .execute(&pool)
+            .await
+            .unwrap();
+
+        sqlx::query_file!("./queries/insert_course_tags.sql")
             .execute(&pool)
             .await
             .unwrap();
@@ -98,25 +103,43 @@ impl CourseStore for SampleCourseStore {
         .fetch_all(&self.pool)
         .await
     }
-    async fn get_last_updated_time(
-        self: Arc<Self>
-    ) -> Result<LastUpdated, Error> {
-        let q: Result<TempSampleUpdated, Error> = sqlx::query_file_as!(
-            TempSampleUpdated,
-            "./queries/select_last_updated.sql"
+
+    async fn select_courses_by_tags(
+        self: Arc<Self>,
+        tags: &[String],
+    ) -> Result<Vec<CourseSummary>, Error> {
+        sqlx::query_file_as!(
+            CourseSummary,
+            "./queries/select_courses_by_tags.sql",
+            2023,
+            &["%(", &tags.join("|"), ")%"].concat(),
         )
-        .fetch_one(&self.pool)
-        .await;
+        .fetch_all(&self.pool)
+        .await
+    }
+
+    async fn select_top_subjects(self: Arc<Self>) -> Result<Vec<SubjectSummary>, Error> {
+        sqlx::query_file_as!(SubjectSummary, "./queries/select_top_tags.sql",)
+            .fetch_all(&self.pool)
+            .await
+    }
+
+    async fn get_last_updated_time(self: Arc<Self>) -> Result<LastUpdated, Error> {
+        let q: Result<TempSampleUpdated, Error> =
+            sqlx::query_file_as!(TempSampleUpdated, "./queries/select_last_updated.sql")
+                .fetch_one(&self.pool)
+                .await;
 
         if let Err(e) = q {
             return Err(e);
         } else {
-            return Ok(LastUpdated{ date_time: Some(q.unwrap().date_time) })
+            return Ok(LastUpdated {
+                date_time: Some(q.unwrap().date_time),
+            });
         }
-        
     }
 }
 
 struct TempSampleUpdated {
-    pub date_time: DateTime<Utc>
+    pub date_time: DateTime<Utc>,
 }

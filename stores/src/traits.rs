@@ -1,5 +1,6 @@
-use crate::prelude::*;
 use models::*;
+
+use crate::prelude::*;
 
 #[async_trait]
 pub trait Migrate {
@@ -21,12 +22,15 @@ pub trait CourseStore {
         self: Arc<Self>,
         course_code: &str,
     ) -> Result<Option<CourseDetail>, Error>;
+    async fn select_courses_by_tags(
+        self: Arc<Self>,
+        tags: &[String],
+    ) -> Result<Vec<CourseSummary>, Error>;
+    async fn select_top_subjects(self: Arc<Self>) -> Result<Vec<SubjectSummary>, Error>;
     async fn select_course_offerings(
         self: Arc<Self>,
         course_code: &str,
     ) -> Result<Vec<OfferingDetail>, Error>;
 
-    async fn get_last_updated_time(
-        self: Arc<Self>,
-    ) -> Result<LastUpdated, Error>;
+    async fn get_last_updated_time(self: Arc<Self>) -> Result<LastUpdated, Error>;
 }

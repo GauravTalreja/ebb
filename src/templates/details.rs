@@ -1,8 +1,8 @@
 use crate::{
-    components::layout::{Layout, SearchBarProps, ThemeProps, FooterProps},
+    components::layout::{FooterProps, Layout, SearchBarProps, ThemeProps},
     global_state::AppStateRx,
 };
-use models::{CourseDetail, CourseSummary, OfferingDetail, LastUpdated};
+use models::{CourseDetail, CourseSummary, LastUpdated, OfferingDetail};
 use perseus::prelude::*;
 use serde::{Deserialize, Serialize};
 use sycamore::prelude::*;
@@ -81,12 +81,12 @@ fn details_page<'a, G: Html>(cx: BoundedScope<'_, 'a>, state: &'a DetailStateRx)
 
         spawn_local_scoped(cx, async {
             let body = reqwasm::http::Request::get("/api/v1/last_updated_time")
-            .send()
-            .await
-            .unwrap()
-            .json::<LastUpdated>()
-            .await
-            .unwrap();
+                .send()
+                .await
+                .unwrap()
+                .json::<LastUpdated>()
+                .await
+                .unwrap();
             state.last_updated_time.set(body);
         });
     }

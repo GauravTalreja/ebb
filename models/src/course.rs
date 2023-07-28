@@ -1,11 +1,11 @@
-use chrono::{NaiveTime, DateTime, Utc};
+use chrono::{DateTime, NaiveTime, Utc};
 use serde::{Deserialize, Serialize};
 #[cfg(feature = "sqlx")]
 use sqlx::{Database, Postgres, Type};
 
 #[derive(Clone, Debug, Serialize, Deserialize, Eq, PartialEq, Hash)]
 pub struct LastUpdated {
-    pub date_time: Option<DateTime<Utc>>
+    pub date_time: Option<DateTime<Utc>>,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize, Eq, PartialEq, Hash)]
@@ -27,6 +27,12 @@ pub struct OfferingSummary {
 #[derive(Clone, Debug, Serialize, Deserialize, Eq, PartialEq, Hash)]
 #[serde(transparent)]
 pub struct OfferingSummaries(Vec<OfferingSummary>);
+
+#[derive(Clone, Debug, Serialize, Deserialize, Eq, PartialEq, Hash)]
+pub struct SubjectSummary {
+    pub name: String,
+    pub course_count: i64,
+}
 
 #[derive(Clone, Debug, Serialize, Deserialize, Eq, PartialEq, Hash)]
 pub struct CourseDetail {

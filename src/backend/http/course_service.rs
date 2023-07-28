@@ -1,7 +1,7 @@
 use axum::{extract::Path, http::StatusCode, Extension, Json};
 use perseus::web_log;
 
-use models::{CourseDetail, CourseSummary, OfferingDetail, LastUpdated};
+use models::{CourseDetail, CourseSummary, LastUpdated, OfferingDetail, SubjectSummary};
 use stores::prelude::*;
 
 pub async fn list_courses(
@@ -23,14 +23,41 @@ pub async fn get_course(
     Path(course_code): Path<String>,
     Extension(store): Extension<EbbStore>,
 ) -> Result<Json<CourseDetail>, StatusCode> {
-    store.course_store.select_course(&course_code).await
+    store
+        .course_store
+        .select_course(&course_code)
+        .await
         .map_err(|e| {
             web_log!("course_store.select_course: {}", e);
             StatusCode::INTERNAL_SERVER_ERROR
         })
-        .and_then(|course| course
-            .map(Json)
-            .ok_or(StatusCode::NOT_FOUND))
+        .and_then(|course| course.map(Json).ok_or(StatusCode::NOT_FOUND))
+}
+
+pub async fn list_courses_by_tags(
+    Path(tags): Path<Vec<String>>,
+    Extension(store): Extension<EbbStore>,
+) -> Result<Json<Vec<CourseSummary>>, StatusCode> {
+    store
+        .course_store
+        .select_courses_by_tags(&tags)
+        .await
+        .map_err(|e| {
+            web_log!("course_store.select_courses_by_tags: {}", e);
+            StatusCode::INTERNAL_SERVER_ERROR
+        })
+        .map(Json)
+}
+
+pub async fn list_top_subjects(
+    Extension(store): Extension<EbbStore>,
+) -> Result<Json<Vec<SubjectSummary>>, StatusCode> {
+    store
+        .course_store
+        .select_top_subjects()
+        .await
+        .map_err(|e| StatusCode::INTERNAL_SERVER_ERROR)
+        .map(Json)
 }
 
 pub async fn list_course_offerings(
@@ -49,7 +76,7 @@ pub async fn list_course_offerings(
 }
 
 pub async fn get_last_updated_time(
-    Extension(store): Extension<EbbStore>
+    Extension(store): Extension<EbbStore>,
 ) -> Result<Json<LastUpdated>, StatusCode> {
     store
         .course_store

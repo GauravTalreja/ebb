@@ -78,5 +78,5 @@ pub fn ThemeChange<'a, G: Html>(cx: Scope<'a>, ThemeProps { state }: ThemeProps<
 
 #[derive(Prop)]
 pub struct ThemeProps<'a> {
-    pub state: &'a RcSignal<String>
+    pub state: &'a RcSignal<String>,
 }

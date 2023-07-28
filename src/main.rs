@@ -23,5 +23,5 @@ pub fn main<G: Html>() -> PerseusApp<G> {
         .template(templates::courses::get_template())
         .template(templates::details::get_template())
         .global_state_creator(global_state::get_global_state_creator())
-        .error_views(error_views::get_error_views()) 
+        .error_views(error_views::get_error_views())
 }
