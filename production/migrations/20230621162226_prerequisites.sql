@@ -85,3 +85,14 @@ CREATE INDEX IF NOT EXISTS idx_mv_courses_id_subject_code
     ON mv_courses (id, subject_code);
 
 REFRESH MATERIALIZED VIEW mv_courses;
+
+CREATE TABLE IF NOT EXISTS tags (
+    id SERIAL PRIMARY KEY,
+    name character varying(250) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS course_tags (
+    course_id integer NOT NULL REFERENCES courses(id) ON DELETE CASCADE,
+    tag_id integer NOT NULL REFERENCES tags(id) ON DELETE CASCADE,
+    CONSTRAINT pk_course_tags PRIMARY KEY (course_id, tag_id)
+);
